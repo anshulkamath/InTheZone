@@ -1204,12 +1204,6 @@ task usercontrol()
 
     // Starting Tasks
 		startTask(controller);
-
-		// startTask(drive);
-    // startTask(mobileGoal);
-    // startTask(barControl);
-    // startTask(lift);
-    // startTask(intakeControl);
     // startTask(autoStack);
     // startTask(autoStackControl);
 
