@@ -1,3 +1,20 @@
+#pragma config(Sensor, in1,    liftPot,        sensorPotentiometer)
+#pragma config(Sensor, in2,    moGoPot,         sensorPotentiometer)
+#pragma config(Sensor, in3,    barPot,         sensorPotentiometer)
+#pragma config(Sensor, in4,    gyroscope,      sensorGyro)
+#pragma config(Sensor, dgtl7,  lDriveQuad,     sensorQuadEncoder)
+#pragma config(Sensor, dgtl9,  rDriveQuad,     sensorQuadEncoder)
+#pragma config(Motor,  port1,           barL,          tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port2,           leftB,         tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port3,           leftF,         tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port4,           lLift,         tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port5,           moGo,          tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port6,           intake,        tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port7,           rLift,         tmotorVex393HighSpeed_MC29, openLoop, reversed)
+#pragma config(Motor,  port8,           rightB,        tmotorVex393HighSpeed_MC29, openLoop, reversed)
+#pragma config(Motor,  port9,           rightF,        tmotorVex393HighSpeed_MC29, openLoop, reversed)
+#pragma config(Motor,  port10,          barR,          tmotorVex393HighSpeed_MC29, openLoop)
+#include "Competiton Code.c"
 const int NUM_AUTONS = 2;
 const int NUM_MENUS = 4;
 bool gyroIsCalibrating = false;
@@ -344,9 +361,4 @@ task autonomous()
         matchAuton5PtBlue();
         break;
     }
-}
-
-task usercontrol()
-{
-  
 }
