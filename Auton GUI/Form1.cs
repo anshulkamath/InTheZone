@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace Vex_Auton_Select
 {
     public partial class Form1 : Form
@@ -15,7 +7,11 @@ namespace Vex_Auton_Select
         private AutonAction[] actions;
         public Form1()
         {
+            ContextMenu cm = new ContextMenu();
+            cm.MenuItems.Add("Generate Code", new EventHandler(codeGeneration));
+
             InitializeComponent();
+            pictureBox1.ContextMenu = cm;
             actions = new AutonAction[0];
         }
 
@@ -31,7 +27,9 @@ namespace Vex_Auton_Select
             temp.Enabled = true;
             temp.Visible = true;
             temp.Show();
-
+            ContextMenu cm = new ContextMenu();
+            cm.MenuItems.Add("Sent Backwards", new EventHandler(setBackwards));
+            temp.ContextMenu = cm;
             //pictureBox1.Enabled = false;
             this.Controls.Add(temp);
             temp.BringToFront();
@@ -40,15 +38,117 @@ namespace Vex_Auton_Select
             {
                 tempActions[i] = actions[i];
             }
-            tempActions[actions.Length] = new AutonAction(temp);
+            tempActions[actions.Length] = new AutonAction(temp, true);
             actions = tempActions;
 
         }
 
+        private void setBackwards(object sender, EventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu menu = menuItem.GetContextMenu();
+            Control sourceControl = menu.SourceControl;
+            for (int i = 0; i<actions.Length; i++)
+                
+                if(((Button)sourceControl).Equals(actions[i].button))
+                {
+                    actions[i].forward = false;
+                }
+        }
+
+        private void codeGeneration(object sender, EventArgs e)
+        {
+            String code = "";
+            double orentation = 0;
+            for (int i = 0; i < actions.Length -1 ; i++)
+            {
+                if(actions[i+1].forward)
+                    orentation = forwardMove(actions[i+1], actions[i], orentation, ref code);
+                else
+                {
+                    orentation = backwardMove(actions[i + 1], actions[i], orentation, ref code);
+                }
+
+            }
+            MessageBox.Show(code);
+
+        }
+
+        private double forwardMove(AutonAction one, AutonAction two, double orentation, ref String code)
+        {
+            double angleToMove = Math.Atan2(one.button.Location.Y - two.button.Location.Y,
+                one.button.Location.X - two.button.Location.X);
+            angleToMove *= (180 / Math.PI);
+            angleToMove -= orentation;
+            orentation = angleToMove;
+            if (angleToMove > 0)
+            {
+                code += "turnRight(" + (int)angleToMove + ");\n";
+            }
+            else
+            {
+                code += "turnLeft(" + -(int)angleToMove + ");\n";
+            }
+            double distance = Math.Pow(inchesToTicks(one.button.Location.Y - two.button.Location.Y, 4), 2)
+                + Math.Pow(inchesToTicks(one.button.Location.X - two.button.Location.X, 4), 2);
+            distance = Math.Sqrt(distance);
+            code += "forward(" + (int)distance + ");\n";
+            return orentation;
+        }
+        private double inchesToTicks(double inches, double wheelSize)
+        {
+            return (inches/(wheelSize * Math.PI)) * 360;
+        }
+
+        private double pixelsToInches(double pixels, bool width)
+        {
+
+            int height = System.Windows.Forms.SystemInformation.VirtualScreen.Height;
+            int width1 = System.Windows.Forms.SystemInformation.VirtualScreen.Width;
+            if(width)
+            {
+                return (double)pixels / pictureBox1.Width;
+            }
+            return (double)pixels / pictureBox1.Height;
+        }
+        private double backwardMove(AutonAction one, AutonAction two, double orentation, ref String code)
+        {
+            double angleToMove = Math.Atan2(-one.button.Location.Y + two.button.Location.Y,
+                -one.button.Location.X + two.button.Location.X);
+            angleToMove *= (180 / Math.PI);
+            angleToMove -= orentation;
+            orentation = angleToMove;
+            if (angleToMove > 0)
+            {
+                code += "turnRight(" + -(int)angleToMove + ");\n";
+            }
+            else
+            {
+                code += "turnLeft(" + -(int)angleToMove + ");\n";
+            }
+            double distance = Math.Pow(inchesToTicks(one.button.Location.Y - two.button.Location.Y, 4), 2)
+                + Math.Pow(inchesToTicks(one.button.Location.X - two.button.Location.X, 4), 2);
+            distance = Math.Sqrt(distance);
+            code += "backward(" + (int)distance + ");\n";
+            return orentation;
+        }
+
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-             var relativePoint = this.PointToClient(Cursor.Position);
-            addAction(relativePoint.X, relativePoint.Y);
+            MouseEventArgs me = (MouseEventArgs)e;
+            switch (me.Button)
+            {
+
+                case MouseButtons.Left:
+                    var relativePoint = this.PointToClient(Cursor.Position);
+                    addAction(relativePoint.X, relativePoint.Y);
+                    break;
+
+                case MouseButtons.Right:
+                    // Right click
+                    break;
+            }
+ 
 
         }
 
@@ -56,12 +156,17 @@ namespace Vex_Auton_Select
     }
     public class AutonAction
     {
-        public Label marker;
-        private Button temp;
+        public Button button;
+        public bool forward;
 
         public AutonAction(Button temp)
         {
-            this.temp = temp;
+            this.button = temp;
+        }
+
+        public AutonAction(Button temp, bool v) : this(temp)
+        {
+            forward = v;
         }
     }
 }
