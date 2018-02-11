@@ -49,7 +49,7 @@ namespace Vex_Auton_Select
             ContextMenu menu = menuItem.GetContextMenu();
             Control sourceControl = menu.SourceControl;
             for (int i = 0; i<actions.Length; i++)
-
+                
                 if(((Button)sourceControl).Equals(actions[i].button))
                 {
                     actions[i].forward = false;
@@ -95,8 +95,10 @@ namespace Vex_Auton_Select
             code += "forward(" + (int)distance + ");\n";
             return orentation;
         }
-        private double inchesToTicks(double inches, double wheelSize)
+        private double inchesToTicks(double pixels, double wheelSize)
         {
+            double inches = pixelsToInches(pixels, true);
+            MessageBox.Show(((inches / (wheelSize * Math.PI)) * 360) + "");
             return (inches/(wheelSize * Math.PI)) * 360;
         }
 
@@ -107,9 +109,9 @@ namespace Vex_Auton_Select
             int width1 = System.Windows.Forms.SystemInformation.VirtualScreen.Width;
             if(width)
             {
-                return (double)pixels / pictureBox1.Width;
+                return ((double)pixels / pictureBox1.Width)*(12*12+2);
             }
-            return (double)pixels / pictureBox1.Height;
+            return ((double)pixels / pictureBox1.Height) * (12 * 12 + 2);
         }
         private double backwardMove(AutonAction one, AutonAction two, double orentation, ref String code)
         {
@@ -120,11 +122,11 @@ namespace Vex_Auton_Select
             orentation = angleToMove;
             if (angleToMove > 0)
             {
-                code += "turnRight(" + -(int)angleToMove + ");\n";
+                code += "right(" + -(int)angleToMove + ");\n";
             }
             else
             {
-                code += "turnLeft(" + -(int)angleToMove + ");\n";
+                code += "left(" + -(int)angleToMove + ");\n";
             }
             double distance = Math.Pow(inchesToTicks(one.button.Location.Y - two.button.Location.Y, 4), 2)
                 + Math.Pow(inchesToTicks(one.button.Location.X - two.button.Location.X, 4), 2);
@@ -148,7 +150,7 @@ namespace Vex_Auton_Select
                     // Right click
                     break;
             }
-
+ 
 
         }
 
