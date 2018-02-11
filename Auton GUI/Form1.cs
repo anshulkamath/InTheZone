@@ -49,7 +49,7 @@ namespace Vex_Auton_Select
             ContextMenu menu = menuItem.GetContextMenu();
             Control sourceControl = menu.SourceControl;
             for (int i = 0; i<actions.Length; i++)
-                
+
                 if(((Button)sourceControl).Equals(actions[i].button))
                 {
                     actions[i].forward = false;
@@ -83,11 +83,11 @@ namespace Vex_Auton_Select
             orentation = angleToMove;
             if (angleToMove > 0)
             {
-                code += "turnRight(" + (int)angleToMove + ");\n";
+                code += "right(" + (int)angleToMove + ");\n";
             }
             else
             {
-                code += "turnLeft(" + -(int)angleToMove + ");\n";
+                code += "left(" + -(int)angleToMove + ");\n";
             }
             double distance = Math.Pow(inchesToTicks(one.button.Location.Y - two.button.Location.Y, 4), 2)
                 + Math.Pow(inchesToTicks(one.button.Location.X - two.button.Location.X, 4), 2);
@@ -148,7 +148,7 @@ namespace Vex_Auton_Select
                     // Right click
                     break;
             }
- 
+
 
         }
 
