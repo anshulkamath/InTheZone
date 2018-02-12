@@ -28,7 +28,8 @@ namespace Vex_Auton_Select
             temp.Visible = true;
             temp.Show();
             ContextMenu cm = new ContextMenu();
-            cm.MenuItems.Add("Sent Backwards", new EventHandler(setBackwards));
+            cm.MenuItems.Add("Open Config File", new EventHandler(LoadConfig));
+            cm.MenuItems.Add("Delete Action", new EventHandler(Delete));
             temp.ContextMenu = cm;
             //pictureBox1.Enabled = false;
             this.Controls.Add(temp);
@@ -43,17 +44,56 @@ namespace Vex_Auton_Select
 
         }
 
-        private void setBackwards(object sender, EventArgs e)
+        private void LoadConfig(object sender, EventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
             ContextMenu menu = menuItem.GetContextMenu();
             Control sourceControl = menu.SourceControl;
-            for (int i = 0; i<actions.Length; i++)
-                
-                if(((Button)sourceControl).Equals(actions[i].button))
+            for (int i = 0; i < actions.Length; i++)
+
+                if (((Button)sourceControl).Equals(actions[i].button))
                 {
-                    actions[i].forward = false;
+                    Form2 f2 = new Form2(actions[i]);
+                    f2.ShowDialog();
                 }
+        }
+
+        private void Delete(object sender, EventArgs e)
+        {
+            AutonAction[] temp = new AutonAction[actions.Length - 1];
+            bool found = false;
+            MenuItem menuItem = sender as MenuItem;
+            ContextMenu menu = menuItem.GetContextMenu();
+            Control sourceControl = menu.SourceControl;
+            try { 
+            for (int i = 0; i<actions.Length; i++)
+            {
+                if(found)
+                {
+                    temp[i - 1] = actions[i];
+                }
+                else if(!actions[i].button.Equals((Button)sourceControl))
+                {
+                    temp[i] = actions[i];
+                }
+                else
+                {
+                    actions[i].button.Enabled = false;
+                    actions[i].button.Visible = false;
+                }
+            }
+                actions = temp;
+            }
+            catch(Exception d)
+            {
+
+            }
+
+        }
+
+        private void setBackwards(object sender, EventArgs e)
+        {
+
         }
 
         private void codeGeneration(object sender, EventArgs e)
@@ -98,7 +138,7 @@ namespace Vex_Auton_Select
         private double inchesToTicks(double pixels, double wheelSize)
         {
             double inches = pixelsToInches(pixels, true);
-            MessageBox.Show(((inches / (wheelSize * Math.PI)) * 360) + "");
+            //MessageBox.Show(((inches / (wheelSize * Math.PI)) * 360) + "");
             return (inches/(wheelSize * Math.PI)) * 360;
         }
 
