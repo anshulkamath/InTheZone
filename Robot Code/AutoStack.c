@@ -22,46 +22,13 @@
 
 #include "Vex_Competition_Includes.c"
 #include "Variables.c"
-#include "Autonomous Control.c"
 
-
-void moveDownField()
+// Made it a task so it will run concurrently with the autostack function
+task releaseCone()
 {
-	// Moves lift up to get out of stack
-	motor[lLift] = motor[rLift] = 60;
-	int tempy = SensorValue[liftPot];
-	while(SensorValue[liftPot] <  tempy + 100) {}
-	motor[lLift] = motor[rLift] = 0;
-
-	// Moves the bar to bottom position
-	barIsUp = false;
-	while(SensorValue[barPot] > BAR_DOWN) {} // Tentative for change - change BAR_DOWN to middle position
-
-	// Moves the lift to field position
-	motor[lLift] = motor[rLift] = -100;
-	while(SensorValue[liftPot] > LIFT_MIN + 200) {}
-	motor[lLift] = motor[rLift] = -60;
-	while(SensorValue[liftPot] > LIFT_MIN) {}
-	motor[lLift] = motor[rLift] = 0;
-}
-
-void moveDownDriver(int height)
-{
-	// Moves lift up to get out of stack
-	motor[lLift] = motor[rLift] = 100;
-	while(SensorValue[liftPot] < height - 100) {}
-	motor[lLift] = motor[rLift] = 0;
-
-	// Moves bar down
-	barIsUp = false;
-	while(SensorValue[barPot] > BAR_DOWN) {} // Tentative for change - change BAR_DOWN to middle position
-
-	// Moves lift down to driver load stack
-	motor[lLift] = motor[rLift] = -100;
-	while(SensorValue[liftPot] > LIFT_DRIVER + 200) {}
-	motor[lLift] = motor[rLift] = -60;
-	while(SensorValue[liftPot] > LIFT_DRIVER) {}
-	motor[lLift] = motor[rLift] = 0;
+	motor[intake] = -100;
+	sleep(500);
+	motor[intake] = 0;
 }
 
 void autoStackInit(int height, int down, bool driver)
@@ -77,16 +44,59 @@ void autoStackInit(int height, int down, bool driver)
 
 	// Moves the lift down to stack
 	motor[lLift] = motor[rLift] = -70;
-	while(SensorValue[liftPot] > down) {}
+	while(SensorValue[liftPot] > down)
+	{
+		// Runs the intake out as the lift is going down
+		if (SensorValue(liftPot) > down + 50)
+			startTask(releaseCone);
+	}
 	motor[lLift] = motor[rLift] = 0;
 
-	// Releases the cone
-	intakeCone(0);
+	// Moves lift up to get out of stack
+	motor[lLift] = motor[rLift] = 60;
+	while(SensorValue[liftPot] <  height - 100) {}
+	motor[lLift] = motor[rLift] = 0;
+
+	// Moves the bar to bottom position
+	barIsUp = false;
+	while(SensorValue[barPot] > BAR_DOWN) {} // Can make the value a little higher to make autostack quicker
+
 
 	if(!driver)
-		moveDownField();
+	{
+		// Residual of the moveDownField function
+
+		// Moves the lift to field position
+		motor[lLift] = motor[rLift] = -100;
+		while(SensorValue[liftPot] > LIFT_MIN + 200) {}
+		motor[lLift] = motor[rLift] = -60;
+		while(SensorValue[liftPot] > LIFT_MIN) {}
+		motor[lLift] = motor[rLift] = 0;
+	}
 	else
-		moveDownDriver(height);
+	{
+		// Residual of the moveDownDriver function
+
+		// Moves lift down to driver load stack
+		motor[lLift] = motor[rLift] = -100;
+		while(SensorValue[liftPot] > LIFT_DRIVER + 200) {}
+		motor[lLift] = motor[rLift] = -60;
+		while(SensorValue[liftPot] > LIFT_DRIVER) {}
+		motor[lLift] = motor[rLift] = 0;
+	}
+}
+
+void autoConeInitVals()
+{
+	// Initializing the lift values for autostack
+	for (int i = 0; i < conesHeight.length; i++)
+		conesHeight[i] = LIFT_MIN + (120 * i);
+
+	// Initializing the lfit values for autostack release
+	// conesDown[0] is the same as conesHeight[0] beacause it is the bottom of the lift
+	conesDown[0] = LIFT_MIN;
+	for (int i = 1; i < conesDown.length; i++)
+		conesDown[i] = conesHeight[i] - 60;
 }
 
 void initConeVals()
