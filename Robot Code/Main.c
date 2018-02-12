@@ -194,7 +194,7 @@ void pre_auton()
 	bStopTasksBetweenModes = true;
 
 	// Initializes the cones arrays
-	initConeVals();
+	autoConeInitVals();
 
 	// Calibrates Gyroscope
 	GyroInit(in4);
