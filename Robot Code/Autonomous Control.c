@@ -24,21 +24,6 @@
 #include "Vex_Competition_Includes.c"
 #include "Debug.c"
 
-// Auton Function Variables
-bool isOpposite = false;
-bool isRunning = false;
-int turnRange = 10;
-int driveRange = 15;
-
-// Auton Variables
-const int BlueStart =  0;
-const int RedStart = 1365;
-const int NoStart = 2730;
-
-const int fivePtStart = 0;
-const int tenPtStart = 1365;
-const int twentyPtStart = 2730;
-
 task lDrivePID()
 {
 	SensorValue(lDriveQuad) = 0;

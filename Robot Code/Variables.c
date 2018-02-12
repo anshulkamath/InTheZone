@@ -27,6 +27,7 @@ bool intakeHold = false;
 bool isFieldControl = true;
 bool moGoIsManual = true;
 bool moGoIsUp = true;
+bool autoStackIsOn = false;
 
 bool driveIsActive = true;
 bool liftIsActive = true;
@@ -46,6 +47,21 @@ const int BAR_DOWN = 1870;
 const int MOGO_UP = 0;
 const int MOGO_DOWN = 0;
 
+// Auton Function Variables
+bool isOpposite = false;
+bool isRunning = false;
+int turnRange = 10;
+int driveRange = 15;
+
+// Auton Variables
+const int BlueStart =  0;
+const int RedStart = 1365;
+const int NoStart = 2730;
+
+const int fivePtStart = 0;
+const int tenPtStart = 1365;
+const int twentyPtStart = 2730;
+
 // LCD Variables
 const int NUM_AUTONS = 2;
 const int NUM_MENUS = 4;
@@ -61,7 +77,13 @@ const short leftButton = 1;
 const short centerButton = 2;
 const short rightButton = 4;
 
-// Datalog Definitions
+// AutoStack Control Variables
+int cones = 0;
+int conesDriver = 0;
+
+// AutoStack arrays
+int conesHeight[10];
+int coneDown[10];
 
 // Datalog Definitions
 #define   DATALOG_SERIES_0    0

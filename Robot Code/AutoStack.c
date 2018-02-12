@@ -23,16 +23,6 @@
 #include "Variables.c"
 #include "Vex_Competition_Includes.c"
 
-// AutoStack Control Variables
-int cones = 0;
-int conesDriver = 0;
-
-// AutoStack arrays
-int conesHeight[10];
-int coneDown[10];
-
-bool autoStackIsOn = false;
-
 
 void moveDownField()
 {
