@@ -73,8 +73,9 @@ int cones = 0;
 int conesDriver = 0;
 
 // AutoStack arrays
-int conesHeight[10];
-int coneDown[10];
+const int size = 10;
+int conesHeight[size];
+int coneDown[size];
 
 // Datalog Definitions
 #define   DATALOG_SERIES_0    0

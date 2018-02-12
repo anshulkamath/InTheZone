@@ -22,6 +22,7 @@
 
 #include "Vex_Competition_Includes.c"
 #include "Variables.c"
+#include "Autonomous Control.c"
 
 // Made it a task so it will run concurrently with the autostack function
 task releaseCone()
@@ -89,14 +90,14 @@ void autoStackInit(int height, int down, bool driver)
 void autoConeInitVals()
 {
 	// Initializing the lift values for autostack
-	for (int i = 0; i < conesHeight.length; i++)
+	for (int i = 0; i < size; i++)
 		conesHeight[i] = LIFT_MIN + (120 * i);
 
 	// Initializing the lfit values for autostack release
 	// conesDown[0] is the same as conesHeight[0] beacause it is the bottom of the lift
-	conesDown[0] = LIFT_MIN;
-	for (int i = 1; i < conesDown.length; i++)
-		conesDown[i] = conesHeight[i] - 60;
+	coneDown[0] = LIFT_MIN;
+	for (int i = 1; i < size; i++)
+		coneDown[i] = conesHeight[i] - 60;
 }
 
 void initConeVals()
