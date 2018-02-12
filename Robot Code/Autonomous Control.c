@@ -23,6 +23,7 @@
 #include "Vex_Competition_Includes.c"
 #include "Variables.c"
 #include "Debug.c"
+#include "GyroLib.c"
 
 task lDrivePID()
 {

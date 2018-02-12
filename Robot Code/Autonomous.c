@@ -24,6 +24,7 @@
 #include "Variables.c"
 #include "LCD Code.c"
 #include "Autonomous Control.c"
+#include "GyroLib.c"
 
 void skillsauton1()
 {
