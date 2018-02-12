@@ -19,6 +19,7 @@
 #pragma platform(VEX2)
 #pragma competitionControl(Competition)
 #include "Vex_Competition_Includes.c"
+#include "LCD Code.c"
 
 // Reduce task count
 // LCD workaround
