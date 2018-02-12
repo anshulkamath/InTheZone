@@ -20,8 +20,8 @@
 #ifndef LCD_CODE_H
 #define LCD_CODE_H
 
-#include "Variables.c"
 #include "Vex_Competition_Includes.c"
+#include "Variables.c"
 
 // LCD Control Functions
 void waitForPress()

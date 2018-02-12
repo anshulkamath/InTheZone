@@ -20,8 +20,8 @@
 #ifndef AUTONOMOUS_FUNCTIONS_H
 #define AUTONOMOUS_FUNCTIONS_H
 
-#include "Variables.c"
 #include "Vex_Competition_Includes.c"
+#include "Variables.c"
 #include "Debug.c"
 
 task lDrivePID()

@@ -2,8 +2,8 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include "Variables.c"
 #include "Vex_Competition_Includes.c"
+#include "Variables.c"
 
 // Datalog Function
 void display(int P, int I, int D, int error, int mpwr, int targ, int sensor, int other)

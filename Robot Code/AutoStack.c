@@ -20,8 +20,9 @@
 #ifndef AUTOSTACK_H
 #define AUTOSTACK_H
 
-#include "Variables.c"
 #include "Vex_Competition_Includes.c"
+#include "Variables.c"
+#include "Autonomous Control.c"
 
 
 void moveDownField()

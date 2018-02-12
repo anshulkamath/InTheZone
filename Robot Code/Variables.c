@@ -20,6 +20,9 @@ const int LIFT_DRIVER = 1742;
 const int BAR_UP = 3350;
 const int BAR_DOWN = 1870;
 
+const int MOGO_UP = 0;
+const int MOGO_DOWN = 0;
+
 // Toggle Variables
 bool barIsUp = true;
 bool barIsManual = false;
@@ -34,18 +37,6 @@ bool liftIsActive = true;
 bool barIsActive = true;
 bool moGoIsActive = true;
 bool intakeIsActive = true;
-
-// Sensor Values - CONSTANTS
-const int LIFT_MIN = 1426;
-const int LIFT_MID = 0;
-const int LIFT_MAX  = 0;
-const int LIFT_DRIVER = 1742;
-
-const int BAR_UP = 3350;
-const int BAR_DOWN = 1870;
-
-const int MOGO_UP = 0;
-const int MOGO_DOWN = 0;
 
 // Auton Function Variables
 bool isOpposite = false;

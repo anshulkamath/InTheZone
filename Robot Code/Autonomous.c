@@ -20,8 +20,8 @@
 #ifndef AUTONOMOUS_H
 #define AUTONOMOUS_H
 
-#include "Variables.c"
 #include "Vex_Competition_Includes.c"
+#include "Variables.c"
 #include "LCD Code.c"
 #include "Autonomous Control.c"
 
