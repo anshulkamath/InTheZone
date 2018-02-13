@@ -228,7 +228,12 @@ task autonomous()
     // 3 - 10 Pt Blue
     // 4 - 5 Pt Red
     // 5 - 5 Pt Blue
-
+		startTask(delayMGoalThrow);
+		forward(2020);
+		startTask(MGoalUp);
+		sleep(500);
+		backward(1500);
+		right(900);
     switch(autonCount)
     {
       case -1:

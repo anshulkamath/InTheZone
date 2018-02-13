@@ -72,6 +72,7 @@ void autoStackInit(int height, int down, bool driver)
 void autoConeInitVals()
 {
 	// Initializing the lift values for autostack
+	conesHeight[0] = LIFT_MIN + 40;
 	for (int i = 0; i < size; i++)
 		conesHeight[i] = LIFT_MIN + (120 * i);
 
@@ -112,19 +113,23 @@ task runAutoStack()
 	if (isFieldControl)
 	{
 		autoStackIsOn = true;
-		intakeCone(1);
-		autoStackInit(conesHeight[cones], coneDown[cones], false);
-		cones++;
+		if(cones < size)
+		{
+			intakeCone(1);
+			autoStackInit(conesHeight[cones], coneDown[cones], false);
+			cones++;
+		}
 		autoStackIsOn = false;
 	}
 	else
 	{
 		autoStackIsOn = true;
-
-		intakeCone(1);
-		autoStackInit(conesHeight[cones], coneDown[cones], true);
-		conesDriver++;
-
+		if(cones < size)
+		{
+			intakeCone(1);
+			autoStackInit(conesHeight[cones], coneDown[cones], true);
+			cones++;
+		}
 		autoStackIsOn = false;
 	}
 }

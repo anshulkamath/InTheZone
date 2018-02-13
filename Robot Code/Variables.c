@@ -25,7 +25,7 @@ const int MOGO_DOWN = 0;
 
 // Toggle Variables
 bool barIsUp = true;
-bool barIsManual = true;
+bool barIsManual = false;
 bool intakeHold = false;
 bool isFieldControl = true;
 bool moGoIsManual = true;

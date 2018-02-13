@@ -40,7 +40,7 @@ task lDrivePID()
 	int target = 0;
 	float error = 0;
 	int lastError = 0;
-	const float gyrostart = SensorValue(GyroGetAngle());
+	const float gyrostart = GyroGetAngle();
 	int debugval = 0;
 
 

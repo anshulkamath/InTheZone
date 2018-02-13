@@ -41,20 +41,20 @@ task controller()
 		// Added toggles for all aspects of the robot so that they could be shut off one at a time
 		// since they are no longer tasks (you can no longer "stopTask()")
 
-		// Drive - with deadzone
-		if (vexRT[Ch3] < 5 && vexRT[Ch3] > -5)
-			lDrivePwr = 0;
-		else if (vexRT[Ch2] < 5 && vexRT[Ch2] > -5)
-			rDrivePwr = 0;
-		else if (driveIsActive)
-		{
-			lDrivePwr = vexRT[Ch3];
-			rDrivePwr = vexRT[Ch2];
-		}
-
 		// Setting the drive motor power
 		if (driveIsActive)
 		{
+			// Drive - with deadzone
+
+
+			{
+				lDrivePwr = vexRT[Ch3];
+				rDrivePwr = vexRT[Ch2];
+			}
+			if (abs(vexRT[Ch3]) < 5)
+				lDrivePwr = 0;
+			else if (abs(vexRT[Ch2]) < 5)
+				rDrivePwr = 0;
 			motor[leftB] = motor[leftF] = lDrivePwr;
 			motor[rightB] = motor[rightF] = rDrivePwr;
 		}
