@@ -1,5 +1,5 @@
 //VARIABLES - FOR POWER AND SENSOR VALUE POSITIONS
-
+#pragma once;
 // Motor Powers
 int lDrivePwr = 0, rDrivePwr = 0;
 int rLiftPwr = 0, lLiftPwr = 0;
@@ -17,15 +17,15 @@ const int LIFT_MID = 0;
 const int LIFT_MAX  = 0;
 const int LIFT_DRIVER = 1742;
 
-const int BAR_UP = 3350;
-const int BAR_DOWN = 1870;
+const int BAR_UP = 3600;
+const int BAR_DOWN = 1875;
 
 const int MOGO_UP = 0;
 const int MOGO_DOWN = 0;
 
 // Toggle Variables
 bool barIsUp = true;
-bool barIsManual = false;
+bool barIsManual = true;
 bool intakeHold = false;
 bool isFieldControl = true;
 bool moGoIsManual = true;
