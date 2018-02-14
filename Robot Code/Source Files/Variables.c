@@ -58,6 +58,7 @@ const int twentyPtStart = 2730;
 const int NUM_AUTONS = 2;
 const int NUM_MENUS = 4;
 bool gyroIsCalibrating = false;
+bool centerPressed = false;
 string mainBattery, backupBattery;
 
 // LCD Counters

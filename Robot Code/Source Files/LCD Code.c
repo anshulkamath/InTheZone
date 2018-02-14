@@ -361,7 +361,7 @@ void displayBattery()
   waitForRelease();
   wait10Msec(50);
 }
-bool centerPressed = false;
+
 task runLCD()
 {
   bLCDBacklight = true;
@@ -421,8 +421,10 @@ task runLCD()
             waitForRelease();
             sleep(500);
             lcdCount--;
-          }else if(nLCDButtons == centerButton)
+          }
+          else if(nLCDButtons == centerButton)
           {
+            waitForRelease();
           	centerPressed = true;
           }
           break;
@@ -445,8 +447,10 @@ task runLCD()
             waitForRelease();
 
             lcdCount--;
-          }else if(nLCDButtons == centerButton)
+          }
+          else if(nLCDButtons == centerButton)
           {
+            waitForRelease();
           	centerPressed = true;
           }
           break;
@@ -465,14 +469,17 @@ task runLCD()
           {
             waitForRelease();
             lcdCount--;
-          }else if(nLCDButtons == centerButton)
+          }
+          else if(nLCDButtons == centerButton)
           {
+            waitForRelease();
           	centerPressed = true;
           }
 
           break;
-        }
-			if(centerPressed)
+      }
+
+      if(centerPressed)
 			{
 	      switch (lcdCount)
 	      {
@@ -485,12 +492,16 @@ task runLCD()
 	        case 2:
 	          moGoIsManual = !moGoIsManual;
 	          break;
+          case 3:
+            displayBattery();
+            break;
 	      }
 	    }
 
 	    if(centerPressed == 1 && lcdCount == 0) autonSelector();
 	    if(lcdCount == 3) displayBattery();
-	    centerPressed = false;
+
+      centerPressed = false;
     }
 
     if (false)
