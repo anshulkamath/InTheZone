@@ -1,5 +1,6 @@
 //VARIABLES - FOR POWER AND SENSOR VALUE POSITIONS
 #pragma once;
+
 // Motor Powers
 int lDrivePwr = 0, rDrivePwr = 0;
 int rLiftPwr = 0, lLiftPwr = 0;

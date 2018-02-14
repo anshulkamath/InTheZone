@@ -3,6 +3,7 @@
 #define AUTONOMOUS_H
 
 #include "Vex_Competition_Includes.c"
+#include "Motors and Sensors.c"
 #include "Variables.c"
 #include "LCD Code.c"
 #include "Autonomous Control.c"

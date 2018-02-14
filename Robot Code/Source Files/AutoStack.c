@@ -3,6 +3,7 @@
 #define AUTOSTACK_H
 
 #include "Vex_Competition_Includes.c"
+#include "Motors and Sensors.c"
 #include "Variables.c"
 #include "Autonomous Control.c"
 
