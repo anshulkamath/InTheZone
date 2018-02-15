@@ -209,7 +209,6 @@ void pre_auton()
 }
 
 // User Control
-float liftPott = 0;
 task usercontrol()
 {
 	clearDebugStream();
@@ -218,9 +217,7 @@ task usercontrol()
 	// Starting Tasks
 	startTask(controller, 130);
 	startTask(autoStack);
-	startTask(autoStackControl);
 	startTask(stabilizeLift);
-
 
 	while (true)
 	{
