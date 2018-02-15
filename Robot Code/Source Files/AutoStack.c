@@ -14,7 +14,47 @@ task releaseCone()
 	motor[intake] = 0;
 }
 
-void autoStackInit(int height, int down, bool driver)
+void autoConeInitVals()
+{
+	// Initializing the lift values for autostack
+	conesHeight[0] = LIFT_MIN + 50;
+	for (int i = 0; i < size; i++)
+		conesHeight[i] = LIFT_MIN + (120 * i);
+
+	// Initializing the lift values for autostack release
+	// conesDown[0] is the same as conesHeight[0] beacause it is the bottom of the lift
+	coneDown[0] = LIFT_MIN;
+	for (int i = 1; i < size; i++)
+		coneDown[i] = conesHeight[i] - 60;
+}
+
+// Vestige
+void initConeVals()
+{
+	conesHeight[0] = 1418;
+	conesHeight[1] = 1524;
+	conesHeight[2] = 1593;
+	conesHeight[3] = 1593 + 181;
+	conesHeight[4] = 1903;
+	conesHeight[5] = conesHeight[4] + 191;
+	conesHeight[6] = conesHeight[5] + 191;
+	conesHeight[7] = 2082;
+	conesHeight[8] = 2251;
+	conesHeight[9] = 0;
+
+	coneDown[0] = 1250;
+	coneDown[1] = 1361;
+	coneDown[2] = 1544;
+	coneDown[3] = 1544 + 181;
+	coneDown[4] = 1774;
+	coneDown[5] = coneDown[4] + 225;
+	coneDown[6] = coneDown[5] + 252;
+	coneDown[7] = 2020;
+	coneDown[8] = 2091;
+	coneDown[9] = 0;
+}
+
+void runAutoStack(int height, int down, bool driver)
 {
 	// Moves the lift up to the height
 	motor[lLift] = motor[rLift] = 100;
@@ -71,46 +111,7 @@ void autoStackInit(int height, int down, bool driver)
 	}
 }
 
-void autoConeInitVals()
-{
-	// Initializing the lift values for autostack
-	conesHeight[0] = LIFT_MIN + 50;
-	for (int i = 0; i < size; i++)
-		conesHeight[i] = LIFT_MIN + (120 * i);
-
-	// Initializing the lfit values for autostack release
-	// conesDown[0] is the same as conesHeight[0] beacause it is the bottom of the lift
-	coneDown[0] = LIFT_MIN;
-	for (int i = 1; i < size; i++)
-		coneDown[i] = conesHeight[i] - 60;
-}
-
-void initConeVals()
-{
-	conesHeight[0] = 1418;
-	conesHeight[1] = 1524;
-	conesHeight[2] = 1593;
-	conesHeight[3] = 1593 + 181;
-	conesHeight[4] = 1903;
-	conesHeight[5] = conesHeight[4] + 191;
-	conesHeight[6] = conesHeight[5] + 191;
-	conesHeight[7] = 2082;
-	conesHeight[8] = 2251;
-	conesHeight[9] = 0;
-
-	coneDown[0] = 1250;
-	coneDown[1] = 1361;
-	coneDown[2] = 1544;
-	coneDown[3] = 1544 + 181;
-	coneDown[4] = 1774;
-	coneDown[5] = coneDown[4] + 225;
-	coneDown[6] = coneDown[5] + 252;
-	coneDown[7] = 2020;
-	coneDown[8] = 2091;
-	coneDown[9] = 0;
-}
-
-task runAutoStack()
+task startAutoStack()
 {
 	if (isFieldControl)
 	{
@@ -118,7 +119,7 @@ task runAutoStack()
 		if(cones < size)
 		{
 		//	intakeCone(1);
-			autoStackInit(conesHeight[cones], coneDown[cones], false);
+			runAutoStack(conesHeight[cones], coneDown[cones], false);
 			cones++;
 		}
 		autoStackIsOn = false;
@@ -129,46 +130,10 @@ task runAutoStack()
 		if(cones < size)
 		{
 			intakeCone(1);
-			autoStackInit(conesHeight[cones], coneDown[cones], true);
+			runAutoStack(conesHeight[cones], coneDown[cones], true);
 			cones++;
 		}
 		autoStackIsOn = false;
-	}
-}
-
-task autoStack()
-{
-	bool tasksStarted = true;
-	while(true)
-	{
-		if (vexRT(Btn5U) && !autoStackIsOn) // Runs AutoStack
-		{
-			tasksStarted = false;
-
-      intakeIsActive = false;
-      barIsActive = false;
-      liftIsActive = false;
-
-
-			startTask(runAutoStack);
-		}
-		else if (vexRT(Btn5D) && autoStackIsOn) // Cancels autoStack
-		{
-			stopTask(runAutoStack);
-
-			autoStackIsOn = false;
-		}
-		else if (!tasksStarted && !autoStackIsOn) // Restarts all tasks in the event that they are not running
-		{
-			tasksStarted = true;
-
-      intakeIsActive = true;
-      barIsActive = true;
-      liftIsActive = true;
-
-		}
-
-		sleep (100);
 	}
 }
 
@@ -219,9 +184,52 @@ task autoStackControl()
 			cones = 0;
 
 		if (vexRT[Btn6UXmtr2])
+		{
+			while (vexRT[Btn6UXmtr2]) {}
 			cones++;
+		}
 		else if (vexRT[Btn6DXmtr2])
+		{
+			while (vexRT[Btn6DXmtr2]) {}
 			cones--;
+		}
+
+		sleep (50);
+	}
+}
+
+task autoStack()
+{
+	startTask(autoStackControl);
+	bool tasksStarted = true;
+	while(true)
+	{
+		if (vexRT(Btn5U) && !autoStackIsOn) // Runs AutoStack
+		{
+			tasksStarted = false;
+
+      intakeIsActive = false;
+      barIsActive = false;
+      liftIsActive = false;
+
+
+			startTask(startAutoStack);
+		}
+		else if (vexRT(Btn5D) && autoStackIsOn) // Cancels AutoStack
+		{
+			stopTask(startAutoStack);
+
+			autoStackIsOn = false;
+		}
+		else if (!tasksStarted && !autoStackIsOn) // Restarts all tasks in the event that they are not running
+		{
+			tasksStarted = true;
+
+      intakeIsActive = true;
+      barIsActive = true;
+      liftIsActive = true;
+
+		}
 
 		sleep (100);
 	}
