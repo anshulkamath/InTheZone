@@ -56,7 +56,7 @@ task moGoSet()
 		// Bang-bang the mobile goal
 		if (moGoIsUp)
 		{
-			if (SensorValue(moGoPot) < MOGO_UP - lBound)
+			if (SensorValue[moGoPot] < MOGO_UP - lBound)
 				barPwr = UPPER_PWR;
 			else if (SensorValue(moGoPot) < MOGO_UP - uBound)
 				barPwr = LOWER_PWR;

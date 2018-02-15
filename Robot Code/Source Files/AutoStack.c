@@ -3,7 +3,6 @@
 #define AUTOSTACK_H
 
 #include "Vex_Competition_Includes.c"
-#include "Motors and Sensors.c"
 #include "Variables.c"
 #include "Autonomous Control.c"
 
@@ -11,7 +10,7 @@
 task releaseCone()
 {
 	motor[intake] = -100;
-	sleep(500);
+	sleep(250);
 	motor[intake] = 0;
 }
 
@@ -25,20 +24,22 @@ void autoStackInit(int height, int down, bool driver)
 	// Moves the bar up
 	barIsUp = true;
 	while(SensorValue[barPot] < BAR_UP) {}
-
+	//startTask(releaseCone);
+	//sleep(250);
 	// Moves the lift down to stack
-	motor[lLift] = motor[rLift] = -70;
-	while(SensorValue[liftPot] > down)
+	motor[lLift] = motor[rLift] = -76;
+ while(SensorValue[liftPot] > down)
 	{
 		// Runs the intake out as the lift is going down
-		if (SensorValue(liftPot) > down + 50)
+		if (SensorValue(liftPot) < down+60)
 			startTask(releaseCone);
+
 	}
 	motor[lLift] = motor[rLift] = 0;
 
 	// Moves lift up to get out of stack
 	motor[lLift] = motor[rLift] = 60;
-	while(SensorValue[liftPot] <  height - 100) {}
+	while(SensorValue[liftPot] <  height) {}
 	motor[lLift] = motor[rLift] = 0;
 
 	// Moves the bar to bottom position
@@ -73,7 +74,7 @@ void autoStackInit(int height, int down, bool driver)
 void autoConeInitVals()
 {
 	// Initializing the lift values for autostack
-	conesHeight[0] = LIFT_MIN + 40;
+	conesHeight[0] = LIFT_MIN + 50;
 	for (int i = 0; i < size; i++)
 		conesHeight[i] = LIFT_MIN + (120 * i);
 
@@ -116,7 +117,7 @@ task runAutoStack()
 		autoStackIsOn = true;
 		if(cones < size)
 		{
-			intakeCone(1);
+		//	intakeCone(1);
 			autoStackInit(conesHeight[cones], coneDown[cones], false);
 			cones++;
 		}
@@ -216,8 +217,11 @@ task autoStackControl()
 
 		if (vexRT[Btn5UXmtr2])
 			cones = 0;
-		else if (vexRT[Btn5DXmtr2])
+
+		if (vexRT[Btn6UXmtr2])
 			cones++;
+		else if (vexRT[Btn6DXmtr2])
+			cones--;
 
 		sleep (100);
 	}

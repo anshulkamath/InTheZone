@@ -3,7 +3,6 @@
 #define AUTONOMOUS_FUNCTIONS_H
 
 #include "Vex_Competition_Includes.c"
-#include "Motors and Sensors.c"
 #include "Variables.c"
 #include "Debug.c"
 #include "GyroLib.c"
@@ -190,6 +189,18 @@ task rDrivePID()
 }
 
 // Lift PID (not specifically lLift)
+task liftStraight()
+{
+	while(true)
+	{
+		float p = .8;
+		float t = p * (SensorValue[liftPot]+60 - SensorValue[liftPot2]);
+		motor[lLift] += t+13;
+		motor[rLift] -= t-.25*60;
+		sleep(10);
+	}
+}
+
 task lLiftPID()
 {
 	float P, I, D;
@@ -217,7 +228,8 @@ task lLiftPID()
 
 		lastError = error;
 		lLiftPwr = P + I + D;
-		motor[lLift] = motor[rLift] = lLiftPwr;
+		motor[lLift] = lLiftPwr ;
+		motor[rLift] = rLiftPwr ;
 
 		//display( (int)P , (int)I , (int)D ,error,lLiftPwr,liftTarget,SensorValue(rLiftPot));
 		sleep (100);

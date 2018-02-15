@@ -3,7 +3,7 @@
 #define AUTONOMOUS_H
 
 #include "Vex_Competition_Includes.c"
-#include "Motors and Sensors.c"
+//#include "Motors and Sensors.c"
 #include "Variables.c"
 #include "LCD Code.c"
 #include "Autonomous Control.c"
@@ -229,11 +229,8 @@ task autonomous()
     // 3 - 10 Pt Blue
     // 4 - 5 Pt Red
     // 5 - 5 Pt Blue
-		startTask(delayMGoalThrow);
-		forward(2020);
-		startTask(MGoalUp);
-		sleep(500);
-		backward(1500);
+    grabMogoOtherSide();
+    sleep(350);
 		right(900);
     switch(autonCount)
     {

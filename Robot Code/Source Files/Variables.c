@@ -13,10 +13,10 @@ int driveTarget = 0;
 int liftTarget = 0;
 
 // Sensor Values - CONSTANTS
-const int LIFT_MIN = 1426;
+const int LIFT_MIN = 1456;
 const int LIFT_MID = 0;
 const int LIFT_MAX  = 0;
-const int LIFT_DRIVER = 1742;
+const int LIFT_DRIVER = 1950;
 
 const int BAR_UP = 3600;
 const int BAR_DOWN = 1875;
