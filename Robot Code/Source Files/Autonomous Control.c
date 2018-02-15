@@ -189,14 +189,14 @@ task rDrivePID()
 }
 
 // Lift PID (not specifically lLift)
-task liftStraight()
+task stabilizeLift()
 {
 	while(true)
 	{
-		float p = .8;
-		float t = p * (SensorValue[liftPot]+60 - SensorValue[liftPot2]);
-		motor[lLift] += t+13;
-		motor[rLift] -= t-.25*60;
+		float kp = .8;
+		float P = kp * (SensorValue[liftPot] + 60 - SensorValue[liftPot2]);
+		motor[lLift] += P + 13;
+		motor[rLift] -= P -.25*60;
 		sleep(10);
 	}
 }

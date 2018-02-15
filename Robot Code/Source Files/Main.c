@@ -219,12 +219,13 @@ task usercontrol()
 	startTask(controller, 130);
 	startTask(autoStack);
 	startTask(autoStackControl);
-	startTask(liftStraight);
+	startTask(stabilizeLift);
 
 
 	while (true)
 	{
-		liftPott = SensorValue[liftPot];
+		int leftPot = SensorValue(liftPot);
+		int rightPot = SensorValue(liftPot2);
 		//writeDebugStreamLine("%f %f", GyroGetAngle(), GyroAngleAbsGet());
 	}
 }
