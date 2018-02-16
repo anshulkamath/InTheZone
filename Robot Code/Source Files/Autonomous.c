@@ -222,6 +222,9 @@ task autonomous()
 {
     clearDebugStream();
     datalogClear();
+		stopTask(runLCD);
+		clearLCDLine(0);
+		clearLCDLine(1);
 
     // 0 - 20 Pt Right Red
     // 1 - 20 Pt Left Blue

@@ -376,7 +376,7 @@ task runLCD()
       displayLCDCenteredString(0, "DO NOT TOUCH");
       displayLCDCenteredString(1, "Gyro is calibrating...");
     }
-    while (true)
+    while ( true )
     {
       switch (lcdCount)
       {

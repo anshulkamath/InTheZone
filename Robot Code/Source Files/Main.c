@@ -190,7 +190,8 @@ void place()
 // Pre-Auton
 void pre_auton()
 {
-	bStopTasksBetweenModes = true;
+	bDisplayCompetitionStatusOnLcd = false;
+	bStopTasksBetweenModes = false;
 
 	// Initializes the cones arrays
 	autoConeInitVals();
@@ -213,6 +214,9 @@ task usercontrol()
 {
 	clearDebugStream();
 	datalogClear();
+	stopTask(runLCD);
+	clearLCDLine(0);
+	clearLCDLine(1);
 
 	// Starting Tasks
 	startTask(controller, 130);
