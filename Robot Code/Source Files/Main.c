@@ -68,7 +68,12 @@ task controller()
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
-					mGoalPwr = 100;
+				{
+					if (SensorValue(moGoPot) >= MOGO_UP)
+						mGoalPwr = 0;
+					else
+						mGoalPwr = 100;
+				}
 				else if (vexRT[Btn7D] && cones < 9)
 					mGoalPwr = -100;
 				else if (vexRT[Btn7D] && cones >= 9)
@@ -122,12 +127,7 @@ task controller()
 			if (barIsActive)
 			{
 				if (vexRT[Btn8U])
-				{
-						if (SensorValue(moGoPot) >= MOGO_UP)
-							barPwr = 0;
-						else
-							barPwr = 100;
-				}
+					barPwr = 100;
 				else if (vexRT[Btn8D])
 					barPwr = -100;
 				else
