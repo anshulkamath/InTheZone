@@ -432,7 +432,7 @@ task MGoalUp()
 	}
 	motor[moGo] = 0;
 
-	sleep(1000);
+	sleep(300);
 	intakeCone(0);
 }
 
