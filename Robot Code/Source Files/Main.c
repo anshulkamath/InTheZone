@@ -122,7 +122,12 @@ task controller()
 			if (barIsActive)
 			{
 				if (vexRT[Btn8U])
-					barPwr = 100;
+				{
+						if (SensorValue(moGoPot) >= MOGO_UP)
+							barPwr = 0;
+						else
+							barPwr = 100;
+				}
 				else if (vexRT[Btn8D])
 					barPwr = -100;
 				else
