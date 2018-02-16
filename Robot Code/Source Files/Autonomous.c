@@ -102,7 +102,6 @@ void grabMogo()
 	forward(1350);
 
 	startTask(MGoalUp);
-	intakeCone(0);
 
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 100;
 	sleep(200);
@@ -128,7 +127,6 @@ void grabMogoOtherSide()
 	forward(1350);
 
 	startTask(MGoalUp);
-	intakeCone(0);
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 100;
 	sleep(400);
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
@@ -143,13 +141,22 @@ void grabMogoOtherSide()
 
 void matchAutonRightRed()
 {
+	intakeCone(1);
 	grabMogo();
 
 	right(450);
-	backward(750);
+	backward(400);
 	right(900);
+	//startTask(delayMGoalThrow);
+	motor[leftB] = motor[rightB] = motor[leftF] = motor[rightF] = 100;
+
+	forwardNonPID(100);
 	startTask(delayMGoalThrow);
-	timeforward(650,1200);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 100;
+	sleep(800);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -50;
+	sleep(200);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
 	deployMGoal(1);
 	backward(100);
 	startTask(MGoalUp);
@@ -162,10 +169,15 @@ void matchAutonLeftBlue()
 	grabMogo();
 
 	left(450);
-	backward(750);
+	backward(700);
 	left(900);
 	startTask(delayMGoalThrow);
-	timeforward(650,1200);
+	timeforward(400,1200);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 100;
+	sleep(800);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -50;
+	sleep(200);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
 	deployMGoal(1);
 	backward(100);
 	startTask(MGoalUp);
@@ -232,9 +244,19 @@ task autonomous()
     // 3 - 10 Pt Blue
     // 4 - 5 Pt Red
     // 5 - 5 Pt Blue
-    grabMogoOtherSide();
+    /*grabMogoOtherSide();
     sleep(350);
-		right(900);
+		right(900);*/
+
+		//forward(500);
+		//backward(500);
+		//left(900);
+		//sleep(500);
+		//right(900);
+		//while(true);
+
+
+
     switch(autonCount)
     {
       case -1:

@@ -21,8 +21,8 @@ const int LIFT_DRIVER = 1950;
 const int BAR_UP = 3680;
 const int BAR_DOWN = 1955;
 
-const int MOGO_UP = 0;
-const int MOGO_DOWN = 0;
+const int MOGO_UP = 2225;
+const int MOGO_DOWN = 650;
 
 // Toggle Variables
 bool barIsUp = true;
@@ -32,6 +32,7 @@ bool isFieldControl = true;
 bool moGoIsManual = true;
 bool moGoIsUp = true;
 bool autoStackIsOn = false;
+bool longDelay = false;
 
 bool driveIsActive = true;
 bool liftIsActive = true;

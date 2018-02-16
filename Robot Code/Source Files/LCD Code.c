@@ -22,8 +22,8 @@ void waitForRelease()
 void redRightSelector()
 {
 	int tempCount = 0;
-	int tempNum = 0;
-	while(nLCDButtons != centerButton)
+	int tempNum = -1;
+	while(tempNum == -1)
 	{
 		switch (tempCount)
 		{
@@ -84,7 +84,7 @@ void redLeftSelector()
 {
 	int tempCount = 0;
 	int tempNum = 0;
-	while(nLCDButtons != centerButton)
+	while(tempNum == 0)
 	{
 		switch (tempCount)
 		{
@@ -129,7 +129,7 @@ void blueRightSelector()
 {
 	int tempCount = 0;
 	int tempNum = 0;
-	while(nLCDButtons != centerButton)
+	while(tempNum == 0)
 	{
 		switch (tempCount)
 		{
@@ -174,7 +174,7 @@ void blueLeftSelector()
 {
 		int tempCount = 0;
 		int tempNum = 0;
-	while(nLCDButtons != centerButton)
+	while(tempNum == 0)
 	{
 
 		switch (tempCount)
@@ -229,6 +229,7 @@ void blueLeftSelector()
 	        break;
 		}
 	}
+	autonCount = tempNum;
 }
 void autonSelector()
 {

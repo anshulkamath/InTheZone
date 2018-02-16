@@ -276,6 +276,13 @@ void forward(int len)
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
+void forwardNonPID(int len)
+{
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 75;
+	while(SensorValue(lDriveQuad) < (len - driveRange));
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
+}
+
 void timeforward(int len, int time)
 {
 	isOpposite = false;
@@ -396,24 +403,37 @@ void deployMGoal(int position)
 // Auton Tasks
 task delayMGoalThrow()
 {
-	sleep(500);
+	sleep(300);
+	if(longDelay)
+	{
+		sleep(700);
+	}
 	motor[moGo] = 100;
-	sleep(400);
+	while(SensorValue[moGoPot] >MOGO_DOWN)
+	{
+	}
 	motor[moGo] = 0;
 }
 
 task MGoalDown()
 {
 	motor[moGo] = 100;
-	sleep(1500);
+	while(SensorValue[moGoPot] > MOGO_DOWN)
+	{
+	}
 	motor[moGo] = 0;
 }
 
 task MGoalUp()
 {
 	motor[moGo] = -100;
-	sleep(1000);
+	while(SensorValue[moGoPot] < MOGO_UP)
+	{
+	}
 	motor[moGo] = 0;
+
+	sleep(1000);
+	intakeCone(0);
 }
 
 #endif
