@@ -439,7 +439,7 @@ task MGoalDown()
 task MGoalUp()
 {
 	motor[moGo] = -100;
-	while(SensorValue[moGoPot] < MOGO_UP)
+	while(SensorValue[moGoPot] < MOGO_UP-300)
 	{
 	}
 	motor[moGo] = 0;

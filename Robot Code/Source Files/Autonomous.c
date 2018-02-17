@@ -99,15 +99,41 @@ void grabMogo()
 	startTask(MGoalDown);
 	//barIsUp = true;
 	sleep(500);
-	forward(1350);
-
+	forward(1450);
+	//forwardNonPID(350, 50);
+	sleep(500);
+	isMogoUp = false;
 	startTask(MGoalUp);
-
-	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 100;
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 40;
 	sleep(200);
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
 	sleep(600);
 
+	while(!isMogoUp);
+//	forwardNonPID(100);
+	stopTask(lLiftPID);
+	startTask(barSet);
+	barIsUp = false;
+	while(SensorValue[barPot] > BAR_DOWN) {}
+	motor[lLift] = motor[rLift] = -100;
+	while(SensorValue[liftPot] > LIFT_MIN + 200) {}
+	motor[lLift] = motor[rLift] = -60;
+	while(SensorValue[liftPot] > LIFT_MIN) {}
+	motor[lLift] = motor[rLift] = 0;
+	sleep(200);
+	motor[intake] = 70;
+	forwardNonPID(120);
+	motor[intake] = 30;
+	cones = 1;
+	if(cones < size)
+	{
+		//	intakeCone(1);
+		runAutoStack(conesHeight[cones], coneDown[cones], false);
+		cones++;
+	}
+	liftTarget = LIFT_MIN + 200;
+	startTask(lLiftPID);
+	barIsUp = true;
 	writeDebugStreamLine("%d",GyroGetAngle());
 	turnTo(0);
 	writeDebugStreamLine("%d",GyroGetAngle());
@@ -145,7 +171,7 @@ void matchAutonRightRed()
 	grabMogo();
 
 	right(450);
-	backward(725);
+	backward(775);
 	right(1000);
 	//startTask(delayMGoalThrow);
 	//startTask(moGoSet);
