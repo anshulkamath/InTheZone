@@ -181,10 +181,10 @@ void matchAutonRightRed()
 //	longDelay = true;
 //	startTask(delayMGoalThrow);
 	motor[moGo] = 90;
-	while(SensorValue[moGoPot] > 1720 + 200);
+	while(SensorValue[moGoPot] > MOGO_THROW + 200);
 	motor[moGo] = 0;
 	forwardNonPID(300);
-	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -127;
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -100;
 	sleep(200);
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
 //	deployMGoal(1);

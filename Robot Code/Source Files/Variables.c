@@ -23,6 +23,7 @@ const int BAR_UP = 3680;
 const int BAR_DOWN = 1955;
 
 const int MOGO_UP = 2225;
+const int MOGO_THROW = 1720;
 const int MOGO_DOWN = 650;
 
 // Toggle Variables

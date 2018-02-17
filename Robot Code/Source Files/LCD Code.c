@@ -195,7 +195,7 @@ void blueLeftSelector()
 	        }
 	        tempNum = 1;
 	        break;
-			case 1:
+       case 1:
 	        displayLCDCenteredString(0, "10 Pt Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
@@ -375,7 +375,7 @@ task runLCD()
     while (gyroIsCalibrating)
     {
       displayLCDCenteredString(0, "DO NOT TOUCH");
-      displayLCDCenteredString(1, "Gyro is calibrating...");
+      displayLCDCenteredString(1, "Gyro calibrating");
     }
     while ( true )
     {
@@ -446,7 +446,6 @@ task runLCD()
           else if (nLCDButtons == leftButton)
           {
             waitForRelease();
-
             lcdCount--;
           }
           else if(nLCDButtons == centerButton)
