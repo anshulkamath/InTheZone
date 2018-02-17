@@ -57,11 +57,11 @@ task moGoSet()
 		if (moGoIsUp)
 		{
 			if (SensorValue[moGoPot] < MOGO_UP - lBound)
-				barPwr = UPPER_PWR;
+				mGoalPwr = UPPER_PWR;
 			else if (SensorValue(moGoPot) < MOGO_UP - uBound)
-				barPwr = LOWER_PWR;
+				mGoalPwr = LOWER_PWR;
 			else
-				barPwr = HOLD_PWR;
+				mGoalPwr = HOLD_PWR;
 		}
 		else
 		{

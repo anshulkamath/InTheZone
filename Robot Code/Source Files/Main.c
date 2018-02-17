@@ -68,14 +68,14 @@ task controller()
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
+						mGoalPwr = 100;
+				else if (vexRT[Btn7D] && cones < 9)
 				{
 					if (SensorValue(moGoPot) >= MOGO_UP)
 						mGoalPwr = 0;
 					else
-						mGoalPwr = 100;
+						mGoalPwr = -100;
 				}
-				else if (vexRT[Btn7D] && cones < 9)
-					mGoalPwr = -100;
 				else if (vexRT[Btn7D] && cones >= 9)
 					place();
 				else
@@ -196,6 +196,7 @@ void place()
 // Pre-Auton
 void pre_auton()
 {
+
 	bDisplayCompetitionStatusOnLcd = false;
 	bStopTasksBetweenModes = false;
 

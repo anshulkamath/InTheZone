@@ -89,7 +89,7 @@ task lDrivePID()
 				lDrivePwr = -50;
 		}
 
-		motor[leftB] = motor[leftF] = lDrivePwr;
+		motor[leftB] = motor[leftF] = lDrivePwr*.95;
 
 		sleep (50);
 	}
@@ -179,7 +179,7 @@ task rDrivePID()
 				rDrivePwr = -55;
 		}
 
-		motor[rightB] = motor[rightF] = rDrivePwr;
+		motor[rightB] = motor[rightF] = rDrivePwr*.95;
 
 		//display( (int)P , (int)I , (int)D ,error,rDrivePwr,target,SensorValue(rDriveQuad));
 		//writeDebugStreamLine("%d , %d", rDrivePwr, lDrivePwr);
@@ -276,12 +276,24 @@ void forward(int len)
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
-void forwardNonPID(int len)
+void forwardNonPID(int len, int power)
 {
-	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 75;
-	while(SensorValue(lDriveQuad) < (len - driveRange));
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = power;
+	int temp = SensorValue[lDriveQuad]
+	//motor[moGo] = -40;
+	while(SensorValue(lDriveQuad) -temp < (len - driveRange));
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
+
+void forwardNonPID(int len)
+{
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 127;
+	int temp = SensorValue[lDriveQuad]
+	//motor[moGo] = -40;
+	while(SensorValue(lDriveQuad) -temp < (len - driveRange));
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
+}
+
 
 void timeforward(int len, int time)
 {
@@ -432,8 +444,9 @@ task MGoalUp()
 	}
 	motor[moGo] = 0;
 
-	sleep(300);
+	sleep(200);
 	intakeCone(0);
+	isMogoUp = true;
 }
 
 #endif

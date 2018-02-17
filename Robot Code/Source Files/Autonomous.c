@@ -111,7 +111,7 @@ void grabMogo()
 	writeDebugStreamLine("%d",GyroGetAngle());
 	turnTo(0);
 	writeDebugStreamLine("%d",GyroGetAngle());
-	backward(1750);
+	backward(1600);
 	writeDebugStreamLine("%d",GyroGetAngle());
 }
 
@@ -145,19 +145,23 @@ void matchAutonRightRed()
 	grabMogo();
 
 	right(450);
-	backward(400);
-	right(900);
+	backward(725);
+	right(1000);
 	//startTask(delayMGoalThrow);
+	//startTask(moGoSet);
 	motor[leftB] = motor[rightB] = motor[leftF] = motor[rightF] = 100;
 
-	forwardNonPID(100);
-	startTask(delayMGoalThrow);
-	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 100;
-	sleep(800);
-	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -50;
+	forwardNonPID(450);
+//	longDelay = true;
+//	startTask(delayMGoalThrow);
+	motor[moGo] = 90;
+	while(SensorValue[moGoPot] > 1720 + 200);
+	motor[moGo] = 0;
+	forwardNonPID(300);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -127;
 	sleep(200);
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
-	deployMGoal(1);
+//	deployMGoal(1);
 	backward(100);
 	startTask(MGoalUp);
 	sleep(800);
@@ -166,13 +170,19 @@ void matchAutonRightRed()
 
 void matchAutonLeftBlue()
 {
+	intakeCone(1);
 	grabMogo();
 
 	left(450);
-	backward(700);
+	backward(400);
 	left(900);
-	startTask(delayMGoalThrow);
-	timeforward(400,1200);
+	//startTask(delayMGoalThrow);
+	moGoIsUp = true;
+	startTask(moGoSet);
+	motor[leftB] = motor[rightB] = motor[leftF] = motor[rightF] = 100;
+
+	forwardNonPID(100);
+	moGoIsUp = false;
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 100;
 	sleep(800);
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -50;

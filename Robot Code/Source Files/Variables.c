@@ -11,6 +11,7 @@ int intakePwr = 0;
 // Control Variables
 int driveTarget = 0;
 int liftTarget = 0;
+bool isMogoUp = false;
 
 // Sensor Values - CONSTANTS
 const int LIFT_MIN = 1456;
@@ -63,7 +64,7 @@ bool centerPressed = false;
 string mainBattery, backupBattery;
 
 // LCD Counters
-int autonCount = -1;
+int autonCount = 0;
 int lcdCount = 1;
 int color = -1;
 int side = -1;
