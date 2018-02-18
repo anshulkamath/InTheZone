@@ -24,10 +24,9 @@
 // All includes
 #pragma platform(VEX2)
 #pragma competitionControl(Competition)
+
 #include "Vex_Competition_Includes.c"
-
-#include "User Control Tasks.c"
-
+#include "Driver Control.c"
 #include "Variables.c"
 #include "GyroLib.c"
 #include "AutoStack.c"
@@ -69,15 +68,15 @@ task controller()
 			{
 				if (vexRT[Btn7U])
 						mGoalPwr = 100;
-				else if (vexRT[Btn7D] && cones < 9)
+				else if (vexRT[Btn7D])
 				{
-					if (SensorValue(moGoPot) >= MOGO_UP)
-						mGoalPwr = 0;
-					else
+					if (SensorValue(moGoPot) < MOGO_UP - 300)
 						mGoalPwr = -100;
+					else if (SensorValue(moGoPot) < MOGO_UP)
+						mGoalPwr = -40;
+					else
+						mGoalPwr = 0;
 				}
-				else if (vexRT[Btn7D] && cones >= 9)
-					place();
 				else
 					mGoalPwr = 0;
 
@@ -92,9 +91,9 @@ task controller()
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
-					moGoIsUp = true;
+					mGoalIsUp = true;
 				else if (vexRT[Btn7D] && cones < 9)
-					moGoIsUp = false;
+					mGoalIsUp = false;
 				else if (vexRT[Btn7D] && cones >= 9)
 					place();
 			}
@@ -154,16 +153,16 @@ task controller()
 			if (vexRT[Btn7L])
 			{
 				intakePwr = -100;
-				intakeHold = false;
+				intakeIsHolding = false;
 			}
 			else if (vexRT[Btn7R])
 			{
 				intakePwr = 100;
-				intakeHold = true;
+				intakeIsHolding = true;
 			}
-			else if (intakeHold)
-				intakePwr = 20;
-			else if (!intakeHold)
+			else if (intakeIsHolding)
+				intakePwr = INTAKE_HOLD;
+			else if (!intakeIsHolding)
 				intakePwr = -10;
 
 			motor[intake] = intakePwr;
@@ -171,26 +170,6 @@ task controller()
 
 	}
 }
-
-// Place mobile goal
-void place()
-{
-	// Check to make sure there aren't conflicting motor power sets with task Controller
-	if (!barIsManual)
-		stopTask(barSet);
-
-	moGoIsUp = false;
-	while (SensorValue(moGoPot) > MOGO_DOWN)
-		motor[barL] = motor[barR] = -30;
-
-	intakeCone(0);
-
-	if (!barIsManual)
-		startTask(barSet);
-
-	barIsUp = true;
-}
-
 
 
 // Pre-Auton

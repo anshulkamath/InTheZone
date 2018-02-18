@@ -11,13 +11,13 @@ int intakePwr = 0;
 // Control Variables
 int driveTarget = 0;
 int liftTarget = 0;
-bool isMogoUp = false;
 
 // Sensor Values - CONSTANTS
 const int LIFT_MIN = 1456;
 const int LIFT_MID = 0;
 const int LIFT_MAX  = 0;
 const int LIFT_DRIVER = 1950;
+const int LIFT_STATIONARY = 0;
 
 const int BAR_UP = 3680;
 const int BAR_DOWN = 1955;
@@ -26,13 +26,15 @@ const int MOGO_UP = 2225;
 const int MOGO_THROW = 1720;
 const int MOGO_DOWN = 650;
 
+const int INTAKE_HOLD = 20;
+
 // Toggle Variables
 bool barIsUp = true;
 bool barIsManual = false;
-bool intakeHold = false;
+bool intakeIsHolding = false;
 bool isFieldControl = true;
 bool moGoIsManual = true;
-bool moGoIsUp = true;
+bool mGoalIsUp = true;
 bool autoStackIsOn = false;
 bool longDelay = false;
 
@@ -49,13 +51,8 @@ int turnRange = 10;
 int driveRange = 15;
 
 // Auton Variables
-const int BlueStart =  0;
-const int RedStart = 1365;
-const int NoStart = 2730;
-
-const int fivePtStart = 0;
-const int tenPtStart = 1365;
-const int twentyPtStart = 2730;
+const int NO_CONES = 1600;
+const int ONE_CONE = 1750;
 
 // LCD Variables
 const int NUM_AUTONS = 2;

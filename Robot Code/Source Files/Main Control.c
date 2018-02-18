@@ -1,9 +1,10 @@
 // Stop recursive includes
-#ifndef USER_CONTROL_TASKS_H
-#define USER_CONTROL_TASKS_H
+#ifndef DRIVER_CONTROL_H
+#define DRIVER_CONTROL_H
 
 #include "Variables.c"
 
+// Sets the four-bar position
 task barSet()
 {
 	while (true)
@@ -42,6 +43,7 @@ task barSet()
 	}
 }
 
+// Sets the mobile goal position
 task moGoSet()
 {
 	while (true)
@@ -66,18 +68,54 @@ task moGoSet()
 		else
 		{
 			if (SensorValue(moGoPot) > MOGO_DOWN + lBound)
-				barPwr = -UPPER_PWR;
+				mGoalPwr = -UPPER_PWR;
 			else if (SensorValue(moGoPot) > MOGO_DOWN + uBound)
-				barPwr = -LOWER_PWR;
+				mGoalPwr = -LOWER_PWR;
 			else
-				barPwr = -HOLD_PWR;
+				mGoalPwr = -HOLD_PWR;
 		}
 
 		// Commented out because replaced in controller task
-		motor[moGo] = barPwr;
+		motor[moGo] = mGoalPwr;
 
 		sleep(50);
 	}
+}
+
+// Runs intake accordingly
+void intakeCone(int pos)
+{
+	if (pos == 1)
+	{
+		motor[intake] = 100;
+		sleep(500);
+		motor[intake] = 30;
+	}
+	else if (pos == 0)
+	{
+		motor[intake] = -100;
+		sleep(500);
+		motor[intake] = 0;
+	}
+}
+
+// Place mobile goal
+void place()
+{
+	// Check to make sure there aren't conflicting motor power sets with task Controller
+	if (!barIsManual)
+		stopTask(barSet);
+
+	mGoalIsUp = false;
+	while (SensorValue(moGoPot) > MOGO_DOWN)
+		motor[barL] = motor[barR] = -30;
+
+	intakeCone(0);
+
+	if (!barIsManual)
+		startTask(barSet);
+
+	barIsUp = true;
 }
 
 #endif

@@ -1,16 +1,12 @@
 // Stop recursive includes
-#ifndef AUTONOMOUS_CONTROL_H
-#define AUTONOMOUS_CONTROL_H
+#ifndef AUTONOMOUS_FUNCTIONS_H
+#define AUTONOMOUS_FUNCTIONS_H
 
 #include "Vex_Competition_Includes.c"
 #include "Variables.c"
 #include "Debug.c"
 #include "GyroLib.c"
-#include "Driver Control.c"
 
-// Autonomous Tasks
-
-// Drive PID
 task lDrivePID()
 {
 	SensorValue(lDriveQuad) = 0;
@@ -240,33 +236,29 @@ task lLiftPID()
 	}
 }
 
-// Mobile Goal Control
-task mGoalAuton()
+void intakeCone(int pos)
 {
-  // mGoalIsUp is initialized to true
-  if (moGoIsUp) // If it is up, run it down
-  {
-    motor[moGo] = 100;
-  	while(SensorValue[moGoPot] > MOGO_DOWN) {}
-  	motor[moGo] = 0;
-    moGoIsUp = false;
-  }
-  else
-  {
-    motor[moGo] = -100;
-  	while(SensorValue[moGoPot] < MOGO_UP - 300) {}
-  	motor[moGo] = 0;
-  	moGoIsUp = true;
-
-    sleep(200);
-    intakeCone(0);
-    cones = 1;
-  }
+	if (pos == 1)
+	{
+		motor[intake] = 100;
+		sleep(500);
+		motor[intake] = 30;
+	}
+	else if (pos == 0)
+	{
+		motor[intake] = -100;
+		sleep(500);
+		motor[intake] = 0;
+	}
 }
 
-// Auton Control functions
 
-// Drive Functions
+
+
+
+
+
+// Drive Auton Functions
 void forward(int len)
 {
 	isOpposite = false;
@@ -280,6 +272,15 @@ void forward(int len)
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
+void forwardNonPID(int len, int power)
+{
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = power;
+	int temp = SensorValue[lDriveQuad];
+	//motor[moGo] = -40;
+	while(SensorValue(lDriveQuad) -temp < (len - driveRange));
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
+}
+
 void forwardNonPID(int len)
 {
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 100;
@@ -289,12 +290,23 @@ void forwardNonPID(int len)
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
-void forwardNonPID(int len, int power)
+
+void timeforward(int len, int time)
 {
-	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = power;
-	int temp = SensorValue[lDriveQuad];
-	//motor[moGo] = -40;
-	while(SensorValue(lDriveQuad) -temp < (len - driveRange));
+	isOpposite = false;
+	driveTarget = len;
+	startTask(lDrivePID);
+	startTask(rDrivePID);
+	clearTimer(T1);
+	while(SensorValue(lDriveQuad) < (len - driveRange))
+	{
+		if(time1[T1] > time){
+			break;
+		}
+	};
+	sleep(500);
+	stopTask(lDrivePID);
+	stopTask(rDrivePID);
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
@@ -311,7 +323,25 @@ void backward(int len)
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
-// Gyro Functions
+void timebackward(int len, int time)
+{
+	isOpposite = false;
+	driveTarget = -len;
+	startTask(lDrivePID);
+	startTask(rDrivePID);
+	clearTimer(T1);
+	while(SensorValue(lDriveQuad) > (-len + driveRange))
+	{
+		if(time1[T1] > time){
+			break;
+		}
+	};
+	sleep(500);
+	stopTask(lDrivePID);
+	stopTask(rDrivePID);
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
+}
+
 void right(int len)
 {
 	int startangle = GyroGetAngle();
@@ -358,6 +388,57 @@ void turnTo(int angle)
 		motor[rightB] = motor[rightF] = pwr;
 	}
 	while(abs(GyroGetAngle() - angle) > range){}
+}
+
+void deployMGoal(int position)
+{
+	// Deploys MGoal
+	if (position == 1)
+	{
+		motor[moGo] = 100;
+		sleep(1500);
+		motor[moGo] = 0;
+	}
+	// Brings in MGoal
+	if (position == 0)
+	{
+		motor[moGo] = -100;
+		sleep(1000);
+		motor[moGo] = 0;
+	}
+}
+
+// Auton Tasks
+task delayMGoalThrow()
+{
+	sleep(300);
+	if(longDelay)
+	{
+		sleep(700);
+	}
+	motor[moGo] = 100;
+	while(SensorValue[moGoPot] > MOGO_DOWN)
+	{
+	}
+	motor[moGo] = 0;
+}
+
+task MGoalDown()
+{
+	motor[moGo] = 100;
+	while(SensorValue[moGoPot] > MOGO_DOWN) {}
+	motor[moGo] = 0;
+}
+
+task MGoalUp()
+{
+	motor[moGo] = -100;
+	while(SensorValue[moGoPot] < MOGO_UP-300) {}
+	motor[moGo] = 0;
+
+	sleep(200);
+	intakeCone(0);
+	isMogoUp = true;
 }
 
 #endif

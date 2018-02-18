@@ -5,6 +5,7 @@
 #include "Vex_Competition_Includes.c"
 #include "Variables.c"
 #include "Autonomous Control.c"
+#include "Driver Control.c"
 
 // Made it a task so it will run concurrently with the autostack function
 task releaseCone()
