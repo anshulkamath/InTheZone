@@ -252,11 +252,12 @@ task mGoalAuton()
     motor[moGo] = -100;
   	while(SensorValue[moGoPot] < MOGO_UP - 300) {}
   	motor[moGo] = 0;
-  	moGoIsUp = true;
 
-    sleep(200);
+
+    sleep(400);
     intakeCone(0);
-    cones = 1;
+    cones++;
+  	moGoIsUp = true;
   }
 }
 
@@ -354,6 +355,8 @@ void turnTo(int angle)
 		motor[rightB] = motor[rightF] = pwr;
 	}
 	while(abs(GyroGetAngle() - angle) > range){}
+	motor[leftB] = motor[leftF] = 0;
+	motor[rightB] = motor[rightF] = 0;
 }
 
 #endif

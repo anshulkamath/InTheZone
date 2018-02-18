@@ -19,14 +19,14 @@ const int LIFT_MAX  = 0;
 const int LIFT_DRIVER = 1950;
 const int LIFT_STATIONARY = 0;
 
-const int BAR_UP = 3680;
-const int BAR_DOWN = 1955;
+const int BAR_UP = 3900;
+const int BAR_DOWN = 1885;
 
-const int MOGO_UP = 2225;
-const int MOGO_THROW = 1720;
-const int MOGO_DOWN = 650;
+const int MOGO_UP = 2325;
+const int MOGO_THROW = 1722;
+const int MOGO_DOWN = 690;
 
-const int INTAKE_HOLD = 20;
+const int INTAKE_HOLD = 40;
 
 // Toggle Variables
 bool barIsUp = true;
@@ -51,7 +51,7 @@ int driveRange = 15;
 
 // Auton Variables
 const int NO_CONES = 1600;
-const int ONE_CONE = 1750;
+const int ONE_CONE = 1650;
 
 // LCD Variables
 //const int NUM_AUTONS = 2;

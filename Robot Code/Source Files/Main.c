@@ -3,6 +3,7 @@
 #pragma config(Sensor, in3,    barPot,         sensorPotentiometer)
 #pragma config(Sensor, in4,    gyroscope,      sensorGyro)
 #pragma config(Sensor, in5,    liftPot2,       sensorPotentiometer)
+#pragma config(Sensor, dgtl4,  moGoLim,      sensorTouch)
 #pragma config(Sensor, dgtl7,  lDriveQuad,     sensorQuadEncoder)
 #pragma config(Sensor, dgtl9,  rDriveQuad,     sensorQuadEncoder)
 #pragma config(Motor,  port1,           barL,          tmotorVex393HighSpeed_HBridge, openLoop, reversed)
