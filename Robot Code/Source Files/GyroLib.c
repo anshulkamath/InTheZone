@@ -153,7 +153,7 @@ GyroInit( tSensors port  )
 {
     theGyro.port = port;
 
-    StartTask( GyroTask );
+    startTask( GyroTask );
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -166,8 +166,8 @@ GyroInit( tSensors port  )
 void
 GyroReinit()
 {
-    StopTask( GyroTask );
-    StartTask( GyroTask );
+    stopTask( GyroTask );
+    startTask( GyroTask );
 }
 
 /*-----------------------------------------------------------------------------*/

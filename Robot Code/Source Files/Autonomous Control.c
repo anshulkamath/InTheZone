@@ -2,11 +2,7 @@
 #ifndef AUTONOMOUS_CONTROL_H
 #define AUTONOMOUS_CONTROL_H
 
-#include "Vex_Competition_Includes.c"
-#include "Variables.c"
 #include "Debug.c"
-#include "GyroLib.c"
-#include "Driver Control.c"
 
 // Autonomous Tasks
 
@@ -26,7 +22,7 @@ task lDrivePID()
 	float kd;
 	int range;
 
-	if(!isopposite)
+	if(!isOpposite)
 	{
 		kp = .7;
 		ki = 0.15;
@@ -114,7 +110,7 @@ task rDrivePID()
 	float kd;
 	int range;
 
-	if(!isopposite)
+	if(!isOpposite)
 	{
 		kp = .9;//.6;
 		ki = 0;//0.02;

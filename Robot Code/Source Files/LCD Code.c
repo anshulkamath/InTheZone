@@ -2,7 +2,6 @@
 #ifndef LCD_CODE_H
 #define LCD_CODE_H
 
-#include "Vex_Competition_Includes.c"
 #include "Variables.c"
 
 // LCD Control Functions

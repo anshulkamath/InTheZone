@@ -26,15 +26,12 @@
 #pragma competitionControl(Competition)
 
 #include "Vex_Competition_Includes.c"
-#include "Driver Control.c"
+#include "Main Control.c"
 #include "Variables.c"
 #include "GyroLib.c"
 #include "AutoStack.c"
 #include "LCD Code.c"
 #include "Autonomous.c"
-
-
-void place();
 
 task controller()
 {
@@ -91,9 +88,9 @@ task controller()
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
-					mGoalIsUp = true;
+					moGoIsUp = true;
 				else if (vexRT[Btn7D] && cones < 9)
-					mGoalIsUp = false;
+					moGoIsUp = false;
 				else if (vexRT[Btn7D] && cones >= 9)
 					place();
 			}
@@ -211,8 +208,8 @@ task usercontrol()
 
 	while (true)
 	{
-		int leftPot = SensorValue(liftPot);
-		int rightPot = SensorValue(liftPot2);
+		//int leftPot = SensorValue(liftPot);
+		//int rightPot = SensorValue(liftPot2);
 		//writeDebugStreamLine("%f %f", GyroGetAngle(), GyroAngleAbsGet());
 	}
 }

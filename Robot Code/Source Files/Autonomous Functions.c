@@ -2,8 +2,6 @@
 #define AUTONOMOUS_FUNCTIONS_H
 
 #include "Variables.c"
-#include "Autonomous Control.c"
-#include "Driver Control.c"
 
 // Autonomous functions
 void deploy()
@@ -97,9 +95,9 @@ void scoreGoal20(bool isRed, int distBack)
 
   turnTo(0); // 1
 	backward(distBack); // 2
-  isRed : right(450) ? left (450); // 3
+  if(isRed) right(450); else left (450); // 3
 	backward(775); // 4
-	isRed : right(1000) ? left (1000); // 5
+	if(isRed) right(1000); else left (1000); // 5
   forwardNonPID(450); // 6
 
   // 7
@@ -133,9 +131,9 @@ void scoreGoal10(bool isRed, int distBack)
 
   turnTo(0); // 1
 	backward(distBack); // 2
-  isRed : right(450) ? left (450); // 3
+  if(isRed) right(450); else left (450); // 3
 	backward(100); // 4
-	isRed : right(1000) ? left (1000); // 5
+	if(isRed) right(1000); else left (1000); // 5
   forward(300); // 6
   startTask(mGoalAuton); // 7
 
@@ -157,7 +155,7 @@ void scoreGoal5(bool isRed, int distBack)
 
   turnTo(0); // 1
 	backward(distBack); // 2
-  isRed : right(1800) ? left (1800); // 3
+  if(isRed) right(1800); else left (1800); // 3
   forward(300); // 4
   startTask(mGoalAuton); // 5
   sleep(800);
