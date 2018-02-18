@@ -14,7 +14,7 @@
 void matchAuton_RED_24()
 {
   deploy();
-	grabMogo();
+  grabMogo();
   grabCone();
   scoreGoal20(true, ONE_CONE);
 }
@@ -22,7 +22,7 @@ void matchAuton_RED_24()
 void matchAuton_BLUE_24()
 {
   deploy();
-	grabMogo();
+  grabMogo();
   grabCone();
   scoreGoal20(false, ONE_CONE);
 }
@@ -73,9 +73,9 @@ task autonomous()
 {
     clearDebugStream();
     datalogClear();
-		stopTask(runLCD);
-		clearLCDLine(0);
-		clearLCDLine(1);
+    stopTask(runLCD);
+    clearLCDLine(0);
+    clearLCDLine(1);
 
     // 0 - 20 Pt Right Red
     // 1 - 20 Pt Left Blue
