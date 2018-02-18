@@ -106,7 +106,7 @@ void place()
 	if (!barIsManual)
 		stopTask(barSet);
 
-	mGoalIsUp = false;
+	moGoIsUp = false;
 	while (SensorValue(moGoPot) > MOGO_DOWN)
 		motor[barL] = motor[barR] = -30;
 

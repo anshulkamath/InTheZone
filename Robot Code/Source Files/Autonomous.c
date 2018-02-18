@@ -2,19 +2,19 @@
 #ifndef AUTONOMOUS_H
 #define AUTONOMOUS_H
 
-#include "Vex_Competition_Includes.c"
-//#include "Motors and Sensors.c"
 #include "Variables.c"
-#include "LCD Code.c"
-#include "Autonomous Control.c"
-#include "GyroLib.c"
+#include "Autonomous Functions.c"
 
 // Naming conventions: "matchAuton_COLOR_PTVALUE"
 
 void matchAuton_RED_24()
 {
   deploy();
+<<<<<<< HEAD
   grabMogo();
+=======
+	grabMGoal();
+>>>>>>> ce213c36f91d908fef1f0f64be850748694d85ec
   grabCone();
   scoreGoal20(true, ONE_CONE);
 }
@@ -22,7 +22,11 @@ void matchAuton_RED_24()
 void matchAuton_BLUE_24()
 {
   deploy();
+<<<<<<< HEAD
   grabMogo();
+=======
+	grabMGoal();
+>>>>>>> ce213c36f91d908fef1f0f64be850748694d85ec
   grabCone();
   scoreGoal20(false, ONE_CONE);
 }
@@ -30,43 +34,43 @@ void matchAuton_BLUE_24()
 void matchAuton_RED_22()
 {
   deploy();
-  grabMogo();
+  grabMGoal();
   scoreGoal20(true, NO_CONES);
 }
 
 void matchAuton_BLUE_22()
 {
   deploy();
-  grabMogo();
+  grabMGoal();
   scoreGoal20(false, NO_CONES);
 }
 
 void matchAuton_RED_12()
 {
   deploy();
-  grabMogo();
+  grabMGoal();
   scoreGoal10(true, NO_CONES);
 }
 
 void matchAuton_BLUE_12()
 {
   deploy();
-  grabMogo();
+  grabMGoal();
   scoreGoal10(false, NO_CONES);
 }
 
 void matchAuton_RED_7()
 {
   deploy();
-  grabMogo();
-  scoreGoal10(false, NO_CONES);
+  grabMGoal();
+  scoreGoal5(false, NO_CONES);
 }
 
 void matchAuton_BLUE_7()
 {
   deploy();
-  grabMogo();
-  scoreGoal10(true, NO_CONES);
+  grabMGoal();
+  scoreGoal5(true, NO_CONES);
 }
 
 task autonomous()

@@ -2,7 +2,6 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include "Vex_Competition_Includes.c"
 #include "Variables.c"
 
 // Datalog Function

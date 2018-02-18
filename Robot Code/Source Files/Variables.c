@@ -34,9 +34,9 @@ bool barIsManual = false;
 bool intakeIsHolding = false;
 bool isFieldControl = true;
 bool moGoIsManual = true;
-bool mGoalIsUp = true;
+bool moGoIsUp = true;
 bool autoStackIsOn = false;
-bool longDelay = false;
+
 
 bool driveIsActive = true;
 bool liftIsActive = true;
@@ -46,7 +46,6 @@ bool intakeIsActive = true;
 
 // Auton Function Variables
 bool isOpposite = false;
-bool isRunning = false;
 int turnRange = 10;
 int driveRange = 15;
 
@@ -55,7 +54,7 @@ const int NO_CONES = 1600;
 const int ONE_CONE = 1750;
 
 // LCD Variables
-const int NUM_AUTONS = 2;
+//const int NUM_AUTONS = 2;
 const int NUM_MENUS = 4;
 bool gyroIsCalibrating = false;
 bool centerPressed = false;
@@ -72,7 +71,6 @@ const short rightButton = 4;
 
 // AutoStack Control Variables
 int cones = 0;
-int conesDriver = 0;
 
 // AutoStack arrays
 const int size = 10;
