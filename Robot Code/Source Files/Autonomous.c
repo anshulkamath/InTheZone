@@ -10,11 +10,8 @@
 void matchAuton_RED_24()
 {
   deploy();
-<<<<<<< HEAD
   grabMogo();
-=======
 	grabMGoal();
->>>>>>> ce213c36f91d908fef1f0f64be850748694d85ec
   grabCone();
   scoreGoal20(true, ONE_CONE);
 }
@@ -22,11 +19,8 @@ void matchAuton_RED_24()
 void matchAuton_BLUE_24()
 {
   deploy();
-<<<<<<< HEAD
   grabMogo();
-=======
 	grabMGoal();
->>>>>>> ce213c36f91d908fef1f0f64be850748694d85ec
   grabCone();
   scoreGoal20(false, ONE_CONE);
 }
