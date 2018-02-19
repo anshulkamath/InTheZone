@@ -6,15 +6,21 @@
 // Autonomous functions
 void deploy()
 {
-  // Runs intake in
-  // Runs lift up and mobile goal intake out
+  // 1 - Runs intake in
+  // 2 - Runs lift up
+	// 3 - Runs mobile goal intake out
+
+	// 1
 	intakeCone(1);
   motor[intake] = INTAKE_HOLD;
+
+	// 2
 	liftTarget = LIFT_MIN + 200;
 	startTask(lLiftPID);
 	sleep(400);
 	startTask(barSet);
 
+	// 3
 	startTask(mGoalAuton);
 
   barIsUp = true;
@@ -23,63 +29,65 @@ void deploy()
 
 void grabMGoal()
 {
-  // 1 - Drives forward
-  // 2 - Picks up mobile goal and runs forward slowly to secure mobile goal
+  // 1 - Drives forward to just before the mobile goal
+  // 2 - Runs forward slowly to secure mobile goal until the limit switch has been hit
+	// 3 - Run mGoalAuton task to bring mobile goal in
 
   // 1
   forward(1260);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 10; // Power to prevent jerk from PID
 	sleep(500);
- motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 10;
-  // 2
-  motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 40;
-	while(SensorValue[moGoLim] == 0)
-	{
-	}
-	moGoIsUp = false;
-	startTask(mGoalAuton);
-	int time = 0;
 
+	// 2
+  motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 40;
+	while(SensorValue[moGoLim] == 0) {}
+
+	// 3
+	startTask(mGoalAuton);
 	while(!moGoIsUp); // Waits for mGoal to go up
-	forwardNonPID(25, 40);
 }
 
 void grabCone()
 {
   // 1 - Stops task liftPID and AutoStack takes over for the lift
-  // 2 - Moves the bar down
-  // 3 - Moves the lift down
-  // 4 - Runs the intake while running forward to grab the cone
-  // 5 - Runs the autostack function
-  // 6 - Turns on lift PID and gets the lift and bar out of the way of the mGoal
-  // 7 - Readjusts
+	// 2 - Drives forward to align with cone
+  // 3 - Moves the bar down
+  // 4 - Moves the lift down
+  // 5 - Runs the intake while running forward to grab the cone
+  // 6 - Runs the autostack function
+  // 7 - Turns on lift PID and gets the lift and bar out of the way of the mGoal
+  // 8 - Readjusts
 
   // 1
   stopTask(lLiftPID);
 
-  // 2
+	// 2
+	forwardNonPID(25, 40);
+
+  // 3
   barIsUp = false;
   motor[intake] = 100;
   while(SensorValue[barPot] > 1915) {}
 
-  // 3
+  // 4
 	motor[lLift] = motor[rLift] = -100;
 	while(SensorValue[liftPot] > LIFT_MIN + 200) {}
 	motor[lLift] = motor[rLift] = 0 ;
 
   sleep(200);
 
-  // 4
+  // 5
   sleep(400);
   motor[intake] = 30;
 
-  // 5
+  // 6
   if(cones < size)
 	{
 		runAutoStack(conesHeight[cones], coneDown[cones], false);
 		cones++;
 	}
 
-  // 6
+  // 7
 	liftTarget = LIFT_MIN + 200;
 	startTask(lLiftPID);
 	barIsUp = true;
@@ -105,7 +113,7 @@ void scoreGoal20(bool isRed, int distBack)
   forwardNonPID(450); // 6
 
   // 7
-  motor[moGo] = 90;
+  motor[moGo] = 100;
 	while(SensorValue[moGoPot] > MOGO_THROW + 200);
 	motor[moGo] = 0;
 

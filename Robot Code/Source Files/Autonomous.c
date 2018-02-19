@@ -9,6 +9,20 @@
 
 void matchAuton_RED_RIGHT_Stationary()
 {
+	/*
+	forward
+	place on stationary
+	turn right
+	forward
+	pick up cone
+	turn 180
+	forward
+	place on stationary
+	back small amount
+	right 90 degrees
+	forward
+	*/
+
 	forward(600);
 	liftTarget = LIFT_STATIONARY;
 	startTask(lLiftPID);
@@ -35,27 +49,11 @@ void matchAuton_RED_RIGHT_Stationary()
 	barIsUp = false;
 	sleep(500);
 	backward(50);
-
-
-	/*
-	forward
-	place on stationary
-	turn right
-	forward
-	pick up cone
-	turn 180
-	forward
-	place on stationary
-	back small amount
-	right 90 degrees
-	forward
-	*/
 }
 
 void matchAuton_RED_24()
 {
   deploy();
-  //grabMogo();
 	grabMGoal();
 	turnTo(0);
   grabCone();
@@ -66,7 +64,6 @@ void matchAuton_RED_24()
 void matchAuton_BLUE_24()
 {
   deploy();
-  grabMogo();
 	grabMGoal();
 	turnTo(0);
   grabCone();
