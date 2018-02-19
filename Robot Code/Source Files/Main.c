@@ -196,7 +196,9 @@ void pre_auton()
 // User Control
 task usercontrol()
 {
-	clearDebugStream();
+
+
+
 	datalogClear();
 	stopTask(runLCD);
 	clearLCDLine(0);
@@ -206,8 +208,9 @@ task usercontrol()
 	startTask(controller, 130);
 	startTask(autoStack);
 	startTask(stabilizeLift);
+	bool x = false;
 
-	while (true)
+	while (!x)
 	{
 		//int leftPot = SensorValue(liftPot);
 		//int rightPot = SensorValue(liftPot2);

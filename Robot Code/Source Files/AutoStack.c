@@ -110,6 +110,40 @@ void runAutoStack(int height, int down, bool driver)
 	}
 }
 
+void runAutoStackAuton(int height, int down)
+{
+	// Moves the lift up to the height
+	motor[lLift] = motor[rLift] = 100;
+	while(SensorValue[liftPot] < height) {}
+	motor[lLift] = motor[rLift] = 0;
+
+	// Moves the bar up
+	barIsUp = true;
+	while(SensorValue[barPot] < BAR_UP) {}
+	//startTask(releaseCone);
+	//sleep(250);
+	// Moves the lift down to stack
+	motor[lLift] = motor[rLift] = -76;
+ while(SensorValue[liftPot] > down)
+	{
+		// Runs the intake out as the lift is going down
+		if (SensorValue(liftPot) < down+60)
+			startTask(releaseCone);
+
+	}
+	motor[lLift] = motor[rLift] = 0;
+
+	// Moves lift up to get out of stack
+	motor[lLift] = motor[rLift] = 60;
+	while(SensorValue[liftPot] <  height) {}
+	motor[lLift] = motor[rLift] = 0;
+
+	// Moves the bar to bottom position
+
+
+}
+
+
 task startAutoStack()
 {
 	if (isFieldControl)

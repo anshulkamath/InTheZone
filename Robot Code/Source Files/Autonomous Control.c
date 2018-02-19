@@ -34,7 +34,7 @@ task lDrivePID()
 		kp = .35;
 		ki = 0.03;//.1;
 		kd = .4;
-		range = 75;
+		range = 25;
 	}
 
 	int target = 0;
@@ -89,7 +89,7 @@ task lDrivePID()
 				lDrivePwr = -50;
 		}
 
-		motor[leftB] = motor[leftF] = lDrivePwr*.95;
+		motor[leftB] = motor[leftF] = lDrivePwr;
 
 		sleep (50);
 	}
@@ -122,7 +122,7 @@ task rDrivePID()
 		kp = .5;
 		ki = 0.1;
 		kd = 1.5;
-		range = 50;
+		range = 30;
 	}
 
 	int target = 0;
@@ -179,7 +179,7 @@ task rDrivePID()
 				rDrivePwr = -55;
 		}
 
-		motor[rightB] = motor[rightF] = rDrivePwr*.95;
+		motor[rightB] = motor[rightF] = rDrivePwr*1.1;
 
 		//display( (int)P , (int)I , (int)D ,error,rDrivePwr,target,SensorValue(rDriveQuad));
 		//writeDebugStreamLine("%d , %d", rDrivePwr, lDrivePwr);
@@ -228,8 +228,8 @@ task lLiftPID()
 
 		lastError = error;
 		lLiftPwr = P + I + D;
-		motor[lLift] = lLiftPwr ;
-		motor[rLift] = rLiftPwr ;
+		motor[lLift] = lLiftPwr * 1.1;
+		motor[rLift] = rLiftPwr * 1.1;
 
 		//display( (int)P , (int)I , (int)D ,error,lLiftPwr,liftTarget,SensorValue(rLiftPot));
 		sleep (100);
@@ -243,9 +243,13 @@ task mGoalAuton()
   if (moGoIsUp) // If it is up, run it down
   {
     motor[moGo] = 100;
-  	while(SensorValue[moGoPot] > MOGO_DOWN) {}
+  	while(SensorValue[moGoPot] > MOGO_DOWN)
+  		{
+  			if(SensorValue[moGoPot] < MOGO_DOWN + 200)
+  				moGoIsUp = false;
+  			}
   	motor[moGo] = 0;
-    moGoIsUp = false;
+
   }
   else
   {
@@ -344,19 +348,19 @@ void turnTo(int angle)
 {
 	const int range = 5;
 	const int pwr = 30;
+
 	if(angle < GyroGetAngle())
 	{
-		motor[leftB] = motor[leftF] = pwr;
-		motor[rightB] = motor[rightF] = -pwr;
+		left((angle - GyroGetAngle()));
 	}
 	else
 	{
-		motor[leftB] = motor[leftF] = -pwr;
-		motor[rightB] = motor[rightF] = pwr;
+		right((GyroGetAngle() - angle));
 	}
-	while(abs(GyroGetAngle() - angle) > range){}
+	//while(abs(GyroGetAngle() - angle) > range){}
 	motor[leftB] = motor[leftF] = 0;
 	motor[rightB] = motor[rightF] = 0;
+	writeDebugStream("%d", GyroGetAngle());
 }
 
 #endif

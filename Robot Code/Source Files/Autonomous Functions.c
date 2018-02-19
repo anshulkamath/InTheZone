@@ -17,14 +17,16 @@ void deploy()
 	// 2
 	liftTarget = LIFT_MIN + 200;
 	startTask(lLiftPID);
-	sleep(400);
 	startTask(barSet);
 
 	// 3
+	sleep(150);
+	moGoIsUp = true;
 	startTask(mGoalAuton);
-
+	while(moGoIsUp)
+	{
+	}
   barIsUp = true;
-  sleep(200);
 }
 
 void grabMGoal()
@@ -35,16 +37,14 @@ void grabMGoal()
 
   // 1
   forward(1260);
-	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 10; // Power to prevent jerk from PID
-	sleep(500);
-
-	// 2
-  motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 40;
-	while(SensorValue[moGoLim] == 0) {}
-
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 40; // Power to prevent jerk from PID
+	sleep(350);
+	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
 	// 3
+	liftTarget = LIFT_MIN+100;
 	startTask(mGoalAuton);
 	while(!moGoIsUp); // Waits for mGoal to go up
+		//sleep(1);
 }
 
 void grabCone()
@@ -71,19 +71,20 @@ void grabCone()
 
   // 4
 	motor[lLift] = motor[rLift] = -100;
-	while(SensorValue[liftPot] > LIFT_MIN + 200) {}
+	while(SensorValue[liftPot] > LIFT_MIN) {}
 	motor[lLift] = motor[rLift] = 0 ;
 
-  sleep(200);
 
   // 5
-  sleep(400);
+  sleep(200);
+  forwardNonPID(100, 50);
+  sleep(250);
   motor[intake] = 30;
 
   // 6
   if(cones < size)
 	{
-		runAutoStack(conesHeight[cones], coneDown[cones], false);
+		runAutoStackAuton(conesHeight[cones], coneDown[cones]);
 		cones++;
 	}
 
@@ -91,6 +92,7 @@ void grabCone()
 	liftTarget = LIFT_MIN + 200;
 	startTask(lLiftPID);
 	barIsUp = true;
+
 }
 
 void scoreGoal20(bool isRed, int distBack)
@@ -105,11 +107,11 @@ void scoreGoal20(bool isRed, int distBack)
   // 8 - Throws mobile goal into the zone
   // 9 - Moves backwards, brings in mobile goal, and moves out of the zone
 
-  turnTo(0); // 1
-	backward(distBack); // 2
+  //turnTo(0); // 1
+	backward(distBack-200); // 2
   if(isRed) right(450); else left (450); // 3
-	backward(790); // 4
-	if(isRed) right(1000); else left (1000); // 5
+	backward(730); // 4
+	if(isRed) right(900); else left (900); // 5
   forwardNonPID(450); // 6
 
   // 7
@@ -125,7 +127,7 @@ void scoreGoal20(bool isRed, int distBack)
 
   // 9
   backward(100);
-  startTask(mGoalAuton);
+  //startTask(mGoalAuton);
   sleep(800);
   backward(500);
 }

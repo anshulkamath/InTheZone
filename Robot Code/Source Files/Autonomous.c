@@ -55,9 +55,9 @@ void matchAuton_RED_24()
 {
   deploy();
 	grabMGoal();
-	turnTo(0);
+	//turnTo(0);
   grabCone();
-	turnTo(0);
+	//turnTo(0);
   scoreGoal20(true, ONE_CONE);
 }
 
@@ -67,6 +67,7 @@ void matchAuton_BLUE_24()
 	grabMGoal();
 	turnTo(0);
   grabCone();
+	turnTo(0);
   scoreGoal20(false, ONE_CONE);
 }
 
@@ -126,13 +127,19 @@ task autonomous()
     // 3 - 10 Pt Blue
     // 4 - 5 Pt Red
     // 5 - 5 Pt Blue
+	clearDebugStream();
 
+/*	writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
+	sleep(3000);
+	//turnTo(0);
+	writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
+	autonCount = -1;*/
     switch(autonCount)
     {
       case -1:
         break;
       case 0:
-        matchAuton_RED_24();
+        matchAuton_BLUE_24();
         break;
       case 1:
         matchAuton_BLUE_22();
