@@ -19,10 +19,10 @@ const int LIFT_MAX  = 0;
 const int LIFT_DRIVER = 1950;
 const int LIFT_STATIONARY = 0;
 
-const int BAR_UP = 3830;
-const int BAR_DOWN = 1620;
+const int BAR_UP = 2120;
+const int BAR_DOWN = 290;
 
-const int MOGO_UP = 2325;
+const int MOGO_UP = 2625;
 const int MOGO_THROW = 1722;
 const int MOGO_DOWN = 690;
 

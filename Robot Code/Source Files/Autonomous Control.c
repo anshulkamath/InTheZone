@@ -194,9 +194,9 @@ task stabilizeLift()
 	while(true)
 	{
 		float kp = .8;
-		float P = kp * (SensorValue[liftPot] + 60 - SensorValue[liftPot2]);
-		motor[lLift] += P + 13;
-		motor[rLift] -= P -.25*60;
+		float P = kp * (SensorValue[liftPot] + 40 - SensorValue[liftPot2]);
+		motor[lLift] -= P + 13;
+		motor[rLift] += P -.25*60;
 		sleep(10);
 	}
 }

@@ -166,6 +166,15 @@ task controller()
 			motor[intake] = intakePwr;
 		}
 
+		if(vexRT(Btn8L)
+		{
+			moGoIsManual = true;
+		}
+		if(vexRT(Btn8R)
+		{
+			cones--;
+			barIsManual = true;
+		}
 	}
 }
 
@@ -175,7 +184,7 @@ void pre_auton()
 {
 
 	bDisplayCompetitionStatusOnLcd = false;
-	bStopTasksBetweenModes = false;
+	bStopTasksBetweenModes = true;
 
 	// Initializes the cones arrays
 	autoConeInitVals();
@@ -203,11 +212,14 @@ task usercontrol()
 	stopTask(runLCD);
 	clearLCDLine(0);
 	clearLCDLine(1);
+	stopTask(lDrivePID);
+	stopTask(rDrivePID);
 
 	// Starting Tasks
-	startTask(controller, 130);
-	startTask(autoStack);
-	startTask(stabilizeLift);
+//	startTask(autoStack);
+	startTask(controller);
+
+	//startTask(stabilizeLift);
 	bool x = false;
 
 	while (!x)

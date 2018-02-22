@@ -14,7 +14,7 @@ task barSet()
 
 		const int UPPER_PWR = 100;
 		const int LOWER_PWR = 40;
-		const int HOLD_PWR = 5;
+		const int HOLD_PWR = 0;
 
 		// Bang-bang the bar
 		if (barIsUp)

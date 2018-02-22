@@ -16,8 +16,8 @@ task releaseCone()
 void autoConeInitVals()
 {
 	// Initializing the lift values for autostack
-	conesHeight[0] = LIFT_MIN + 50;
-	for (int i = 0; i < size; i++)
+	conesHeight[0] = LIFT_MIN + 120;
+	for (int i = 1; i < size; i++)
 		conesHeight[i] = LIFT_MIN + (120 * i);
 
 	// Initializing the lift values for autostack release
@@ -67,17 +67,21 @@ void runAutoStack(int height, int down, bool driver)
 	//sleep(250);
 	// Moves the lift down to stack
 	motor[lLift] = motor[rLift] = -76;
+	bool started = false;
  while(SensorValue[liftPot] > down)
 	{
 		// Runs the intake out as the lift is going down
-		if (SensorValue(liftPot) < down+60)
-			startTask(releaseCone);
+		if (SensorValue(liftPot) < down+70 && !started)
+		{
 
+			startTask(releaseCone);
+			started = true;
+		}
 	}
 	motor[lLift] = motor[rLift] = 0;
 
 	// Moves lift up to get out of stack
-	motor[lLift] = motor[rLift] = 60;
+	motor[lLift] = motor[rLift] = 120;
 	while(SensorValue[liftPot] <  height) {}
 	motor[lLift] = motor[rLift] = 0;
 
@@ -93,7 +97,7 @@ void runAutoStack(int height, int down, bool driver)
 		// Moves the lift to field position
 		motor[lLift] = motor[rLift] = -100;
 		while(SensorValue[liftPot] > LIFT_MIN + 200) {}
-		motor[lLift] = motor[rLift] = -60;
+		motor[lLift] = motor[rLift] = -80;
 		while(SensorValue[liftPot] > LIFT_MIN) {}
 		motor[lLift] = motor[rLift] = 0;
 	}
@@ -104,7 +108,7 @@ void runAutoStack(int height, int down, bool driver)
 		// Moves lift down to driver load stack
 		motor[lLift] = motor[rLift] = -100;
 		while(SensorValue[liftPot] > LIFT_DRIVER + 200) {}
-		motor[lLift] = motor[rLift] = -60;
+		motor[lLift] = motor[rLift] = -65;
 		while(SensorValue[liftPot] > LIFT_DRIVER) {}
 		motor[lLift] = motor[rLift] = 0;
 	}
@@ -241,6 +245,7 @@ task autoStack()
 		{
 			tasksStarted = false;
 
+			stopTask(stabilizeLift);
       intakeIsActive = false;
       barIsActive = false;
       liftIsActive = false;
@@ -258,6 +263,7 @@ task autoStack()
 		{
 			tasksStarted = true;
 
+			//startTask(stabilizeLift);
       intakeIsActive = true;
       barIsActive = true;
       liftIsActive = true;
