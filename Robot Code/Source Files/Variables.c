@@ -26,7 +26,7 @@ const int MOGO_UP = 2625;
 const int MOGO_THROW = 1722;
 const int MOGO_DOWN = 690;
 
-const int INTAKE_HOLD = 40;
+const int INTAKE_HOLD = 30;
 
 // Toggle Variables
 bool barIsUp = true;

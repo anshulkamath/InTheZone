@@ -166,11 +166,11 @@ task controller()
 			motor[intake] = intakePwr;
 		}
 
-		if(vexRT(Btn8L)
+		if(vexRT[Btn8L])
 		{
 			moGoIsManual = true;
 		}
-		if(vexRT(Btn8R)
+		if(vexRT[Btn8R])
 		{
 			cones--;
 			barIsManual = true;

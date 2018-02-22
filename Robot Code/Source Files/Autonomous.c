@@ -6,6 +6,7 @@
 #include "Autonomous Functions.c"
 
 // Naming conventions: "matchAuton_COLOR_PTVALUE"
+// NUM_CONE DOES NOT COUNT THE PRELOAD
 
 void matchAuton_RED_RIGHT_Stationary()
 {
@@ -55,9 +56,7 @@ void matchAuton_RED_24()
 {
   deploy();
 	grabMGoal();
-	//turnTo(0);
   grabCone();
-	//turnTo(0);
   scoreGoal20(true, ONE_CONE);
 }
 
@@ -65,9 +64,7 @@ void matchAuton_BLUE_24()
 {
   deploy();
 	grabMGoal();
-	turnTo(0);
   grabCone();
-	turnTo(0);
   scoreGoal20(false, ONE_CONE);
 }
 

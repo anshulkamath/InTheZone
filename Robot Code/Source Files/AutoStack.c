@@ -241,7 +241,7 @@ task autoStack()
 	bool tasksStarted = true;
 	while(true)
 	{
-		if (vexRT(Btn5U) && !autoStackIsOn) // Runs AutoStack
+		if (vexRT[Btn5U] && !autoStackIsOn) // Runs AutoStack
 		{
 			tasksStarted = false;
 
@@ -253,7 +253,7 @@ task autoStack()
 
 			startTask(startAutoStack);
 		}
-		else if (vexRT(Btn5D) && autoStackIsOn) // Cancels AutoStack
+		else if (vexRT[Btn5D] && autoStackIsOn) // Cancels AutoStack
 		{
 			stopTask(startAutoStack);
 
