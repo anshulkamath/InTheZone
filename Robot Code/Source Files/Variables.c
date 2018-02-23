@@ -14,13 +14,13 @@ int liftTarget = 0;
 
 // Sensor Values - CONSTANTS
 const int LIFT_MIN = 1456;
-const int LIFT_MID = 0;
-const int LIFT_MAX  = 0;
+const int LIFT_MID = 2025;
+const int LIFT_MAX  = 2562;
 const int LIFT_DRIVER = 1950;
 const int LIFT_STATIONARY = 0;
 
-const int BAR_UP = 2120;
-const int BAR_DOWN = 290;
+const int BAR_UP = 2920;
+const int BAR_DOWN = 1025;
 
 const int MOGO_UP = 2625;
 const int MOGO_THROW = 1722;

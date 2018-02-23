@@ -18,7 +18,7 @@ void deploy()
   motor[intake] = INTAKE_HOLD + 10;
 
 	// 2
-	liftTarget = LIFT_MIN + 200;
+	liftTarget = LIFT_MID;
 	startTask(lLiftPID);
 	startTask(barSet);
 
@@ -28,7 +28,7 @@ void deploy()
 	startTask(mGoalAuton);
 	while(moGoIsUp);
 
-  barIsUp = true;
+  //barIsUp = true;
 }
 
 void grabMGoal()
@@ -44,10 +44,11 @@ void grabMGoal()
 	// 5 - Run mGoalAuton task to bring mobile goal in
 
   // 1
-  forward(1260);
-
-	// 2
 	barIsUp = false;
+  forward(1260);
+//	liftTarget = LIFT_MID;
+	// 2
+
 
 	// 3
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 40; // Power to prevent jerk from PID
@@ -55,14 +56,43 @@ void grabMGoal()
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
 
 	// 4
-	while(SensorValue[barPot] > BAR_DOWN + 100) {} // This shouldn't ever run; +100 for small margin of error
+	while(SensorValue[barPot] > BAR_DOWN) {} // This shouldn't ever run; +100 for small margin of error
+	liftTarget = LIFT_MIN;
 	intakeCone(0);
 
 	// 5
-	liftTarget = LIFT_MIN+100;
-
+	liftTarget = LIFT_MID;
+	while(SensorValue[liftPot] < LIFT_MID - 300);
 	startTask(mGoalAuton);
+	//liftTarget = LIFT_MID;
 	while(!moGoIsUp); // Waits for mGoal to go up
+}
+
+
+task stackCone1()
+{
+	// Pre-Condition: Cone is already in the intake
+	// Post-Condition: Cone is placed onto the mobile goal
+
+	// Steps:
+	// 1 - Intake Runs at INTAKE_HOLD power + extra (because robot will be moving)
+	// 2 - Autostack function runs
+	// 3 - Lift moves out of the way in order for the robot to be able to score the goal.
+
+	// 1
+	motor[intake] = 100;
+
+  // 2
+	forwardNonPID(75, 40);
+
+	cones = 1;
+	runAutoStackAuton(conesHeight[cones], coneDown[cones])
+	cones++;
+
+  // 3
+	liftTarget = LIFT_MIN + 200;
+	startTask(lLiftPID);
+	barIsUp = true;
 }
 
 void grabCone()
@@ -96,32 +126,10 @@ void grabCone()
 	motor[lLift] = motor[rLift] = 0 ;
 
   // 6
-	startTask(stackCone);
+	startTask(stackCone1);
+	sleep(1000);
 }
 
-task stackCone()
-{
-	// Pre-Condition: Cone is already in the intake
-	// Post-Condition: Cone is placed onto the mobile goal
-
-	// Steps:
-	// 1 - Intake Runs at INTAKE_HOLD power + extra (because robot will be moving)
-	// 2 - Autostack function runs
-	// 3 - Lift moves out of the way in order for the robot to be able to score the goal.
-
-	// 1
-	motor[intake] = INTAKE_HOLD;
-
-  // 2
-	cones = 1;
-	runAutoStackAuton(conesHeight[cones], coneDown[cones]);
-	cones++;
-
-  // 3
-	liftTarget = LIFT_MIN + 200;
-	startTask(lLiftPID);
-	barIsUp = true;
-}
 
 
 void scoreGoal20(bool isRed, int distBack)
