@@ -73,7 +73,7 @@ task controller()
 					else if (SensorValue(moGoPot) < MOGO_UP)
 						mGoalPwr = -40;
 					else
-						mGoalPwr = 0;
+						mGoalPwr = -10;
 				}
 				else
 					mGoalPwr = 0;
@@ -168,12 +168,14 @@ task controller()
 
 		if(vexRT[Btn8L])
 		{
-			moGoIsManual = true;
+			moGoIsManual = !moGoIsManual;
+			while(vexRT[btn8L]);
 		}
 		if(vexRT[Btn8R])
 		{
-			cones--;
-			barIsManual = true;
+			//cones--;
+			barIsManual = !barIsManual;
+			while(vexRT[btn8R]);
 		}
 	}
 }
@@ -184,7 +186,7 @@ void pre_auton()
 {
 
 	bDisplayCompetitionStatusOnLcd = false;
-	bStopTasksBetweenModes = true;
+	bStopTasksBetweenModes = false;
 
 	// Initializes the cones arrays
 	autoConeInitVals();
@@ -209,11 +211,11 @@ task usercontrol()
 
 
 	datalogClear();
-	stopTask(runLCD);
 	clearLCDLine(0);
 	clearLCDLine(1);
 	stopTask(lDrivePID);
 	stopTask(rDrivePID);
+	startTask(runLCD);
 
 	// Starting Tasks
 //	startTask(autoStack);

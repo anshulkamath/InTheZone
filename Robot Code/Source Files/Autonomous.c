@@ -98,23 +98,32 @@ void matchAuton_BLUE_12()
 
 void matchAuton_RED_7()
 {
-  deploy();
-  grabMGoal();
-  scoreGoal5(false, NO_CONES);
+	deploy();
+	grabMGoal();
+  grabCone();
+ // while(!autoStackEnd);
+ //grabCone();
+	autonIs24 = false;
+
+  scoreGoal5(true, ONE_CONE+300);
 }
 
 void matchAuton_BLUE_7()
 {
-  deploy();
-  grabMGoal();
-  scoreGoal5(true, NO_CONES);
+	deploy();
+	grabMGoal();
+  grabCone();
+ // while(!autoStackEnd);
+ //grabCone();
+	autonIs24 = false;
+
+  scoreGoal5(false, ONE_CONE+300);
 }
 
 task autonomous()
 {
     clearDebugStream();
     datalogClear();
-    stopTask(runLCD);
     clearLCDLine(0);
     clearLCDLine(1);
 
@@ -124,6 +133,7 @@ task autonomous()
     // 3 - 10 Pt Blue
     // 4 - 5 Pt Red
     // 5 - 5 Pt Blue
+  return;
 	clearDebugStream();
 
 /*	writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
@@ -134,17 +144,20 @@ task autonomous()
     switch(autonCount)
     {
       case -1:
+      	motor[moGo] = -100;
+      	sleep(2000);
+      	motor[moGo] = 0;
         break;
       case 0:
         matchAuton_BLUE_24();
         break;
       case 1:
-        matchAuton_BLUE_22();
+        matchAuton_RED_24();
         break;
       case 2:
-        matchAuton_RED_12();
+        matchAuton_BLUE_7();
       case 3:
-        matchAuton_BLUE_12();
+        matchAuton_RED_7();
         break;
       case 4:
         matchAuton_RED_7();

@@ -18,12 +18,12 @@ void deploy()
   motor[intake] = INTAKE_HOLD + 10;
 
 	// 2
-	liftTarget = LIFT_MID;
-	startTask(lLiftPID);
-	startTask(barSet);
+	liftTarget = LIFT_MIN+400;
+	//startTask(lLiftPID);
+	//startTask(barSet);
 
 	// 3
-	sleep(150);
+	sleep(300);
 	moGoIsUp = true;
 	startTask(mGoalAuton);
 	while(moGoIsUp);
@@ -56,16 +56,24 @@ void grabMGoal()
 	motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
 
 	// 4
-	while(SensorValue[barPot] > BAR_DOWN) {} // This shouldn't ever run; +100 for small margin of error
-	liftTarget = LIFT_MIN;
+	liftTarget = LIFT_MIN + 300;
+	while(SensorValue[liftPot] < LIFT_MIN + 100);
+	sleep(100);
+	while(SensorValue[barPot] > BAR_DOWN+100) {} // This shouldn't ever run; +100 for small margin of error
+
+	sleep(200); // prev 700
 	intakeCone(0);
 
 	// 5
-	liftTarget = LIFT_MID;
-	while(SensorValue[liftPot] < LIFT_MID - 300);
-	startTask(mGoalAuton);
+	liftTarget = LIFT_MIN + 500;
+	motor[moGo] = -100;
+	sleep(500);
+	motor[moGo] = 0;
+	//startTask(mGoalAuton);
+	moGoIsUp = false;
 	//liftTarget = LIFT_MID;
 	while(!moGoIsUp); // Waits for mGoal to go up
+	liftTarget = LIFT_MIN;
 }
 
 
@@ -83,10 +91,11 @@ task stackCone1()
 	motor[intake] = 100;
 
   // 2
-	forwardNonPID(75, 40);
+	if(autonIs24) forwardNonPID(45, 40) else forwardNonPID(40, 40);
 
 	cones = 1;
-	runAutoStackAuton(conesHeight[cones], coneDown[cones])
+	runAutoStackAuton(conesHeight[cones], coneDown[cones]);
+	autoStackEnd = true;
 	cones++;
 
   // 3
@@ -112,7 +121,8 @@ void grabCone()
   stopTask(lLiftPID);
 
 	// 2
-	forwardNonPID(25, 40);
+  //turnTo(0);
+	forwardNonPID(15, 40);
 
   // 3
   motor[intake] = 100;
@@ -127,7 +137,8 @@ void grabCone()
 
   // 6
 	startTask(stackCone1);
-	sleep(1000);
+	autoStackEnd = false;
+	while(!liftUpAuton);
 }
 
 
@@ -147,9 +158,9 @@ void scoreGoal20(bool isRed, int distBack)
   //turnTo(0); // 1
 	backward(distBack - 200); // 2
   if(isRed) right(450); else left (450); // 3
-	backward(730); // 4
+	backward(785); // 4
 	if(isRed) right(900); else left (900); // 5
-  forwardNonPID(450); // 6
+  forwardNonPID(600); // 6
 
   // 7
   motor[moGo] = 100;
@@ -157,7 +168,7 @@ void scoreGoal20(bool isRed, int distBack)
 	motor[moGo] = 0;
 
   // 8
-  forwardNonPID(300);
+  forwardNonPID(600);
   motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = -100;
   sleep(200);
   motor[leftB] = motor[leftF] = motor[rightB] = motor[rightF] = 0;
@@ -180,7 +191,7 @@ void scoreGoal10(bool isRed, int distBack)
   // 7 - Places mobile goal into the zone
   // 8 - Moves backwards, brings in mobile goal, and moves out of the zone
 
-  turnTo(0); // 1
+  //turnTo(0); // 1
 	backward(distBack); // 2
   if(isRed) right(450); else left (450); // 3
 	backward(100); // 4
@@ -204,12 +215,13 @@ void scoreGoal5(bool isRed, int distBack)
   // 5 - Runs mGoal lift down
   // 6 - Releases mGoal
 
-  turnTo(0); // 1
-	backward(distBack); // 2
-  if(isRed) right(1800); else left (1800); // 3
-  forward(300); // 4
+  //turnTo(0); // 1
+	backward(distBack-400); // 2
+  if(isRed) left(1800); else right (1800); // 3
+  //forwardNonPID(150); // 4
+	moGoIsUp = true;
   startTask(mGoalAuton); // 5
-  sleep(800);
+  while (SensorValue(moGoPot) > MOGO_DOWN);
   backward(300); // 6
 }
 

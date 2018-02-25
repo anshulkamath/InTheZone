@@ -245,7 +245,7 @@ task mGoalAuton()
     motor[moGo] = 100;
   	while(SensorValue[moGoPot] > MOGO_DOWN)
   		{
-  			if(SensorValue[moGoPot] < MOGO_DOWN + 200)
+  			if(SensorValue[moGoPot] < MOGO_DOWN + 700)
   				moGoIsUp = false;
   			}
   	motor[moGo] = 0;
@@ -256,11 +256,6 @@ task mGoalAuton()
     motor[moGo] = -100;
   	while(SensorValue[moGoPot] < MOGO_UP - 300) {}
   	motor[moGo] = 0;
-
-
-    sleep(400);
-    intakeCone(0);
-    cones++;
   	moGoIsUp = true;
   }
 }
@@ -348,19 +343,19 @@ void turnTo(int angle)
 {
 	const int range = 5;
 	const int pwr = 30;
-
 	if(angle < GyroGetAngle())
 	{
-		left((angle - GyroGetAngle()));
+		motor[leftB] = motor[leftF] = pwr;
+		motor[rightB] = motor[rightF] = -pwr;
 	}
 	else
 	{
-		right((GyroGetAngle() - angle));
+		motor[leftB] = motor[leftF] = -pwr;
+		motor[rightB] = motor[rightF] = pwr;
 	}
-	//while(abs(GyroGetAngle() - angle) > range){}
+	while(abs(GyroGetAngle() - angle) > range){}
 	motor[leftB] = motor[leftF] = 0;
 	motor[rightB] = motor[rightF] = 0;
-	writeDebugStream("%d", GyroGetAngle());
 }
 
 #endif

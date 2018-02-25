@@ -94,7 +94,7 @@ void intakeCone(int pos)
 	else if (pos == 0)
 	{
 		motor[intake] = -100;
-		sleep(500);
+		sleep(250);
 		motor[intake] = 0;
 	}
 }

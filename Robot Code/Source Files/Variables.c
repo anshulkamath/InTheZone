@@ -19,12 +19,14 @@ const int LIFT_MAX  = 2562;
 const int LIFT_DRIVER = 1950;
 const int LIFT_STATIONARY = 0;
 
-const int BAR_UP = 2920;
-const int BAR_DOWN = 1025;
+bool liftUpAuton = false;
+
+const int BAR_UP = 2240;
+const int BAR_DOWN = 370;
 
 const int MOGO_UP = 2625;
 const int MOGO_THROW = 1722;
-const int MOGO_DOWN = 690;
+const int MOGO_DOWN = 400;
 
 const int INTAKE_HOLD = 30;
 
@@ -36,6 +38,7 @@ bool isFieldControl = true;
 bool moGoIsManual = true;
 bool moGoIsUp = true;
 bool autoStackIsOn = false;
+bool autoStackEnd = false;
 
 
 bool driveIsActive = true;
@@ -43,7 +46,7 @@ bool liftIsActive = true;
 bool barIsActive = true;
 bool moGoIsActive = true;
 bool intakeIsActive = true;
-
+bool autonIs24 = true;
 // Auton Function Variables
 bool isOpposite = false;
 int turnRange = 10;
@@ -61,7 +64,7 @@ bool centerPressed = false;
 string mainBattery, backupBattery;
 
 // LCD Counters
-int autonCount = 0;
+int autonCount = -1;
 int lcdCount = 1;
 int color = -1;
 int side = -1;

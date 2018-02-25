@@ -118,6 +118,7 @@ void runAutoStackAuton(int height, int down)
 {
 	// Moves the lift up to the height
 	motor[lLift] = motor[rLift] = 100;
+	liftUpAuton = true;
 	while(SensorValue[liftPot] < height) {}
 	motor[lLift] = motor[rLift] = 0;
 

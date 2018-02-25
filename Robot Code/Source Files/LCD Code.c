@@ -27,22 +27,25 @@ void redRightSelector()
 		switch (tempCount)
 		{
 	      case 0:
-	        displayLCDCenteredString(0, "20 Pt Right Red");
+	        displayLCDCenteredString(0, "24 Pt Right Red");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
 	        {
 	          waitForRelease();
 	          tempCount++;
+	          break;
+
 	        }
 	        else if (nLCDButtons == leftButton)
 	        {
 	          waitForRelease();
 	          //tempCount = 1;
+	          break;
 	        }
-	        tempNum = 0;
+	        tempNum = 1;
 	        break;
-	      case 1:
+	     /* case 1:
 	        displayLCDCenteredString(0, "10 Pt Red");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
@@ -57,22 +60,25 @@ void redRightSelector()
 	          tempCount--;
 	        }
 	        tempNum = 2;
-	        break;
-	      case 2:
-	        displayLCDCenteredString(0, "5 Pt Red");
+	        break;*/
+	      case 1:
+	        displayLCDCenteredString(0, "9 Pt Red");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
 	        {
 	          waitForRelease();
-	          //tempCount++;
+	          tempCount = 0;
+	          break;
+
 	        }
 	        else if (nLCDButtons == leftButton)
 	        {
 	          waitForRelease();
 	          tempCount--;
+	          break;
 	        }
-	        tempNum = 4;
+	        tempNum = 2;
 	        break;
 		}
 	}
@@ -82,42 +88,47 @@ void redRightSelector()
 void redLeftSelector()
 {
 	int tempCount = 0;
-	int tempNum = 0;
-	while(tempNum == 0)
+	int tempNum = -1;
+	while(tempNum == -1)
 	{
 		switch (tempCount)
 		{
 	      case 0:
-	        displayLCDCenteredString(0, "10 Pt Red");
+	        displayLCDCenteredString(0, "24 Pt Red");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
 	        {
 	          waitForRelease();
 	          tempCount++;
+	          break;
 	        }
 	        else if (nLCDButtons == leftButton)
 	        {
 	          waitForRelease();
 	         // tempCount--;
+	          break;
 	        }
-	        tempNum = 2;
+	        tempNum = 0;
 	        break;
 	      case 1:
-	        displayLCDCenteredString(0, "5 Pt Red");
+	        displayLCDCenteredString(0, "9 Pt Red");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
 	        {
 	          waitForRelease();
 	         // tempCount++;
+	          tempCount = 0;
+	          break;
 	        }
 	        else if (nLCDButtons == leftButton)
 	        {
 	          waitForRelease();
 	          tempCount--;
+	          break;
 	        }
-	        tempNum = 4;
+	        tempNum = 3;
 	        break;
 		}
 	}
@@ -133,23 +144,26 @@ void blueRightSelector()
 		switch (tempCount)
 		{
 	      case 0:
-	        displayLCDCenteredString(0, "10 Pt Blue");
+	        displayLCDCenteredString(0, "24 Pt Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
 	        {
 	          waitForRelease();
 	          tempCount++;
+	          break;
 	        }
 	        else if (nLCDButtons == leftButton)
 	        {
 	          waitForRelease();
+	          //tempCount;
+	          break;
 	         // tempCount--;
 	        }
-	        tempNum = 3;
+	        tempNum = 1;
 	        break;
 	      case 1:
-	        displayLCDCenteredString(0, "5 Pt Blue");
+	        displayLCDCenteredString(0, "9 Pt Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
@@ -162,7 +176,7 @@ void blueRightSelector()
 	          waitForRelease();
 	          tempCount--;
 	        }
-	        tempNum = 5;
+	        tempNum = 3;
 	        break;
 		}
 		autonCount = tempNum;
@@ -172,14 +186,14 @@ void blueRightSelector()
 void blueLeftSelector()
 {
 		int tempCount = 0;
-		int tempNum = 0;
-	while(tempNum == 0)
+		int tempNum = -1;
+	while(tempNum == -1)
 	{
 
 		switch (tempCount)
 		{
 	      case 0:
-	        displayLCDCenteredString(0, "20 Pt Left Blue");
+	        displayLCDCenteredString(0, "24 Pt Left Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
@@ -192,9 +206,9 @@ void blueLeftSelector()
 	          waitForRelease();
 
 	        }
-	        tempNum = 1;
+	        tempNum = 0;
 	        break;
-       case 1:
+       /*case 1:
 	        displayLCDCenteredString(0, "10 Pt Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
@@ -209,22 +223,24 @@ void blueLeftSelector()
 	          tempCount--;
 	        }
 	        tempNum = 3;
-	        break;
-	      case 2:
-	        displayLCDCenteredString(0, "5 Pt Blue");
+	        break;*/
+	      case 1:
+	        displayLCDCenteredString(0, "9 Pt Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
 	        {
 	          waitForRelease();
 	          //tempCount++;
+	          break;
 	        }
 	        else if (nLCDButtons == leftButton)
 	        {
 	          waitForRelease();
 	          tempCount--;
+	          break;
 	        }
-	        tempNum = 5;
+	        tempNum = 2;
 	        break;
 		}
 	}
