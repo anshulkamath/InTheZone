@@ -1,0 +1,22 @@
+Controller 1:
+
+  Joystick Controls:
+    - Left Joystick : Left Drive
+    - Right Joystick : Right Drive
+
+  Bumpers:
+    5U - AutoStack ON
+    5D - AutoStack CANCEL
+    6U - Lift Up
+    6D - Lift Down
+
+  Buttons:
+    7U - Mobile Goal In
+    7D - Mobile Goal Out
+    7R - Intake In
+    7L - Intake Out
+
+    8U - Bar Up
+    8D - Bar Down
+    8L - Toggle AutoStack FIELD
+    8R - Toggle AutoStack DRIVER
