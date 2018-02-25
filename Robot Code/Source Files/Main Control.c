@@ -53,7 +53,7 @@ task moGoSet()
 
 		const int UPPER_PWR = 100;
 		const int LOWER_PWR = 40;
-		const int HOLD_PWR = 0;
+		const int HOLD_PWR = -10;
 
 		// Bang-bang the mobile goal
 		if (moGoIsUp)
