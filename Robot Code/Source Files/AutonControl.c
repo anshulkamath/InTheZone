@@ -18,14 +18,16 @@ void pControlFunction(PControlStruct control)
   while(SensorValue[control.SensorPort] < control.target + control.highPrecision ? control.target : 0 && !done)
   {
     int cumPower = 0;
+    
     for(int i = 0; i<size; i++)
-    {
       cumPower += control.pValue[i] * (SensorValue[control.SensorPort];
-    }
+    
     for(int i = 0; i<size; i++)
       motor[control.motorPorts[i]] = cumPower; 
+    
     if(abs(prev - SensorValue[control.SensorPort]) < rangeHigh && abs(SensorValue[control.SensorPort] - control.target) < rangeHigh)
       done = true;
+    
     prev = SensorValue[control.SensorPort];
   }
 }
