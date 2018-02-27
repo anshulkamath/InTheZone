@@ -3,7 +3,6 @@
 #define AUTOSTACK_H
 
 #include "Variables.c"
-#include "Autonomous Control.c"
 
 // Made it a task so it will run concurrently with the autostack function
 task releaseCone()
@@ -142,10 +141,6 @@ void runAutoStackAuton(int height, int down)
 	motor[lLift] = motor[rLift] = 60;
 	while(SensorValue[liftPot] <  height) {}
 	motor[lLift] = motor[rLift] = 0;
-
-	// Moves the bar to bottom position
-
-
 }
 
 

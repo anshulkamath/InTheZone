@@ -1,6 +1,6 @@
 // Stop recursive includes
-#ifndef LCD_CODE_H
-#define LCD_CODE_H
+#ifndef LCDCODE_H
+#define LCDCODE_H
 
 #include "Variables.c"
 

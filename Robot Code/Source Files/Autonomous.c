@@ -3,7 +3,6 @@
 #define AUTONOMOUS_H
 
 #include "Variables.c"
-#include "Autonomous Functions.c"
 
 // Naming conventions: "matchAuton_COLOR_PTVALUE"
 // NUM_CONE DOES NOT COUNT THE PRELOAD
@@ -118,54 +117,6 @@ void matchAuton_BLUE_7()
 	autonIs24 = false;
 
   scoreGoal5(false, ONE_CONE+300);
-}
-
-task autonomous()
-{
-    clearDebugStream();
-    datalogClear();
-    clearLCDLine(0);
-    clearLCDLine(1);
-
-    // 0 - 20 Pt Right Red
-    // 1 - 20 Pt Left Blue
-    // 2 - 10 Pt Red
-    // 3 - 10 Pt Blue
-    // 4 - 5 Pt Red
-    // 5 - 5 Pt Blue
-  return;
-	clearDebugStream();
-
-/*	writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
-	sleep(3000);
-	//turnTo(0);
-	writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
-	autonCount = -1;*/
-    switch(autonCount)
-    {
-      case -1:
-      	motor[moGo] = -100;
-      	sleep(2000);
-      	motor[moGo] = 0;
-        break;
-      case 0:
-        matchAuton_BLUE_24();
-        break;
-      case 1:
-        matchAuton_RED_24();
-        break;
-      case 2:
-        matchAuton_BLUE_7();
-      case 3:
-        matchAuton_RED_7();
-        break;
-      case 4:
-        matchAuton_RED_7();
-        break;
-      case 5:
-        matchAuton_BLUE_7();
-        break;
-    }
 }
 
 #endif

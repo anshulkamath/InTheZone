@@ -27,164 +27,16 @@
 #pragma competitionControl(Competition)
 
 #include "Vex_Competition_Includes.c"
-#include "Main Control.c"
+#include "MainControl.c"
 #include "Variables.c"
 #include "GyroLib.c"
 #include "AutoStack.c"
-#include "LCD Code.c"
+#include "LCDCode.c"
 #include "Autonomous.c"
-
-task controller()
-{
-	while (true)
-	{
-		// Added toggles for all aspects of the robot so that they could be shut off one at a time
-		// since they are no longer tasks (you can no longer "stopTask()")
-
-		// Drive
-		if (driveIsActive)
-		{
-			lDrivePwr = vexRT[Ch3];
-			rDrivePwr = vexRT[Ch2];
-
-			// Introduces deadzone
-			if (abs(lDrivePwr) < 5)
-				lDrivePwr = 0;
-			else if (abs(rDrivePwr) < 5)
-				rDrivePwr = 0;
-
-			motor[leftB] = motor[leftF] = lDrivePwr;
-			motor[rightB] = motor[rightF] = rDrivePwr;
-		}
-
-		// Mobile Goal
-		if (moGoIsManual)
-		{
-			stopTask(moGoSet);
-
-			if (moGoIsActive)
-			{
-				if (vexRT[Btn7U])
-						mGoalPwr = 100;
-				else if (vexRT[Btn7D])
-				{
-					if (SensorValue(moGoPot) < MOGO_UP - 300)
-						mGoalPwr = -100;
-					else if (SensorValue(moGoPot) < MOGO_UP)
-						mGoalPwr = -40;
-					else
-						mGoalPwr = -10;
-				}
-				else
-					mGoalPwr = 0;
-
-				// Setting mobile goal motor power
-				motor[moGo] = mGoalPwr;
-			}
-		}
-		else
-		{
-			startTask(moGoSet);
-
-			if (moGoIsActive)
-			{
-				if (vexRT[Btn7U])
-					moGoIsUp = true;
-				else if (vexRT[Btn7D] && cones < 9)
-					moGoIsUp = false;
-				else if (vexRT[Btn7D] && cones >= 9)
-					place();
-			}
-		}
-
-		// Lift
-		if (liftIsActive)
-		{
-			if(vexRT[Btn6U])
-				lLiftPwr = rLiftPwr = 100;
-			else if(vexRT[Btn6D])
-				lLiftPwr = rLiftPwr = -100;
-			else
-			{
-				if(SensorValue(liftPot) > LIFT_MIN + 100)
-					lLiftPwr = rLiftPwr = -2;
-				else
-					lLiftPwr = rLiftPwr = -10;
-			}
-
-			motor[lLift] = lLiftPwr;
-			motor[rLift] = rLiftPwr;
-		}
-
-		// Four bar
-		if (barIsManual)
-		{
-			stopTask(barSet);
-
-			if (barIsActive)
-			{
-				if (vexRT[Btn8U])
-					barPwr = 100;
-				else if (vexRT[Btn8D])
-					barPwr = -100;
-				else
-					barPwr = 0;
-
-				motor[barR] = motor[barL] = barPwr;
-			}
-		}
-		else
-		{
-			startTask(barSet);
-			if (barIsActive)
-			{
-				if (vexRT[Btn8U])
-					barIsUp = true;
-				else if (vexRT[Btn8D])
-					barIsUp = false;
-			}
-		}
-
-		// Intake
-		if (intakeIsActive)
-		{
-			if (vexRT[Btn7L])
-			{
-				intakePwr = -100;
-				intakeIsHolding = false;
-			}
-			else if (vexRT[Btn7R])
-			{
-				intakePwr = 100;
-				intakeIsHolding = true;
-			}
-			else if (intakeIsHolding)
-				intakePwr = INTAKE_HOLD;
-			else if (!intakeIsHolding)
-				intakePwr = -10;
-
-			motor[intake] = intakePwr;
-		}
-
-		if(vexRT[Btn8L])
-		{
-			moGoIsManual = !moGoIsManual;
-			while(vexRT[btn8L]);
-		}
-		if(vexRT[Btn8R])
-		{
-			//cones--;
-			barIsManual = !barIsManual;
-			while(vexRT[btn8R]);
-		}
-	}
-}
-
 
 // Pre-Auton
 void pre_auton()
 {
-
 	bDisplayCompetitionStatusOnLcd = false;
 	bStopTasksBetweenModes = false;
 
@@ -204,27 +56,59 @@ void pre_auton()
 	gyroIsCalibrating = false;
 }
 
+task autonomous()
+{
+    clearDebugStream();
+    datalogClear();
+    clearLCDLine(0);
+    clearLCDLine(1);
+
+		// writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
+		// sleep(3000);
+		// writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
+
+    switch(autonCount)
+    {
+      case 0:
+        matchAuton_BLUE_24();
+        break;
+      case 1:
+        matchAuton_RED_24();
+        break;
+      case 2:
+        matchAuton_BLUE_7();
+      case 3:
+        matchAuton_RED_7();
+        break;
+      case 4:
+        matchAuton_RED_7();
+        break;
+      case 5:
+        matchAuton_BLUE_7();
+        break;
+    }
+}
+
 // User Control
 task usercontrol()
 {
-
-
-
+	// Clearing all output streams
 	datalogClear();
 	clearLCDLine(0);
 	clearLCDLine(1);
+
+	// Stopping all auton tasks
 	stopTask(lDrivePID);
 	stopTask(rDrivePID);
-	startTask(runLCD);
 
 	// Starting Tasks
-//	startTask(autoStack);
+	// startTask(stabilizeLift);
+	// startTask(autoStack);
 	startTask(controller);
+	startTask(robotControl);
+	startTask(runLCD);
 
-	//startTask(stabilizeLift);
-	bool x = false;
-
-	while (!x)
+	while (true)
 	{
 		//int leftPot = SensorValue(liftPot);
 		//int rightPot = SensorValue(liftPot2);
