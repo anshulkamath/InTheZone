@@ -30,8 +30,6 @@ task controller()
 		// Mobile Goal
 		if (moGoIsManual)
 		{
-			stopTask(moGoSet);
-
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
@@ -54,8 +52,6 @@ task controller()
 		}
 		else
 		{
-			startTask(moGoSet);
-
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
@@ -89,8 +85,6 @@ task controller()
 		// Four bar
 		if (barIsManual)
 		{
-			stopTask(barSet);
-
 			if (barIsActive)
 			{
 				if (vexRT[Btn8U])
@@ -105,7 +99,6 @@ task controller()
 		}
 		else
 		{
-			startTask(barSet);
 			if (barIsActive)
 			{
 				if (vexRT[Btn8U])
@@ -212,7 +205,7 @@ task robotControl()
 				else if (SensorValue(moGoPot) > MOGO_DOWN + uBound)
 					mGoalPwr = -LOWER_MOGO_PWR;
 				else
-					mGoalPwr = -HOLD_MOGO_PWR;
+					mGoalPwr = 0;
 			}
 
 			motor[moGo] = mGoalPwr;
@@ -237,25 +230,6 @@ void intakeCone(int pos)
 		sleep(250);
 		motor[intake] = 0;
 	}
-}
-
-// Place mobile goal
-void place()
-{
-	// Check to make sure there aren't conflicting motor power sets with task Controller
-	if (!barIsManual)
-		stopTask(barSet);
-
-	moGoIsUp = false;
-	while (SensorValue(moGoPot) > MOGO_DOWN)
-		motor[barL] = motor[barR] = -30;
-
-	intakeCone(0);
-
-	if (!barIsManual)
-		startTask(barSet);
-
-	barIsUp = true;
 }
 
 #endif

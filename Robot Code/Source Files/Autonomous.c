@@ -28,7 +28,7 @@ void matchAuton_RED_RIGHT_Stationary()
 	startTask(lLiftPID);
 	forward(50);
 	barIsUp = false;
-	startTask(barSet);
+	startTask(robotControl);
 	intakeCone(0);
 	right(1350);
 	forward(300);
