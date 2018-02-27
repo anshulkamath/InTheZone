@@ -5,78 +5,74 @@
 #include "Variables.c"
 
 // Sets the four-bar position
-task barSet()
+
+task robotControl()
 {
 	while (true)
 	{
-		int lBound = 200;
-		int uBound = 10;
+		int lBoundBar = 200;
+		int uBoundBar = 10;
 
-		const int UPPER_PWR = 100;
-		const int LOWER_PWR = 40;
-		const int HOLD_PWR = 0;
+		const int UPPER_BAR_PWR = 100;
+		const int LOWER_BAR_PWR = 40;
+		const int HOLD_BAR_PWR = 0;
 
-		// Bang-bang the bar
-		if (barIsUp)
+		int lBoundMoGo = 200;
+		int uBoundMoGo = 10;
+
+		const int UPPER_MOGO_PWR = 100;
+		const int LOWER_MOGO_PWR = 40;
+		const int HOLD_MOGO_PWR = -10;
+
+		// Four bar
+		if (!barIsManual)
 		{
-			if (SensorValue(barPot) < BAR_UP - lBound)
-				barPwr = UPPER_PWR;
-			else if (SensorValue(barPot) < BAR_UP - uBound)
-				barPwr = LOWER_PWR;
+			if (barIsUp)
+			{
+				if (SensorValue(barPot) < BAR_UP - lBound)
+					barPwr = UPPER_BAR_PWR;
+				else if (SensorValue(barPot) < BAR_UP - uBound)
+					barPwr = LOWER_BAR_PWR;
+				else
+					barPwr = HOLD_BAR_PWR;
+			}
 			else
-				barPwr = HOLD_PWR;
-		}
-		else
-		{
-			if (SensorValue(barPot) > BAR_DOWN + lBound)
-				barPwr = -UPPER_PWR;
-			else if (SensorValue(barPot) > BAR_DOWN + uBound)
-				barPwr = -LOWER_PWR;
-			else
-				barPwr = -HOLD_PWR;
-		}
+			{
+				if (SensorValue(barPot) > BAR_DOWN + lBound)
+					barPwr = -UPPER_BAR_PWR;
+				else if (SensorValue(barPot) > BAR_DOWN + uBound)
+					barPwr = -LOWER_BAR_PWR;
+				else
+					barPwr = -HOLD_BAR_PWR;
+			}
 
-		// Commented out because replaced in controller task
-		motor[barL] = motor[barR] = barPwr;
-
-		sleep(50);
-	}
-}
-
-// Sets the mobile goal position
-task moGoSet()
-{
-	while (true)
-	{
-		int lBound = 200;
-		int uBound = 10;
-
-		const int UPPER_PWR = 100;
-		const int LOWER_PWR = 40;
-		const int HOLD_PWR = -10;
-
-		// Bang-bang the mobile goal
-		if (moGoIsUp)
-		{
-			if (SensorValue[moGoPot] < MOGO_UP - lBound)
-				mGoalPwr = UPPER_PWR;
-			else if (SensorValue(moGoPot) < MOGO_UP - uBound)
-				mGoalPwr = LOWER_PWR;
-			else
-				mGoalPwr = HOLD_PWR;
-		}
-		else
-		{
-			if (SensorValue(moGoPot) > MOGO_DOWN + lBound)
-				mGoalPwr = -UPPER_PWR;
-			else if (SensorValue(moGoPot) > MOGO_DOWN + uBound)
-				mGoalPwr = -LOWER_PWR;
-			else
-				mGoalPwr = -HOLD_PWR;
+			motor[barL] = motor[barR] = barPwr;
 		}
 
-		// Commented out because replaced in controller task
-		motor[moGo] = mGoalPwr;
+		// Mobile Goal
+		if (!moGoIsManual)
+		{
+			if (moGoIsUp)
+			{
+				if (SensorValue[moGoPot] < MOGO_UP - lBound)
+					mGoalPwr = UPPER_MOGO_PWR;
+				else if (SensorValue(moGoPot) < MOGO_UP - uBound)
+					mGoalPwr = LOWER_MOGO_PWR;
+				else
+					mGoalPwr = HOLD_MOGO_PWR;
+			}
+			else
+			{
+				if (SensorValue(moGoPot) > MOGO_DOWN + lBound)
+					mGoalPwr = -UPPER_MOGO_PWR;
+				else if (SensorValue(moGoPot) > MOGO_DOWN + uBound)
+					mGoalPwr = -LOWER_MOGO_PWR;
+				else
+					mGoalPwr = -HOLD_MOGO_PWR;
+			}
+
+			motor[moGo] = mGoalPwr;
+		}
 
 		sleep(50);
 	}
