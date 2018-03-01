@@ -166,18 +166,18 @@ task robotControl()
 		{
 			if (barIsUp)
 			{
-				if (SensorValue(barPot) < BAR_UP - lBound)
+				if (SensorValue(barPot) < BAR_UP )
 					barPwr = UPPER_BAR_PWR;
-				else if (SensorValue(barPot) < BAR_UP - uBound)
+				else if (SensorValue(barPot) < BAR_UP)
 					barPwr = LOWER_BAR_PWR;
 				else
 					barPwr = HOLD_BAR_PWR;
 			}
 			else
 			{
-				if (SensorValue(barPot) > BAR_DOWN + lBound)
+				if (SensorValue(barPot) > BAR_DOWN)
 					barPwr = -UPPER_BAR_PWR;
-				else if (SensorValue(barPot) > BAR_DOWN + uBound)
+				else if (SensorValue(barPot) > BAR_DOWN )
 					barPwr = -LOWER_BAR_PWR;
 				else
 					barPwr = -HOLD_BAR_PWR;
@@ -191,18 +191,18 @@ task robotControl()
 		{
 			if (moGoIsUp)
 			{
-				if (SensorValue[moGoPot] < MOGO_UP - lBound)
+				if (SensorValue[moGoPot] < MOGO_UP )
 					mGoalPwr = UPPER_MOGO_PWR;
-				else if (SensorValue(moGoPot) < MOGO_UP - uBound)
+				else if (SensorValue(moGoPot) < MOGO_UP)
 					mGoalPwr = LOWER_MOGO_PWR;
 				else
 					mGoalPwr = HOLD_MOGO_PWR;
 			}
 			else
 			{
-				if (SensorValue(moGoPot) > MOGO_DOWN + lBound)
+				if (SensorValue(moGoPot) > MOGO_DOWN )
 					mGoalPwr = -UPPER_MOGO_PWR;
-				else if (SensorValue(moGoPot) > MOGO_DOWN + uBound)
+				else if (SensorValue(moGoPot) > MOGO_DOWN )
 					mGoalPwr = -LOWER_MOGO_PWR;
 				else
 					mGoalPwr = 0;

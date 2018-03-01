@@ -241,7 +241,7 @@ task autoStack()
 		{
 			tasksStarted = false;
 
-			stopTask(stabilizeLift);
+			//stopTask(stabilizeLift);
       intakeIsActive = false;
       barIsActive = false;
       liftIsActive = false;

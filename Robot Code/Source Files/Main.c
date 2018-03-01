@@ -32,7 +32,10 @@
 #include "GyroLib.c"
 #include "AutoStack.c"
 #include "LCDCode.c"
-#include "Autonomous.c"
+#include "Debug.c"
+//#include "Autonomous.c"
+
+int bat = nAvgBatteryLevel;
 
 // Pre-Auton
 void pre_auton()
@@ -57,8 +60,8 @@ void pre_auton()
 }
 
 task autonomous()
-{
-    clearDebugStream();
+{}
+/*?    clearDebugStream();
     datalogClear();
     clearLCDLine(0);
     clearLCDLine(1);
@@ -87,7 +90,73 @@ task autonomous()
         matchAuton_BLUE_7();
         break;
     }
+}*/
+	float p = 1.3;
+	float d = -.3;
+void turnLeft(int degrees)
+{
+
+	int disp = GyroGetAngle();
+	int prevError = 0;
+	while(GyroGetAngle() - disp < degrees * 1)
+	{
+		int error = -((GyroGetAngle()-disp) - degrees*1);
+		int der = error - prevError;
+
+		{
+			der *= d;
+			motor[rightB] = motor[rightF] = -(((GyroGetAngle()-disp) - degrees*1)*p + der);
+			motor[leftB] = motor[leftF] = ((GyroGetAngle()-disp) - degrees*1)*p + der;
+			display(GyroGetAngle(), degrees, der, motor[leftB], motor[rightB], error, 0, 0);
+		}
+		prevError = error;
+	}
+	sleep(50);
+	/*		motor[rightB] = motor[rightF] = 20;
+			motor[leftB] = motor[leftF] =	-20;
+	while(GyroGetAngle() - disp < degrees*.9);*/
+
+			motor[rightB] = motor[rightF] = -10;
+			motor[leftB] = motor[leftF] =	-10;
 }
+// 7.56
+void turnLeft1(int degrees)
+{
+	while(GyroGetAngle() < degrees*.7)
+	{
+		motor[rightB] = motor[rightF] = -75*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 75*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+	}
+			motor[rightB] = motor[rightF] = -10;
+			motor[leftB] = motor[leftF] =	-10;
+}
+
+
+void turnLeft2(int degrees)
+{
+	while(GyroGetAngle() < degrees*.55)
+	{
+		motor[rightB] = motor[rightF] = -75*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 75*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+	}
+			motor[rightB] = motor[rightF] = -10;
+			motor[leftB] = motor[leftF] =	-10;
+}
+// 7.8
+void turnLeft2MoGo(int degrees)
+{
+	while(GyroGetAngle() < degrees*.7)
+	{
+		motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+	}
+			motor[rightB] = motor[rightF] = -10;
+			motor[leftB] = motor[leftF] =	-10;
+}
+
 
 // User Control
 task usercontrol()
@@ -98,8 +167,8 @@ task usercontrol()
 	clearLCDLine(1);
 
 	// Stopping all auton tasks
-	stopTask(lDrivePID);
-	stopTask(rDrivePID);
+	//stopTask(lDrivePID);
+	//stopTask(rDrivePID);
 
 	// Starting Tasks
 	// startTask(stabilizeLift);
@@ -107,7 +176,7 @@ task usercontrol()
 	startTask(controller);
 	startTask(robotControl);
 	startTask(runLCD);
-
+	//turnLeft2MoGo(900);
 	while (true)
 	{
 		//int leftPot = SensorValue(liftPot);
