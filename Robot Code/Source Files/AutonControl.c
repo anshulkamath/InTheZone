@@ -42,7 +42,7 @@ void autoTune(int degrees)
   while(!done)
   {
     int i = 0;
-    float pff = 0;
+    float off = 0;
     while(i<4)
     {
       while(GyroGetAngle() < degrees*stopThres)
@@ -57,15 +57,13 @@ void autoTune(int degrees)
       pre_auton();
       i++;
     }
+    
     if(abs(off/4) < 10)
       done = true;
     else if(off > 0)
-    {
       stopThres -= .05;
-    }else
-    {
+    else
       stopThres += .05;
-    }
   }
 }
 
