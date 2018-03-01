@@ -34,5 +34,39 @@ void pControlFunction(PControlStruct control)
     prev = SensorValue[control.SensorPort];
   }
 }
+                                       
+void autoTune(int degrees)
+{
+  bool done = false;
+  float stopThres = .7;
+  while(!done)
+  {
+    int i = 0;
+    float pff = 0;
+    while(i<4)
+    {
+      while(GyroGetAngle() < degrees*stopThres)
+      {
+        motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+        motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+      }
+          motor[rightB] = motor[rightF] = -10;
+          motor[leftB] = motor[leftF] =	-10;  
+      off += GyroGetAngle() - degrees;
+      pre_auton();
+      i++;
+    }
+    if(abs(off/4) < 10)
+      done = true;
+    else if(off > 0)
+    {
+      stopThres -= .05;
+    }else
+    {
+      stopThres += .05;
+    }
+  }
+}
 
 #endif
