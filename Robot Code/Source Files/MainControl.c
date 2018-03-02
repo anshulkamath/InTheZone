@@ -33,7 +33,10 @@ task controller()
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
+				{
 						mGoalPwr = 100;
+						moGoIsUp = false;
+				}
 				else if (vexRT[Btn7D])
 				{
 					if (SensorValue(moGoPot) < MOGO_UP - 300)
@@ -41,7 +44,18 @@ task controller()
 					else if (SensorValue(moGoPot) < MOGO_UP)
 						mGoalPwr = -40;
 					else
-						mGoalPwr = -10;
+						mGoalPwr = 0;
+
+					moGoIsUp = true;
+				}
+				else if (moGoIsUp)
+				{
+					if (SensorValue(moGoPot) < MOGO_UP - 200)
+						mGoalPwr = -30;
+					else if (SensorValue(moGoPot) > MOGO_UP + 200)
+						mGoalPwr = 30;
+					else
+						mGoalPwr = 0;
 				}
 				else
 					mGoalPwr = 0;

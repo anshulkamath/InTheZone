@@ -34,8 +34,9 @@ void pControlFunction(PControlStruct control)
     prev = SensorValue[control.SensorPort];
   }
 }
-  float stopThres = .75;
-  float end = 0;
+
+float stopThres = .75;
+float end = 0;
 void autoTune(int degrees)
 {
   bool done = false;
@@ -79,7 +80,7 @@ task mGoalAuton()
 	{
 		while (SensorValue(moGoPot) > MOGO_DOWN + 300)
 			motor[moGo] = 100;
-		while (SensorValue(moGoPot) < MOGO_DOWN)
+		while (SensorValue(moGoPot) > MOGO_DOWN)
 			motor[moGo] = 40;
 
 		motor[moGo] = 20;
@@ -98,6 +99,7 @@ task mGoalAuton()
 		moGoIsUp = true;
 	}
 }
+
 task lDrivePID()
 {
 	SensorValue(lDriveQuad) = 0;
@@ -270,7 +272,7 @@ task rDrivePID()
 				rDrivePwr = -55;
 		}
 
-		motor[rightB] = motor[rightF] = rDrivePwr*1.1;
+		motor[rightB] = motor[rightF] = rDrivePwr * 1.1;
 
 		//display( (int)P , (int)I , (int)D ,error,rDrivePwr,target,SensorValue(rDriveQuad));
 		//writeDebugStreamLine("%d , %d", rDrivePwr, lDrivePwr);
@@ -326,11 +328,6 @@ task lLiftPID()
 		sleep (100);
 	}
 }
-
-// Mobile Goal Control
-
-
-// Auton Control functions
 
 // Drive Functions
 void forward(int len)

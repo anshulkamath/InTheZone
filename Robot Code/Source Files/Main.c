@@ -38,6 +38,93 @@
 
 int bat = nAvgBatteryLevel;
 
+
+// 7.56 V - .7 w/o MOGO
+// 7.8 V - .7 w MOGO
+// 7.564 V - .75 w MOGO
+// 7.387 V - .74 w MOGO
+
+// Turn Functions
+float p = 1.3;
+float d = -.3;
+void turnLeft(int degrees)
+{
+
+	int disp = GyroGetAngle();
+	int prevError = 0;
+	while(GyroGetAngle() - disp < degrees * 1)
+	{
+		int error = -((GyroGetAngle()-disp) - degrees*1);
+		int der = error - prevError;
+
+		{
+			der *= d;
+			motor[rightB] = motor[rightF] = -(((GyroGetAngle()-disp) - degrees*1)*p + der);
+			motor[leftB] = motor[leftF] = ((GyroGetAngle()-disp) - degrees*1)*p + der;
+			display(GyroGetAngle(), degrees, der, motor[leftB], motor[rightB], error, 0, 0);
+		}
+		prevError = error;
+	}
+	sleep(50);
+	/*		motor[rightB] = motor[rightF] = 20;
+			motor[leftB] = motor[leftF] =	-20;
+	while(GyroGetAngle() - disp < degrees*.9);*/
+
+			motor[rightB] = motor[rightF] = -10;
+			motor[leftB] = motor[leftF] =	-10;
+}
+
+// 7.56
+void turnLeft1(int degrees)
+{
+	while(GyroGetAngle() < degrees*.7)
+	{
+		motor[rightB] = motor[rightF] = -75*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 75*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+	}
+		motor[rightB] = motor[rightF] = 10;
+		motor[leftB] = motor[leftF] =	-10;
+}
+
+
+void turnLeft2(int degrees)
+{
+	while(GyroGetAngle() < degrees*.55)
+	{
+		motor[rightB] = motor[rightF] = -75*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 75*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+	}
+		motor[rightB] = motor[rightF] = 10;
+		motor[leftB] = motor[leftF] =	-10;
+}
+
+// 7.8
+void turnLeft2MoGo(int degrees)
+{
+	while(GyroGetAngle() < degrees*.7)
+	{
+		motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+	}
+		motor[rightB] = motor[rightF] = 10;
+		motor[leftB] = motor[leftF] =	-10;
+}
+
+void turnLeft3MoGo(int degrees, float stopThres1)
+{
+	while(GyroGetAngle() < degrees*stopThres1)
+	{
+		motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
+
+	}
+		motor[rightB] = motor[rightF] = 10;
+		motor[leftB] = motor[leftF] =	-10;
+}
+
 // Pre-Auton
 void pre_auton()
 {
@@ -99,86 +186,7 @@ task autonomous()
         break;
     }
 }*/
-	float p = 1.3;
-	float d = -.3;
-void turnLeft(int degrees)
-{
 
-	int disp = GyroGetAngle();
-	int prevError = 0;
-	while(GyroGetAngle() - disp < degrees * 1)
-	{
-		int error = -((GyroGetAngle()-disp) - degrees*1);
-		int der = error - prevError;
-
-		{
-			der *= d;
-			motor[rightB] = motor[rightF] = -(((GyroGetAngle()-disp) - degrees*1)*p + der);
-			motor[leftB] = motor[leftF] = ((GyroGetAngle()-disp) - degrees*1)*p + der;
-			display(GyroGetAngle(), degrees, der, motor[leftB], motor[rightB], error, 0, 0);
-		}
-		prevError = error;
-	}
-	sleep(50);
-	/*		motor[rightB] = motor[rightF] = 20;
-			motor[leftB] = motor[leftF] =	-20;
-	while(GyroGetAngle() - disp < degrees*.9);*/
-
-			motor[rightB] = motor[rightF] = -10;
-			motor[leftB] = motor[leftF] =	-10;
-}
-// 7.56
-void turnLeft1(int degrees)
-{
-	while(GyroGetAngle() < degrees*.7)
-	{
-		motor[rightB] = motor[rightF] = -75*(GyroGetAngle() - degrees)/(degrees*.95)+10;
-		motor[leftB] = motor[leftF] = 75*(GyroGetAngle() - degrees)/(degrees*.95)-10;
-
-	}
-			motor[rightB] = motor[rightF] = -10;
-			motor[leftB] = motor[leftF] =	-10;
-}
-
-
-void turnLeft2(int degrees)
-{
-	while(GyroGetAngle() < degrees*.55)
-	{
-		motor[rightB] = motor[rightF] = -75*(GyroGetAngle() - degrees)/(degrees*.95)+10;
-		motor[leftB] = motor[leftF] = 75*(GyroGetAngle() - degrees)/(degrees*.95)-10;
-
-	}
-			motor[rightB] = motor[rightF] = -10;
-			motor[leftB] = motor[leftF] =	-10;
-}
-// 7.8
-void turnLeft2MoGo(int degrees)
-{
-	while(GyroGetAngle() < degrees*.7)
-	{
-		motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
-		motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
-
-	}
-			motor[rightB] = motor[rightF] = -10;
-			motor[leftB] = motor[leftF] =	-10;
-}
-
-void turnLeft3MoGo(int degrees, float stopThres1)
-{
-	while(GyroGetAngle() < degrees*stopThres1)
-	{
-		motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
-		motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
-
-	}
-			motor[rightB] = motor[rightF] = -10;
-			motor[leftB] = motor[leftF] =	-10;
-}
-
-// 7.564 - .75
-// 7.387 - .74
 // User Control
 task usercontrol()
 {
@@ -197,7 +205,7 @@ task usercontrol()
 	// startTask(autoStack);
 	startTask(controller);
 	startTask(robotControl);
-//	startTask(runLCD);
+	// startTask(runLCD);
 	//turnLeft2MoGo(900);
 	while (true)
 	{
