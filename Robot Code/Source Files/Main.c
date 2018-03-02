@@ -33,6 +33,7 @@
 #include "AutoStack.c"
 #include "LCDCode.c"
 #include "Debug.c"
+#include "AutonControl.c"
 //#include "Autonomous.c"
 
 int bat = nAvgBatteryLevel;
@@ -41,7 +42,7 @@ int bat = nAvgBatteryLevel;
 void pre_auton()
 {
 	bDisplayCompetitionStatusOnLcd = false;
-	bStopTasksBetweenModes = false;
+//	bStopTasksBetweenModes = false;
 
 	// Initializes the cones arrays
 	autoConeInitVals();
@@ -60,7 +61,14 @@ void pre_auton()
 }
 
 task autonomous()
-{}
+{
+	startTask(mGoalAuton);
+	while (moGoIsUp) {}
+	forward(1250);
+	forwardNonPID(100, 30);
+	//startTask(mGoalAuton);
+	//while(!moGoIsUp);
+}
 /*?    clearDebugStream();
     datalogClear();
     clearLCDLine(0);
@@ -157,7 +165,20 @@ void turnLeft2MoGo(int degrees)
 			motor[leftB] = motor[leftF] =	-10;
 }
 
+void turnLeft3MoGo(int degrees, float stopThres1)
+{
+	while(GyroGetAngle() < degrees*stopThres1)
+	{
+		motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
+		motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
 
+	}
+			motor[rightB] = motor[rightF] = -10;
+			motor[leftB] = motor[leftF] =	-10;
+}
+
+// 7.564 - .75
+// 7.387 - .74
 // User Control
 task usercontrol()
 {
@@ -169,16 +190,18 @@ task usercontrol()
 	// Stopping all auton tasks
 	//stopTask(lDrivePID);
 	//stopTask(rDrivePID);
-
+	//autoTune(900);
+	//turnLeft3MoGo(900, .74);
 	// Starting Tasks
 	// startTask(stabilizeLift);
 	// startTask(autoStack);
 	startTask(controller);
 	startTask(robotControl);
-	startTask(runLCD);
+//	startTask(runLCD);
 	//turnLeft2MoGo(900);
 	while (true)
 	{
+		bat = nAvgBatteryLevel;
 		//int leftPot = SensorValue(liftPot);
 		//int rightPot = SensorValue(liftPot2);
 		//writeDebugStreamLine("%f %f", GyroGetAngle(), GyroAngleAbsGet());
