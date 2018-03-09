@@ -12,6 +12,12 @@ struct PControlStruct
 
 };
 
+struct Structy
+{
+	int power;
+	float thres;
+};
+
 void pControlFunction(PControlStruct control)
 {
   //int currSensorValue = SensorValue[control.SensorPort];
@@ -72,6 +78,27 @@ void autoTune(int degrees)
   }
   writeDebugStreamLine("Value: %d With Bat Of %d", stopThres, nAvgBatteryLevel);
   end = stopThres;
+}
+
+int powerExtrap(Structy [] x, int size)
+{
+	int closest = 0;
+	for(int i = 0; i<size; i++)
+	{
+		if(abs(nAvgBatteryLevel - x[i].power) <  abs(nAvgBatteryLevel - x[i].power))
+		{
+			closest = i;
+		}
+	}
+	if(x[closest].power > nAvgBatteryLevel)
+	{
+		float slope = (x[closest].thres - x[closest != 0 ? closest - 1 : 0]) /(x[closest].power - x[closest > 0 ? closest - 1 : 0]);
+		float b = slope * x[closest].power * -1 + x[closest].thres;
+		return (int)(slope * nAvgBatteryLevel + b);
+	}
+	float slope = (-x[closest].thres + x[closest +1 != size ? closest + 1 : 0]) /(-x[closest].power + x[closest +1 != size ? closest + 1 : 0]);
+	float b = slope * x[closest].power * -1 + x[closest].thres;
+	return (int)(slope * nAvgBatteryLevel + b);
 }
 
 task mGoalAuton()
