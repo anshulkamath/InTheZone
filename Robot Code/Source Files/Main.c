@@ -26,7 +26,7 @@
 #pragma platform(VEX2)
 #pragma competitionControl(Competition)
 
-#include "Vex_Competition_Includes.c"
+
 #include "MainControl.c"
 #include "Variables.c"
 #include "GyroLib.c"
@@ -34,6 +34,7 @@
 #include "LCDCode.c"
 #include "Debug.c"
 #include "AutonControl.c"
+#include "Vex_Competition_Includes.c"
 //#include "Autonomous.c"
 
 int bat = nAvgBatteryLevel;

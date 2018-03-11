@@ -21,7 +21,7 @@ const int LIFT_STATIONARY = 0;
 
 bool liftUpAuton = false;
 
-const int BAR_UP = 2200;
+const int BAR_UP = 2120;
 const int BAR_DOWN = 420;
 
 const int MOGO_START = 2625;

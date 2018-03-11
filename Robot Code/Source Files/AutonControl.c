@@ -80,7 +80,7 @@ void autoTune(int degrees)
   end = stopThres;
 }
 
-int powerExtrap(Structy [] x, int size)
+/*int powerExtrap(Structy [] x, int size)
 {
 	int closest = 0;
 	for(int i = 0; i<size; i++)
@@ -99,7 +99,7 @@ int powerExtrap(Structy [] x, int size)
 	float slope = (-x[closest].thres + x[closest +1 != size ? closest + 1 : 0]) /(-x[closest].power + x[closest +1 != size ? closest + 1 : 0]);
 	float b = slope * x[closest].power * -1 + x[closest].thres;
 	return (int)(slope * nAvgBatteryLevel + b);
-}
+}*/
 
 task mGoalAuton()
 {
