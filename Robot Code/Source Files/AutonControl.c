@@ -1,5 +1,6 @@
 #ifndef AUTONCONTROL_H
 #define AUTONCONTROL_H
+#include "GyroPid.c"
 
 const int size1 = 10;
 struct PControlStruct
