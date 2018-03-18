@@ -50,11 +50,12 @@ task controller()
 				}
 				else if (moGoIsUp)
 				{
-					if (SensorValue(moGoPot) < MOGO_UP - 200)
+				/*	if (SensorValue(moGoPot) < MOGO_UP - 200)
 						mGoalPwr = -30;
 					else if (SensorValue(moGoPot) > MOGO_UP + 200)
 						mGoalPwr = 30;
 					else
+						mGoalPwr = 0;*/
 						mGoalPwr = 0;
 				}
 				else
@@ -138,7 +139,7 @@ task controller()
 			else if (intakeIsHolding)
 				intakePwr = INTAKE_HOLD;
 			else if (!intakeIsHolding)
-				intakePwr = -10;
+				intakePwr = -5    ;
 
 			motor[intake] = intakePwr;
 		}

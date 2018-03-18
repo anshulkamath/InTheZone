@@ -21,8 +21,8 @@ const int LIFT_STATIONARY = 0;
 
 bool liftUpAuton = false;
 
-const int BAR_UP = 2120;
-const int BAR_DOWN = 420;
+const int BAR_UP = 210;
+const int BAR_DOWN = 2060;
 
 const int MOGO_START = 2625;
 const int MOGO_UP = 2220;
@@ -42,7 +42,7 @@ bool autoStackIsOn = false;
 bool autoStackEnd = false;
 
 
-bool driveIsActive = true;
+bool driveIsActive = false;
 bool liftIsActive = true;
 bool barIsActive = true;
 bool moGoIsActive = true;

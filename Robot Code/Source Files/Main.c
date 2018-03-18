@@ -210,7 +210,7 @@ task usercontrol()
 	//turnLeft2MoGo(900);
 	while (true)
 	{
-		bat = nAvgBatteryLevel;
+		bat = SensorValue[liftPot];
 		//int leftPot = SensorValue(liftPot);
 		//int rightPot = SensorValue(liftPot2);
 		//writeDebugStreamLine("%f %f", GyroGetAngle(), GyroAngleAbsGet());

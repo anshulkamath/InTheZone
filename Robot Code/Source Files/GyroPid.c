@@ -13,7 +13,7 @@
 #pragma userControlDuration(120)
 
 #include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
-#include "gyro.c"
+#include     "gyro.c"
 #include "PIDController.h"
 
 PID gyroPid;
@@ -88,9 +88,9 @@ void pre_auton()
 
 	//Allow gyro to settle and then calibrate (Takes a total of around 3 seconds)
 	delay(1100);
-	SensorValue[calibrationInProgress] = 1;
+	//SensorValue[calibrationInProgress] = 1;
 	gyroCalibrate();
-	SensorValue[calibrationInProgress] = 0;
+//	SensorValue[calibrationInProgress] = 0;
 
 	/*Initialize PID controller for gyro
 	 * kP = 2, kI = 0, kD = 0.15
