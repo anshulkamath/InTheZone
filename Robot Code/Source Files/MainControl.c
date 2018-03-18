@@ -73,8 +73,8 @@ task controller()
 					moGoIsUp = true;
 				else if (vexRT[Btn7D] && cones < 9)
 					moGoIsUp = false;
-				else if (vexRT[Btn7D] && cones >= 9)
-					place();
+				//else if (vexRT[Btn7D] && cones >= 9)
+					//place();
 			}
 		}
 
@@ -181,18 +181,18 @@ task robotControl()
 		{
 			if (barIsUp)
 			{
-				if (SensorValue(barPot) < BAR_UP )
+				if (SensorValue(barPot) > BAR_UP )
 					barPwr = UPPER_BAR_PWR;
-				else if (SensorValue(barPot) < BAR_UP)
+				else if (SensorValue(barPot) > BAR_UP)
 					barPwr = LOWER_BAR_PWR;
 				else
 					barPwr = HOLD_BAR_PWR;
 			}
 			else
 			{
-				if (SensorValue(barPot) > BAR_DOWN)
+				if (SensorValue(barPot) < BAR_DOWN)
 					barPwr = -UPPER_BAR_PWR;
-				else if (SensorValue(barPot) > BAR_DOWN )
+				else if (SensorValue(barPot) < BAR_DOWN )
 					barPwr = -LOWER_BAR_PWR;
 				else
 					barPwr = -HOLD_BAR_PWR;

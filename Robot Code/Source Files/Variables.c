@@ -42,7 +42,7 @@ bool autoStackIsOn = false;
 bool autoStackEnd = false;
 
 
-bool driveIsActive = false;
+bool driveIsActive = true;
 bool liftIsActive = true;
 bool barIsActive = true;
 bool moGoIsActive = true;
