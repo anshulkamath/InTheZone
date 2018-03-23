@@ -127,6 +127,7 @@ void turnLeft3MoGo(int degrees, float stopThres1)
 }
 
 // Pre-Auton
+int oiweriowre = 0;
 void pre_auton()
 {
 	bDisplayCompetitionStatusOnLcd = false;
@@ -134,7 +135,7 @@ void pre_auton()
 
 	// Initializes the cones arrays
 	autoConeInitVals();
-
+	oiweriowre = 40385;
 	gyroIsCalibrating = true;
 	writeDebugStreamLine("%d", SensorValue[liftPot]);
 	startTask(runLCD);
@@ -203,7 +204,7 @@ task usercontrol()
 	//turnLeft3MoGo(900, .74);
 	// Starting Tasks
 	// startTask(stabilizeLift);
-	// startTask(autoStack);
+  startTask(autoStack);
 	startTask(controller);
 	startTask(robotControl);
 	// startTask(runLCD);

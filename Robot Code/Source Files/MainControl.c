@@ -48,16 +48,16 @@ task controller()
 
 					moGoIsUp = true;
 				}
-				else if (moGoIsUp)
+				/*else if (moGoIsUp)
 				{
 				/*	if (SensorValue(moGoPot) < MOGO_UP - 200)
 						mGoalPwr = -30;
 					else if (SensorValue(moGoPot) > MOGO_UP + 200)
 						mGoalPwr = 30;
 					else
-						mGoalPwr = 0;*/
 						mGoalPwr = 0;
-				}
+						mGoalPwr = 0;
+				}*/
 				else
 					mGoalPwr = 0;
 
@@ -88,7 +88,7 @@ task controller()
 			else
 			{
 				if(SensorValue(liftPot) > LIFT_MIN + 100)
-					lLiftPwr = rLiftPwr = -2;
+					lLiftPwr = rLiftPwr = 0;
 				else
 					lLiftPwr = rLiftPwr = -10;
 			}
@@ -166,14 +166,14 @@ task robotControl()
 		int uBoundBar = 10;
 
 		const int UPPER_BAR_PWR = 100;
-		const int LOWER_BAR_PWR = 40;
+		const int LOWER_BAR_PWR = 60;
 		const int HOLD_BAR_PWR = 0;
 
 		int lBoundMoGo = 200;
 		int uBoundMoGo = 10;
 
 		const int UPPER_MOGO_PWR = 100;
-		const int LOWER_MOGO_PWR = 40;
+		const int LOWER_MOGO_PWR = 100;
 		const int HOLD_MOGO_PWR = -10;
 
 		// Four bar

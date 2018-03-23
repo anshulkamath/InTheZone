@@ -81,7 +81,7 @@ void gyroTurn(float target)
 }
 
 //Calibrate gyro and initialize PID controller
-void pre_auton()
+/*void pre_auton()
 {
 	//Set gyro port to analog port 1
 	gyroSetPort(in1);
@@ -95,6 +95,6 @@ void pre_auton()
 	/*Initialize PID controller for gyro
 	 * kP = 2, kI = 0, kD = 0.15
 	 * epsilon = 0, slewRate = 1270
-	*/
+	*
 	pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
-}
+}*/

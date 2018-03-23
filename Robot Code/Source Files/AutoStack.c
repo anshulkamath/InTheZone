@@ -12,46 +12,58 @@ task releaseCone()
 	motor[intake] = 0;
 }
 
+
+// Vestige
+void initConeVals()
+{
+	conesHeight[0] = LIFT_MIN;
+	conesHeight[1] = 1125;
+	conesHeight[2] = 1285;
+	conesHeight[3] = 1593 + 181;
+	conesHeight[4] = 1903;
+	conesHeight[5] = 1630;
+	conesHeight[6] = conesHeight[5] + 191;
+	conesHeight[7] = 2082;
+	conesHeight[8] = 2251;
+	conesHeight[9] = 0;
+	conesHeight[10] = 2220;
+
+	coneDown[0] = LIFT_MIN;
+	coneDown[1] = 1032;
+	coneDown[2] = 1051;
+	coneDown[3] = 1544 + 181;
+	coneDown[4] = 1774;
+	coneDown[5] = 1440;
+	coneDown[6] = coneDown[5] + 252;
+	coneDown[7] = 2020;
+	coneDown[8] = 2091;
+	coneDown[9] = 0;
+	coneDown[10] = 2000;
+}
+
 void autoConeInitVals()
 {
 	// Initializing the lift values for autostack
-	conesHeight[0] = LIFT_MIN + 120;
+	conesHeight[0] = LIFT_MIN;
 	for (int i = 1; i < size; i++)
-		conesHeight[i] = LIFT_MIN + (120 * i);
+		conesHeight[i] = LIFT_MIN + (122 * i);
 
 	// Initializing the lift values for autostack release
 	// conesDown[0] is the same as conesHeight[0] beacause it is the bottom of the lift
 	coneDown[0] = LIFT_MIN;
 	for (int i = 1; i < size; i++)
-		coneDown[i] = conesHeight[i] - 60;
+		coneDown[i] = conesHeight[i] - 30*i;
 }
 
-// Vestige
-void initConeVals()
+void runAutoStackOneCone(bool driver)
 {
-	conesHeight[0] = 1418;
-	conesHeight[1] = 1524;
-	conesHeight[2] = 1593;
-	conesHeight[3] = 1593 + 181;
-	conesHeight[4] = 1903;
-	conesHeight[5] = conesHeight[4] + 191;
-	conesHeight[6] = conesHeight[5] + 191;
-	conesHeight[7] = 2082;
-	conesHeight[8] = 2251;
-	conesHeight[9] = 0;
+	barIsUp = true;
+	while(SensorValue[barPot] > BAR_UP) {}
+	startTask(releaseCone);
+	sleep(450);
+	barIsUp = false;
 
-	coneDown[0] = 1250;
-	coneDown[1] = 1361;
-	coneDown[2] = 1544;
-	coneDown[3] = 1544 + 181;
-	coneDown[4] = 1774;
-	coneDown[5] = coneDown[4] + 225;
-	coneDown[6] = coneDown[5] + 252;
-	coneDown[7] = 2020;
-	coneDown[8] = 2091;
-	coneDown[9] = 0;
 }
-
 void runAutoStack(int height, int down, bool driver)
 {
 	// Moves the lift up to the height
@@ -61,13 +73,13 @@ void runAutoStack(int height, int down, bool driver)
 
 	// Moves the bar up
 	barIsUp = true;
-	while(SensorValue[barPot] < BAR_UP) {}
+	while(SensorValue[barPot] > BAR_UP) {}
 	//startTask(releaseCone);
 	//sleep(250);
 	// Moves the lift down to stack
 	motor[lLift] = motor[rLift] = -76;
 	bool started = false;
- while(SensorValue[liftPot] > down)
+ while(SensorValue[liftPot] > down + 30)
 	{
 		// Runs the intake out as the lift is going down
 		if (SensorValue(liftPot) < down+70 && !started)
@@ -77,6 +89,8 @@ void runAutoStack(int height, int down, bool driver)
 			started = true;
 		}
 	}
+	if(!started) startTask(releaseCone);
+
 	motor[lLift] = motor[rLift] = 0;
 
 	// Moves lift up to get out of stack
@@ -86,7 +100,7 @@ void runAutoStack(int height, int down, bool driver)
 
 	// Moves the bar to bottom position
 	barIsUp = false;
-	while(SensorValue[barPot] > BAR_DOWN) {} // Can make the value a little higher to make autostack quicker
+	while(SensorValue[barPot] < BAR_DOWN) {} // Can make the value a little higher to make autostack quicker
 
 
 	if(!driver)
@@ -123,7 +137,7 @@ void runAutoStackAuton(int height, int down)
 
 	// Moves the bar up
 	barIsUp = true;
-	while(SensorValue[barPot] < BAR_UP) {}
+	while(SensorValue[barPot] > BAR_UP) {}
 	//startTask(releaseCone);
 	//sleep(250);
 	// Moves the lift down to stack
@@ -152,7 +166,10 @@ task startAutoStack()
 		if(cones < size)
 		{
 		//	intakeCone(1);
-			runAutoStack(conesHeight[cones], coneDown[cones], false);
+			if(cones == 0)
+				runAutoStackOneCone(false);
+			else
+				runAutoStack(conesHeight[cones], coneDown[cones], false);
 			cones++;
 		}
 		autoStackIsOn = false;
