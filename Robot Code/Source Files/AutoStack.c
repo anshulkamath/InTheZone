@@ -111,7 +111,7 @@ void runAutoStack(int height, int down, bool driver)
 		motor[lLift] = motor[rLift] = -100;
 		while(SensorValue[liftPot] > LIFT_MIN + 200) {}
 		motor[lLift] = motor[rLift] = -80;
-		while(SensorValue[liftPot] > LIFT_MIN) {}
+		while(SensorValue[liftPot] > LIFT_MIN+50) {}
 		motor[lLift] = motor[rLift] = 0;
 	}
 	else
@@ -122,7 +122,7 @@ void runAutoStack(int height, int down, bool driver)
 		motor[lLift] = motor[rLift] = -100;
 		while(SensorValue[liftPot] > LIFT_DRIVER + 200) {}
 		motor[lLift] = motor[rLift] = -65;
-		while(SensorValue[liftPot] > LIFT_DRIVER) {}
+		while(SensorValue[liftPot] > LIFT_DRIVER+50) {}
 		motor[lLift] = motor[rLift] = 0;
 	}
 }

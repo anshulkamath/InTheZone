@@ -35,6 +35,7 @@
 #include "Debug.c"
 #include "AutonControl.c"
 #include "Vex_Competition_Includes.c"
+#include "GyroPid.c"
 //#include "Autonomous.c"
 
 int bat = nAvgBatteryLevel;
@@ -141,20 +142,32 @@ void pre_auton()
 	startTask(runLCD);
 
 	// Calibrates Gyroscope
-	GyroInit(in4);
-	wait1Msec(1000);
-	wait1Msec(2000);
-	SensorFullCount[in4] = 3600 * 100;
-	SensorScale[in4] = 130;
+	gyroSetPort(gyroscope);
+
+	//Allow gyro to settle and then calibrate (Takes a total of around 3 seconds)
+	//SensorValue[calibrationInProgress] = 1;
+	gyroCalibrate();
+//	SensorValue[calibrationInProgress] = 0;
+
+	/*Initialize PID controller for gyro
+	 * kP = 2, kI = 0, kD = 0.15
+	 * epsilon = 0, slewRate = 1270
+	*/
+	pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
+
+	//SensorFullCount[in4] = 3600 * 100;
+//	SensorScale[in4] = 130;
 	gyroIsCalibrating = false;
 }
 
 task autonomous()
 {
-	startTask(mGoalAuton);
+	gyroTurn(900);
+/*	startTask(mGoalAuton);
 	while (moGoIsUp) {}
 	forward(1250);
-	forwardNonPID(100, 30);
+	forwardNonPID(100, 30);*/
+
 	//startTask(mGoalAuton);
 	//while(!moGoIsUp);
 }
