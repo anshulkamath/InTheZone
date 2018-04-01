@@ -13,13 +13,13 @@ Gyro gyro;
 float gyroGetRate()
 {
 	float scaleFactor = 1.511;
-	
+
 	// 1.1 mV/dps
 	float sensitivity = 0.0011;
-	
-	//Voltage from gyro sensor is proportional to sensor read (0 to 4095) multiplied by a scale factor constant 
+
+	//Voltage from gyro sensor is proportional to sensor read (0 to 4095) multiplied by a scale factor constant
 	float gyroVoltage = (float)SensorValue(gyro.sensorPort) * (5/4095) / scaleFactor;
-	
+
 	//Degrees per second = voltage / (volts/degrees per second) * constant
 	float rate = gyroVoltage/sensitivity;
 	return rate;
@@ -59,6 +59,11 @@ void gyroSetPort(int sensorPort)
 float gyroAddAngle(float dt)
 {
 	gyro.angle += gyroGetFilteredRate() * dt;
+	return gyro.angle;
+}
+
+float gyroGetAngle()
+{
 	return gyro.angle;
 }
 

@@ -60,7 +60,7 @@ void autoTune(int degrees)
         motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
 
       }
-      display(GyroGetAngle(), stopThres*100, off, 0, 0, 0, 0, 0);
+      //display(GyroGetAngle(), stopThres*100, off, 0, 0, 0, 0, 0);
           motor[rightB] = motor[rightF] = 10;
           motor[leftB] = motor[leftF] = -10;
       off += GyroGetAngle() - degrees;
@@ -101,6 +101,16 @@ void autoTune(int degrees)
 	float b = slope * x[closest].power * -1 + x[closest].thres;
 	return (int)(slope * nAvgBatteryLevel + b);
 }*/
+
+void right(int deg)
+{
+	gyroTurn( -90 );
+}
+
+void left(int deg)
+{
+	//gyroTurn((-deg + (SensorValue[gyroscope] - gyro.gyroOffset))%3600);
+}
 
 task mGoalAuton()
 {
@@ -170,7 +180,7 @@ task lDrivePID()
 		float g = GyroGetAngle();
 		//if(isOpposite)
 		//display( (int)P , (int)I , (int)D ,error,lDrivePwr,driveTarget,g);
-		display( (int)P , (int)I , (int)D, error, lDrivePwr, driveTarget, debugval, rDrivePwr);
+		//display( (int)P , (int)I , (int)D, error, lDrivePwr, driveTarget, debugval, rDrivePwr);
 
 		target = driveTarget;
 
