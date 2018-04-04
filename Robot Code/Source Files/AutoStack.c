@@ -40,6 +40,82 @@ void runAutoStackOneCone(bool driver)
 	barIsUp = false;
 
 }
+
+void runAutoStackDeriv(int height, int prevConeBottom, bool driver)
+{
+	// Moves the lift up to the height
+	motor[lLift] = motor[rLift] = 100;
+	while(SensorValue[liftPot] < prevConeBottom) {}
+	motor[lLift] = motor[rLift] = 0;
+
+	// Moves the bar up
+	barIsUp = true;
+
+	motor[lLift] = motor[rLift] = 100;
+	while(SensorValue[liftPot] < height) {}
+	motor[lLift] = motor[rLift] = 0;
+
+	while(SensorValue[barPot] > BAR_UP+1000) {}
+
+	// Moves the lift down to stack
+	motor[lLift] = motor[rLift] = -100;
+	bool started = false;
+
+	// Used to calculate the derivative of the potentiometer
+	int potenLast = 0;
+	int potenCurrent = 0;
+
+ 	while((int)((potenCurrent - potenLast) / 10) != 0)
+	{
+		potenCurrent = SensorValue(liftPot);
+
+		// Runs the intake out as the lift is going down
+		if (SensorValue(liftPot) < down + 70 && !started)
+		{
+			startTask(releaseCone);
+			started = true;
+		}
+
+		potenLast = potenCurrent;
+		sleep(50);
+	}
+	if(!started) startTask(releaseCone);
+	motor[lLift] = motor[rLift] = 0;
+
+	// Moves lift up to get out of stack
+	motor[lLift] = motor[rLift] = 100;
+	while(SensorValue[liftPot] <  down + 75) {}
+	motor[lLift] = motor[rLift] = 0;
+
+	// Moves the bar to bottom position
+	barIsUp = false;
+	while(SensorValue[barPot] < BAR_DOWN - 2000) {} // Can make the value a little higher to make autostack quicker
+
+
+	if(!driver)
+	{
+		// Residual of the moveDownField function
+
+		// Moves the lift to field position
+		motor[lLift] = motor[rLift] = -100;
+		while(SensorValue[liftPot] > LIFT_MIN + 200) {}
+		motor[lLift] = motor[rLift] = -80;
+		while(SensorValue[liftPot] > LIFT_MIN+100) {}
+		motor[lLift] = motor[rLift] = 0;
+	}
+	else
+	{
+		// Residual of the moveDownDriver function
+
+		// Moves lift down to driver load stack
+		motor[lLift] = motor[rLift] = -100;
+		while(SensorValue[liftPot] > LIFT_DRIVER + 50) {}
+		motor[lLift] = motor[rLift] = 0;
+		//while(SensorValue[liftPot] > LIFT_DRIVER+50) {}
+		//motor[lLift] = motor[rLift] = 0;
+	}
+}
+
 void runAutoStack(int height, int down, int prevConeBottom, bool driver)
 {
 	// Moves the lift up to the height
@@ -60,7 +136,7 @@ void runAutoStack(int height, int down, int prevConeBottom, bool driver)
 	//startTask(releaseCone);
 	//sleep(250);
 	// Moves the lift down to stack
-	motor[lLift] = motor[rLift] = -120;
+	motor[lLift] = motor[rLift] = -100;
 	bool started = false;
  while(SensorValue[liftPot] > down + 30)
 	{
@@ -77,7 +153,7 @@ void runAutoStack(int height, int down, int prevConeBottom, bool driver)
 	motor[lLift] = motor[rLift] = 0;
 
 	// Moves lift up to get out of stack
-	motor[lLift] = motor[rLift] = 120;
+	motor[lLift] = motor[rLift] = 100;
 	while(SensorValue[liftPot] <  down + 75) {}
 	motor[lLift] = motor[rLift] = 0;
 
@@ -154,7 +230,7 @@ void runAutoStackAuton(int height, int down)
 	//sleep(250);
 	// Moves the lift down to stack
 	motor[lLift] = motor[rLift] = -76;
- while(SensorValue[liftPot] > down)
+ 	while(SensorValue[liftPot] > down)
 	{
 		// Runs the intake out as the lift is going down
 		if (SensorValue(liftPot) < down+60)
@@ -187,7 +263,7 @@ task startAutoStack()
 			else if(cones < 3)
 				runAutoStack(conesHeight[cones], coneDown[cones], coneDown[cones], false);
 			else
-				runAutoStack(conesHeight[cones], coneDown[cones], coneDown[cones - 3], false);
+				runAutoStackDeriv(conesHeight[cones], coneDown[cones - 3], false);
 			cones++;
 		}
 		autoStackIsOn = false;

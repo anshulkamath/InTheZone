@@ -90,10 +90,8 @@ task controller()
 			{
 				if (vexRT[Btn7U])
 					moGoIsUp = true;
-				else if (vexRT[Btn7D] && cones < 9)
+				else if (vexRT[Btn7D])
 					moGoIsUp = false;
-				else if (vexRT[Btn7D] && cones >= 9)
-					place();
 			}
 		}
 
@@ -102,16 +100,11 @@ task controller()
 		{
 			int startLiftPwr = lLiftPwr;
 			if(vexRT[Btn6U])
-				lLiftPwr = rLiftPwr = (100 + startLiftPwr*3)/4;
+				lLiftPwr = rLiftPwr = (95 + startLiftPwr * 3)/4;
 			else if(vexRT[Btn6D])
-				lLiftPwr = rLiftPwr = (-100 + startLiftPwr*3)/4;
+				lLiftPwr = rLiftPwr = (-95 + startLiftPwr * 3)/4;
 			else
-			{
-				if(SensorValue(liftPot) > LIFT_MIN + 100)
-					lLiftPwr = rLiftPwr = -2;
-				else
-					lLiftPwr = rLiftPwr = -10;
-			}
+				lLiftPwr = rLiftPwr = 0;
 
 			motor[lLift] = lLiftPwr;
 			motor[rLift] = rLiftPwr;
@@ -153,6 +146,7 @@ task controller()
 			while(vexRT(Btn8L));
 
 		}
+
 		if(vexRT[Btn8R])
 		{
 			if(vexRT[Btn5D])
@@ -165,6 +159,8 @@ task controller()
 			}
 			while(vexRT(Btn8R));
 		}
+
+		sleep(50);
 	}
 }
 
@@ -215,10 +211,9 @@ task usercontrol()
 	startTask(controller);
 //	startTask(robotControl);
 	//startTask(stabilizeLift);
-	bool x = false;
-	int b1 = 0;
+	int liftPotVal = 0;
 
-	while (!x)
+	while (true)
 	{
 		if (barIsManual)
 		{
@@ -239,6 +234,7 @@ task usercontrol()
 		else
 		{
 			startTask(barSet);
+
 			if (barIsActive)
 			{
 				if (vexRT[Btn8U])
@@ -247,8 +243,8 @@ task usercontrol()
 					barIsUp = false;
 			}
 		}
-		b1 = SensorValue[liftPot];
 
+		liftPotVal = SensorValue[liftPot];
 
 		sleep(50);
 		//int leftPot = SensorValue(liftPot);
