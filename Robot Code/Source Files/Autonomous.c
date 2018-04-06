@@ -9,13 +9,27 @@
 // Naming conventions: "matchAuton_COLOR_PTVALUE"
 // NUM_CONE DOES NOT COUNT THE PRELOAD
 
-
+void auton1()
+{
+	// move puck lift down
+	// move forward
+	// place cone on extended lift
+	// move puck lift up
+	// move forward
+	// autostack second cone
+	// move backwards
+	// turn
+	// move backwards again
+	// turn
+	// forward
+	// drop in high cone
+}
 
 task autonomous()
 {
     clearDebugStream();
     datalogClear();
-    stopTask(runLCD);
+  ///  stopTask(runLCD);
     clearLCDLine(0);
     clearLCDLine(1);
 

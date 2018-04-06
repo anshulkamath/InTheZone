@@ -81,6 +81,7 @@ void autoTune(int degrees)
   end = stopThres;
 }
 
+
 /*int powerExtrap(Structy [] x, int size)
 {
 	int closest = 0;
@@ -102,16 +103,68 @@ void autoTune(int degrees)
 	return (int)(slope * nAvgBatteryLevel + b);
 }*/
 
+
+
+
+void driveL(int val)
+{
+	if(abs(val) > 127)
+		val = 127 * val/abs(val);
+
+	motor[leftB] = motor[leftF] = val;
+}
+
+//Power right drive motors
+void driveR(int val)
+{
+	if(abs(val) > 127)
+		val = 127 * val/abs(val);
+
+	motor[rightB] = motor[rightF] = val;
+}
+
+
+void turnV3(int degrees1, int timeStopMS = 100000, bool doCorrection = false) {
+	clearTimer(T4);
+	const int DEGREES10 = degrees1 * 10;
+	const float Kt = 0.25;
+	const int GYRO_START = SensorValue[gyroscope];
+	const int TARGET = (fabs(GYRO_START + DEGREES10) > 3600) ? (sgn(degrees) * (fabs(GYRO_START + DEGREES10) - 3600)) : (GYRO_START + DEGREES10);
+	int dist = TARGET - SensorValue[gyroscope];
+	int pwr = (int) (dist * Kt);
+	while (fabs(pwr) > 5 && time1[T4] < timeStopMS) {
+		dist = TARGET - SensorValue[in2];
+		pwr = (int) (dist * Kt);
+		driveR(pwr);
+		driveL(-pwr);
+	}
+	driveL(-pwr);
+	driveR(pwr);
+	if (doCorrection) {
+		writeDebugStreamLine("Attempting Correction");
+		int dist = degrees1 - SensorValue[gyroscope];
+		int b = dist;
+		while (fabs(dist) > 10) {
+			dist = degrees1 - SensorValue[gyroscope];
+			driveR(sgn(dist) * 30);
+			driveL(-sgn(dist) * 30);
+			writeDebugStreamLine("Right Drive: %i", sgn(dist) * 30);
+			writeDebugStreamLine("Left power %i", -sgn(dist) * 30);
+		}
+		driveL(sgn(b) * 10);
+		driveR(-sgn(b) * 10);
+	}
+}
+
 void right(int deg)
 {
-	gyroTurn( -90 );
+	turnV3(900);
 }
 
 void left(int deg)
 {
 	//gyroTurn((-deg + (SensorValue[gyroscope] - gyro.gyroOffset))%3600);
 }
-
 task mGoalAuton()
 {
 	if (moGoIsUp)

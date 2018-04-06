@@ -20,25 +20,9 @@ PID gyroPid;
 float setAngle = 90;
 
 //Power left drive motors
-void driveL(int val)
-{
-	if(abs(val) > 127)
-		val = 127 * val/abs(val);
-
-	motor[leftB] = motor[leftF] = val;
-}
-
-//Power right drive motors
-void driveR(int val)
-{
-	if(abs(val) > 127)
-		val = 127 * val/abs(val);
-
-	motor[rightB] = motor[rightF] = val;
-}
 
 //Gyro turn to target angle
-void gyroTurn(float target)
+/*void gyroTurn(float target)
 {
 	if(abs(target) < 40)
 		pidInit(gyroPid, 3, 0, 0.15, 3, 1270);
@@ -78,7 +62,7 @@ void gyroTurn(float target)
 
 	//Reinitialize the PID constants to their original values in case they were changed
 	pidInit(gyroPid, 2, 0, 0.15, 2, 1270);
-}
+}*/
 
 //Calibrate gyro and initialize PID controller
 /*void pre_auton()

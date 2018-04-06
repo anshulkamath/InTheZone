@@ -100,9 +100,9 @@ task controller()
 		{
 			int startLiftPwr = lLiftPwr;
 			if(vexRT[Btn6U])
-				lLiftPwr = rLiftPwr = (95 + startLiftPwr * 3)/4;
+				lLiftPwr = rLiftPwr = (95 + startLiftPwr)/2;
 			else if(vexRT[Btn6D])
-				lLiftPwr = rLiftPwr = (-95 + startLiftPwr * 3)/4;
+				lLiftPwr = rLiftPwr = (-95 + startLiftPwr)/2;
 			else
 				lLiftPwr = rLiftPwr = 0;
 
@@ -160,7 +160,7 @@ task controller()
 			while(vexRT(Btn8R));
 		}
 
-		sleep(50);
+		sleep(20);
 	}
 }
 
@@ -192,7 +192,7 @@ void pre_auton()
 }
 
 
-
+	int liftPotVal = 0;
 // User Control
 task usercontrol()
 {
@@ -211,7 +211,7 @@ task usercontrol()
 	startTask(controller);
 //	startTask(robotControl);
 	//startTask(stabilizeLift);
-	int liftPotVal = 0;
+
 
 	while (true)
 	{
