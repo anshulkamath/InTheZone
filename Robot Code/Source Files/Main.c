@@ -3,9 +3,9 @@
 #pragma config(Sensor, in3,    barPot,         sensorPotentiometer)
 #pragma config(Sensor, in4,    gyroscope,      sensorGyro)
 #pragma config(Sensor, in5,    liftPot2,       sensorPotentiometer)
-#pragma config(Sensor, dgtl4,  moGoLim,        sensorTouch)
+#pragma config(Sensor, dgtl1,  ,               sensorQuadEncoder)
+#pragma config(Sensor, dgtl4,  rDriveQuad,     sensorQuadEncoder)
 #pragma config(Sensor, dgtl7,  lDriveQuad,     sensorQuadEncoder)
-#pragma config(Sensor, dgtl9,  rDriveQuad,     sensorQuadEncoder)
 #pragma config(Motor,  port1,           barL,          tmotorVex393HighSpeed_HBridge, openLoop)
 #pragma config(Motor,  port2,           leftB,         tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port3,           leftF,         tmotorVex393HighSpeed_MC29, openLoop)
@@ -65,12 +65,22 @@ task controller()
 			if (moGoIsActive)
 			{
 				if (vexRT[Btn7U])
+				{
+					if(SensorValue[moGoPot] > MOGO_DOWN + 300)
 						mGoalPwr = 100;
+					else if(SensorValue[moGOPot] > MOGO_DOWN)
+					{
+						mGoalPwr = 40;
+					}else
+					{
+						mGoalPwr = 0;
+					}
+				}
 				else if (vexRT[Btn7D])
 				{
-					if (SensorValue(moGoPot) < MOGO_UP - 300)
+					if (SensorValue(moGoPot) < MOGO_UP - 500)
 						mGoalPwr = -100;
-					else if (SensorValue(moGoPot) < MOGO_UP)
+					else if (SensorValue(moGoPot) < MOGO_UP - 200)
 						mGoalPwr = -40;
 					else
 						mGoalPwr = 0;
@@ -100,9 +110,9 @@ task controller()
 		{
 			int startLiftPwr = lLiftPwr;
 			if(vexRT[Btn6U])
-				lLiftPwr = rLiftPwr = (95 + startLiftPwr)/2;
+				lLiftPwr = rLiftPwr = (95);
 			else if(vexRT[Btn6D])
-				lLiftPwr = rLiftPwr = (-95 + startLiftPwr)/2;
+				lLiftPwr = rLiftPwr = (-95);
 			else
 				lLiftPwr = rLiftPwr = 0;
 

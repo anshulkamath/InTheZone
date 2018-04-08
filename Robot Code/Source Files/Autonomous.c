@@ -11,8 +11,8 @@
 
 void auton1()
 {
-	// move puck lift down
-	// move forward
+	startTask(moveMoGoDown);
+	forward(1450);
 	// place cone on extended lift
 	// move puck lift up
 	// move forward
@@ -40,7 +40,9 @@ task autonomous()
     // 4 - 5 Pt Red
     // 5 - 5 Pt Blue
 	clearDebugStream();
-
+	forward(1250);
+	wait10Msec(100);
+	backward(1250);
 /*	writeDebugStreamLine("Gyro at: %d", GyroGetAngle());
 	sleep(3000);
 	//turnTo(0);

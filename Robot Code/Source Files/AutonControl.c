@@ -19,6 +19,15 @@ struct Structy
 	float thres;
 };
 
+task moveMoGoDown()
+{
+	motor[moGo] = 100;
+	while(SensorValue[moGoPot] > MOGO_DOWN + 50)
+	{
+	}
+	motor[moGo] = 0;
+}
+
 void pControlFunction(PControlStruct control)
 {
   //int currSensorValue = SensorValue[control.SensorPort];
