@@ -22,8 +22,10 @@ struct Structy
 task moveMoGoDown()
 {
 	motor[moGo] = 100;
-	while(SensorValue[moGoPot] > MOGO_DOWN + 50)
+	int start1 = SensorValue[moGoPot];
+	while(SensorValue[moGoPot] > MOGO_DOWN)
 	{
+		motor[moGo] = 100 * SensorValue[moGoPot];
 	}
 	motor[moGo] = 0;
 }
@@ -134,21 +136,21 @@ void driveR(int val)
 
 
 void turnV3(int degrees1, int timeStopMS = 100000, bool doCorrection = false) {
-	clearTimer(T4);
+	clearTimer(T4)
 	const int DEGREES10 = degrees1 * 10;
-	const float Kt = 0.25;
+	const float Kt = 0.08;
 	const int GYRO_START = SensorValue[gyroscope];
 	const int TARGET = (fabs(GYRO_START + DEGREES10) > 3600) ? (sgn(degrees) * (fabs(GYRO_START + DEGREES10) - 3600)) : (GYRO_START + DEGREES10);
 	int dist = TARGET - SensorValue[gyroscope];
 	int pwr = (int) (dist * Kt);
 	while (fabs(pwr) > 5 && time1[T4] < timeStopMS) {
-		dist = TARGET - SensorValue[in2];
+		dist = TARGET - SensorValue[gyroscope];
 		pwr = (int) (dist * Kt);
 		driveR(pwr);
 		driveL(-pwr);
 	}
-	driveL(-pwr);
-	driveR(pwr);
+	driveL(0);
+	driveR(0);
 	if (doCorrection) {
 		writeDebugStreamLine("Attempting Correction");
 		int dist = degrees1 - SensorValue[gyroscope];
@@ -214,7 +216,7 @@ task lDrivePID()
 	float ki;
 	float kd;
 	int range;
-
+	float tempy = .25;
 	if(!isOpposite)
 	{
 		kp = .7;
@@ -282,7 +284,8 @@ task lDrivePID()
 				lDrivePwr = -50;
 		}
 
-		motor[leftB] = motor[leftF] = lDrivePwr;
+		motor[leftB] = motor[leftF] = lDrivePwr * tempy;
+		if(tempy < 1) tempy += .05;
 
 		sleep (50);
 	}
@@ -323,7 +326,7 @@ task rDrivePID()
 	int lastError = 0;
 	int debugval = 0;
 	int startangle = GyroGetAngle();
-
+	float tempy = .25;
 	while (true)
 	{
 		//if(!isOpposite)
@@ -372,8 +375,8 @@ task rDrivePID()
 				rDrivePwr = -55;
 		}
 
-		motor[rightB] = motor[rightF] = rDrivePwr * 1.1;
-
+		motor[rightB] = motor[rightF] = rDrivePwr * tempy;
+		if(tempy < 1) tempy += .05;
 		//display( (int)P , (int)I , (int)D ,error,rDrivePwr,target,SensorValue(rDriveQuad));
 		//writeDebugStreamLine("%d , %d", rDrivePwr, lDrivePwr);
 
@@ -424,7 +427,7 @@ task lLiftPID()
 		motor[lLift] = lLiftPwr * 1.1;
 		motor[rLift] = rLiftPwr * 1.1;
 
-		//display( (int)P , (int)I , (int)D ,error,lLiftPwr,liftTarget,SensorValue(rLiftPot));
+		//display( (int)P , (int)I , (int)D ,error,lLiftPwr,liftTarget,SensorValue(liftPot));
 		sleep (100);
 	}
 }

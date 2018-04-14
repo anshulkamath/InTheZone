@@ -1,3 +1,4 @@
+
 #pragma config(Sensor, in1,    liftPot,        sensorPotentiometer)
 #pragma config(Sensor, in2,    moGoPot,        sensorPotentiometer)
 #pragma config(Sensor, in3,    barPot,         sensorPotentiometer)
@@ -110,9 +111,9 @@ task controller()
 		{
 			int startLiftPwr = lLiftPwr;
 			if(vexRT[Btn6U])
-				lLiftPwr = rLiftPwr = (95);
+				lLiftPwr = rLiftPwr = (100);
 			else if(vexRT[Btn6D])
-				lLiftPwr = rLiftPwr = (-95);
+				lLiftPwr = rLiftPwr = (-100);
 			else
 				lLiftPwr = rLiftPwr = 0;
 
@@ -183,7 +184,7 @@ void pre_auton()
 	bStopTasksBetweenModes = true;
 
 	// Initializes the cones arrays
-	autoConeInitVals();
+	initConeVals();
 
 	gyroIsCalibrating = true;
 	writeDebugStreamLine("%d", SensorValue[liftPot]);
@@ -192,11 +193,11 @@ void pre_auton()
 	wait1Msec(1000);
 	SensorType[gyroscope] = sensorGyro;
 	// Calibrates Gyroscope
-	gyroSetPort(gyroscope);
+	//gyroSetPort(gyroscope);
 
 	//Allow gyro to settle and then calibrate (Takes a total of around 3 seconds)
 	delay(1100);
-	gyroCalibrate();
+//gyroCalibrate();
 	gyroIsCalibrating = false;
 	pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
 }

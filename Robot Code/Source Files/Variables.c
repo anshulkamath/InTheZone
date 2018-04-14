@@ -15,7 +15,7 @@ int liftTarget = 0;
 // Sensor Values - CONSTANTS
 const int LIFT_MIN = 1307;
 const int LIFT_MID = 2025;
-const int LIFT_MAX  = 2562;
+const int LIFT_MAX  = 2900;
 const int LIFT_DRIVER = 1950;
 const int LIFT_STATIONARY = 0;
 
@@ -77,7 +77,7 @@ const short rightButton = 4;
 int cones = 0;
 
 // AutoStack arrays
-const int size = 11;
+const int size = 13;
 int conesHeight[size];
 int coneDown[size];
 
