@@ -111,18 +111,15 @@ task controller()
 		{
 			int startLiftPwr = lLiftPwr;
 			if(vexRT[Btn6U])
-				lLiftPwr = rLiftPwr = (100);
+				lLiftPwr = rLiftPwr = 100;
 			else if(vexRT[Btn6D])
-				lLiftPwr = rLiftPwr = (-100);
+				lLiftPwr = rLiftPwr = -100;
 			else
 				lLiftPwr = rLiftPwr = 0;
 
 			motor[lLift] = lLiftPwr;
 			motor[rLift] = rLiftPwr;
 		}
-
-		// Four bar
-
 
 		// Intake
 		if (intakeIsActive)
@@ -149,8 +146,10 @@ task controller()
 		{
 			if(vexRT(Btn5D))
 			{
-				cones--;
-			}else
+				if (cones > 0)
+					cones--;
+			}
+			else
 			{
 				isFieldControl = !isFieldControl;
 			}
@@ -162,7 +161,8 @@ task controller()
 		{
 			if(vexRT[Btn5D])
 			{
-				cones++;
+				if (cones < 12)
+					cones++;
 			}
 			else
 			{

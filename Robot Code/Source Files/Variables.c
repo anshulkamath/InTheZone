@@ -14,10 +14,11 @@ int liftTarget = 0;
 
 // Sensor Values - CONSTANTS
 const int LIFT_MIN = 1307;
-const int LIFT_MID = 2025;
 const int LIFT_MAX  = 2900;
+const int LIFT_MID = (LIFT_MIN + LIFT_MAX) / 2;
 const int LIFT_DRIVER = 1950;
 const int LIFT_STATIONARY = 0;
+const int LIFT_CONE = 1590;
 
 bool liftUpAuton = false;
 
