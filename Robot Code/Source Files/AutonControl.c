@@ -30,6 +30,62 @@ task moveMoGoDown()
 	motor[moGo] = 0;
 }
 
+
+void driveL(int val)
+{
+	if(abs(val) > 127)
+		val = 127 * val/abs(val);
+
+	motor[leftB] = motor[leftF] = val;
+}
+
+//Power right drive motors
+void driveR(int val)
+{
+	if(abs(val) > 127)
+		val = 127 * val/abs(val);
+
+	motor[rightB] = motor[rightF] = val;
+}
+
+
+void turnV3(int degrees1, int timeStopMS = 100000, bool doCorrection = false) {
+	clearTimer(T4)
+	const int DEGREES10 = degrees1 * 10;
+	const float Kt = 0.08;
+	const int GYRO_START = SensorValue[gyroscope];
+	const int TARGET = (fabs(GYRO_START + DEGREES10) > 3600) ? (sgn(degrees) * (fabs(GYRO_START + DEGREES10) - 3600)) : (GYRO_START + DEGREES10);
+	int dist = TARGET - SensorValue[gyroscope];
+	int pwr = (int) (dist * Kt);
+	while (fabs(pwr) > 5 && time1[T4] < timeStopMS) {
+		dist = TARGET - SensorValue[gyroscope];
+		pwr = (int) (dist * Kt);
+		driveR(pwr);
+		driveL(-pwr);
+	}
+	driveL(0);
+	driveR(0);
+	if (doCorrection) {
+		writeDebugStreamLine("Attempting Correction");
+		int dist = degrees1 - SensorValue[gyroscope];
+		int b = dist;
+		while (fabs(dist) > 10) {
+			dist = degrees1 - SensorValue[gyroscope];
+			driveR(sgn(dist) * 30);
+			driveL(-sgn(dist) * 30);
+			writeDebugStreamLine("Right Drive: %i", sgn(dist) * 30);
+			writeDebugStreamLine("Left power %i", -sgn(dist) * 30);
+		}
+		driveL(sgn(b) * 10);
+		driveR(-sgn(b) * 10);
+	}
+}
+
+void turnTo(int degs)
+{
+	turnV3(-(degs - SensorValue[gyroscope]), 100000, true);
+}
+
 void pControlFunction(PControlStruct control)
 {
   //int currSensorValue = SensorValue[control.SensorPort];
@@ -117,55 +173,8 @@ void autoTune(int degrees)
 
 
 
-void driveL(int val)
-{
-	if(abs(val) > 127)
-		val = 127 * val/abs(val);
-
-	motor[leftB] = motor[leftF] = val;
-}
-
-//Power right drive motors
-void driveR(int val)
-{
-	if(abs(val) > 127)
-		val = 127 * val/abs(val);
-
-	motor[rightB] = motor[rightF] = val;
-}
 
 
-void turnV3(int degrees1, int timeStopMS = 100000, bool doCorrection = false) {
-	clearTimer(T4)
-	const int DEGREES10 = degrees1 * 10;
-	const float Kt = 0.08;
-	const int GYRO_START = SensorValue[gyroscope];
-	const int TARGET = (fabs(GYRO_START + DEGREES10) > 3600) ? (sgn(degrees) * (fabs(GYRO_START + DEGREES10) - 3600)) : (GYRO_START + DEGREES10);
-	int dist = TARGET - SensorValue[gyroscope];
-	int pwr = (int) (dist * Kt);
-	while (fabs(pwr) > 5 && time1[T4] < timeStopMS) {
-		dist = TARGET - SensorValue[gyroscope];
-		pwr = (int) (dist * Kt);
-		driveR(pwr);
-		driveL(-pwr);
-	}
-	driveL(0);
-	driveR(0);
-	if (doCorrection) {
-		writeDebugStreamLine("Attempting Correction");
-		int dist = degrees1 - SensorValue[gyroscope];
-		int b = dist;
-		while (fabs(dist) > 10) {
-			dist = degrees1 - SensorValue[gyroscope];
-			driveR(sgn(dist) * 30);
-			driveL(-sgn(dist) * 30);
-			writeDebugStreamLine("Right Drive: %i", sgn(dist) * 30);
-			writeDebugStreamLine("Left power %i", -sgn(dist) * 30);
-		}
-		driveL(sgn(b) * 10);
-		driveR(-sgn(b) * 10);
-	}
-}
 
 void right(int deg)
 {
@@ -200,6 +209,107 @@ task mGoalAuton()
 
 		moGoIsUp = true;
 	}
+}
+
+void turnBrake(bool clockwise)
+{
+  if (clockwise)
+  {
+    driveR(10);
+    driveL(-10);
+  }
+  else
+  {
+    driveR(-10);
+    driveL(10);
+  }
+
+    sleep (50);
+
+    driveR(0);
+    driveL(0);
+}
+
+void turnBangBang(int deg)
+{
+  float lBound = 0.6;
+  float uBound = 0.9;
+  while (SensorValue(gyroscope) < abs(deg) * 0.99)
+  {
+    if (SensorValue(gyroscope) < deg * lBound)
+    {
+      driveR(100);
+      driveL(-100);
+    }
+    else if (SensorValue(gyroscope) < deg * uBound)
+    {
+      driveR(65);
+      driveL(-65);
+    }
+    else
+    {
+      driveR(40);
+      driveL(-40);
+    }
+  }
+
+  turnBrake(false);
+}
+
+void turnPD(int target, bool mogo1, bool change = true)
+{
+
+  float kp = .03;
+  float kd = .07;
+  if(abs(target)- 450 < 150 && !mogo1) // normal
+  {
+  	kp = .09;
+  	kd = .1;
+  }else if(abs(target)- 450 < 150 && mogo1) // mogo
+  {
+  	kp = .09;
+  	kd = .1;
+  }else if(abs(target)- 900 < 150 && mogo1) // mogo
+  {
+  	kp = .07;
+  	kd = .1;
+  }else if(abs(target)- 900 < 150 && !mogo1) // mogo
+  {
+  	kp = .06;
+  	kd = .07;
+  }
+  int P = 0;
+  int D = 0;
+  int error, lastError, pwr;
+  bool PDOn = true;
+	int begin = SensorValue[gyroscope];
+  while (abs(SensorValue(gyroscope) - begin) < abs(target))
+  {
+    error = target - SensorValue(gyroscope) - begin;
+    P = error * kp;
+    D = (error - lastError) * kd;
+
+    pwr = P - D;
+
+    if (pwr > 100) pwr = 100;
+    if (pwr < -100) pwr = -100;
+		if((D == 0 && error < 300) &&  change || !PDOn)
+		{
+			pwr = sgn(target) * 40;
+			PDOn = false;
+		}else if(!change && D==0)
+		{
+			pwr = sgn(target) * 20;
+			PDOn = false;
+		}
+    driveL(-pwr);
+    driveR(pwr);
+
+    lastError = error;
+    sleep (50);
+  }
+  if (target < 0) turnBrake (false);
+  else turnBrake (true);
 }
 
 task lDrivePID()
