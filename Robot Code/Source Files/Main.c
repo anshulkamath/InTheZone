@@ -1,4 +1,3 @@
-
 #pragma config(Sensor, in1,    liftPot,        sensorPotentiometer)
 #pragma config(Sensor, in2,    moGoPot,        sensorPotentiometer)
 #pragma config(Sensor, in3,    barPot,         sensorPotentiometer)
@@ -83,7 +82,8 @@ task controller()
 						mGoalPwr = -100;
 					else if (SensorValue(moGoPot) < MOGO_UP - 200)
 						mGoalPwr = -40;
-					else
+
+						else
 						mGoalPwr = 0;
 				}
 				else
@@ -192,6 +192,8 @@ void pre_auton()
 	SensorType[gyroscope] = sensorNone;
 	wait1Msec(1000);
 	SensorType[gyroscope] = sensorGyro;
+	SensorScale[gyroscope] = 135;
+	SensorFullCount[gyroscope] *= 100;
 	// Calibrates Gyroscope
 	//gyroSetPort(gyroscope);
 
@@ -200,6 +202,7 @@ void pre_auton()
 //gyroCalibrate();
 	gyroIsCalibrating = false;
 	pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
+
 }
 
 
