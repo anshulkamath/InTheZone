@@ -224,7 +224,7 @@ void turnBrake(bool clockwise)
     driveL(10);
   }
 
-    sleep (50);
+    sleep (150);
 
     driveR(0);
     driveL(0);
@@ -283,9 +283,9 @@ void turnPD(int target, bool mogo1, bool change = true)
   int error, lastError, pwr;
   bool PDOn = true;
 	int begin = SensorValue[gyroscope];
-  while (abs(SensorValue(gyroscope) - begin) < abs(target))
+  while (abs(SensorValue(gyroscope) ) < abs(target + begin))
   {
-    error = target - SensorValue(gyroscope) - begin;
+    error = target + begin - SensorValue(gyroscope);
     P = error * kp;
     D = (error - lastError) * kd;
 
@@ -308,8 +308,8 @@ void turnPD(int target, bool mogo1, bool change = true)
     lastError = error;
     sleep (50);
   }
-  if (target < 0) turnBrake (false);
-  else turnBrake (true);
+  if (target < 0) turnBrake (true);
+  else turnBrake (false);
 }
 
 task lDrivePID()

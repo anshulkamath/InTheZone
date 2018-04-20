@@ -193,6 +193,7 @@ void pre_auton()
 	wait1Msec(1000);
 	SensorType[gyroscope] = sensorGyro;
 	SensorScale[gyroscope] = 135;
+	SensorFullCount[gyroscope] *= 100;
 	// Calibrates Gyroscope
 	//gyroSetPort(gyroscope);
 
@@ -201,6 +202,7 @@ void pre_auton()
 //gyroCalibrate();
 	gyroIsCalibrating = false;
 	pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
+
 }
 
 
