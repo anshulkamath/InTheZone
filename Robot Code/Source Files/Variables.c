@@ -30,6 +30,8 @@ const int MOGO_UP = 2852;
 const int MOGO_THROW = 1722;
 const int MOGO_DOWN = 660;
 
+const int TURN_PWR = 30;
+
 const int INTAKE_HOLD = 30;
 
 // Toggle Variables
