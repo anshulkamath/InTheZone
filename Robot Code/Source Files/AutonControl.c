@@ -30,6 +30,7 @@ task moveMoGoDown()
 	motor[moGo] = 0;
 }
 
+<<<<<<< HEAD
 
 void driveL(int val)
 {
@@ -84,6 +85,25 @@ void turnV3(int degrees1, int timeStopMS = 100000, bool doCorrection = false) {
 void turnTo(int degs)
 {
 	turnV3(-(degs - SensorValue[gyroscope]), 100000, true);
+=======
+void turnBrake(bool clockwise)
+{
+  if (clockwise)
+  {
+    driveR(10);
+    driveL(-10);
+  }
+  else
+  {
+    driveR(-10);
+    driveL(10);
+  }
+
+    sleep (50);
+
+    driveR(0);
+    driveL(0);
+>>>>>>> 388f87faa3e19737f835cf3be8fb2d7ec93e1a67
 }
 
 void pControlFunction(PControlStruct control)
@@ -175,6 +195,61 @@ void autoTune(int degrees)
 
 
 
+
+void turnBangBang(int deg)
+{
+  float lBound = 0.6;
+  float uBound = 0.9;
+  while (SensorValue(gyroscope) < deg * 0.99)
+  {
+    if (SensorValue(gyroscope) < deg * lBound)
+    {
+      driveR(100);
+      driveL(-100);
+    }
+    else if (SensorValue(gyroscope) < deg * uBound)
+    {
+      driveR(65);
+      driveL(-65);
+    }
+    else
+    {
+      driveR(40);
+      driveL(-40);
+    }
+  }
+
+  turnBrake(false);
+}
+
+void turnPD(int target)
+{
+  float kp = 0;
+  float kd = 0;
+  int P = 0;
+  int D = 0;
+  int error, lastError, pwr;
+
+  while (abs(SensorValue(gyroscope)) < abs(target))
+  {
+    error = target - SensorValue(gyroscope);
+    P = error * kp;
+    D = (error - lastError) * kd;
+
+    pwr = P - D;
+
+    if (pwr > 100) pwr = 100;
+    if (pwr < -100) pwr = -100;
+
+    driveL(pwr);
+    driveR(-pwr);
+
+    lastError = error;
+    sleep (50);
+  }
+  if (target < 0) turnBrake (false);
+  else turnBrake (true);
+}
 
 void right(int deg)
 {
