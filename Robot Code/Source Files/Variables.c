@@ -26,9 +26,11 @@ const int BAR_UP = 360;
 const int BAR_DOWN = 2260;
 
 const int MOGO_START = 3111;
-const int MOGO_UP = 2852;
+const int MOGO_UP = 2745;
 const int MOGO_THROW = 1722;
-const int MOGO_DOWN = 660;
+const int MOGO_DOWN = 500;
+
+const int TURN_PWR = 30;
 
 const int INTAKE_HOLD = 30;
 

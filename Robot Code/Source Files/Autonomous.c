@@ -9,76 +9,103 @@
 // Naming conventions: "matchAuton_COLOR_PTVALUE"
 // NUM_CONE DOES NOT COUNT THE PRELOAD
 
+task deploy()
+{
+	startTask(intakeCone);
+	sleep(200); // wait for cone to get into intake
+	motor[lLift] = motor[rLift] = 75;
+	while(SensorValue[liftPot] < LIFT_MIN + 400);
+	motor[lLift] = motor[rLift] = 10;
+	startTask(moveMoGoDown);
+	while(moGoIsUp);
+}
+
+// 22_Left
 void auton1()
 {
 	writeDebugStreamLine("%d", SensorValue[gyroscope]);
 	clearTimer(T3);
-	motor[intake] = 50;
-	wait10Msec(75);
-	motor[intake] = 20;
+	startTask(barSet);
+
+	/*
+	startTask(intakeCone);
+	sleep(100); // wait for cone to get into intake
 	motor[lLift] = motor[rLift] = 75;
 	while(SensorValue[liftPot] < LIFT_MIN + 400);
 	motor[lLift] = motor[rLift] = 10;
 	startTask(moveMoGoDown);
   //while(SensorValue[moGoPot] > MOGO_DOWN + 100);
+	*/
+
+	// Replaced with task... see how it works. If it doesn't just replace with above
+	startTask(deploy);
+	while(SensorValue[liftPot] < LIFT_MIN + 400);
+
   forward(1400);
-	//forwardNonPID(200, 45);
-	startTask(barSet);
   barIsUp = false;
   while(SensorValue(barPot) < BAR_DOWN - 500);
- 	motor[lLift] = motor[rLift] = -75;
+
+	motor[lLift] = motor[rLift] = -75;
 	while(SensorValue[liftPot] > LIFT_MIN + 200);
 	motor[lLift] = motor[rLift] = 10;
 
+	// Could replace with startTask(releaseCone)
 	motor[intake] = -50;
 	wait10Msec(50);
 	motor[intake] = 0;
 
   barIsUp = true;
   while(SensorValue(barPot) > BAR_UP + 100);
+
 	motor[lLift] = motor[rLift] = 75;
 	while(SensorValue[liftPot] < LIFT_MIN + 300);
 	motor[lLift] = motor[rLift] = 10;
 
 	motor[moGo] = -100;
-	int start1 = SensorValue[moGoPot];
-	writeDebugStream("%d", SensorValue[gyroscope]);
 	while(SensorValue[moGoPot] < MOGO_UP)
 	{
-		motor[moGo] = -100;// * (SensorValue[moGoPot]/MOGO_UP);
+		motor[moGo] = -100;
 	}
 	motor[moGo] = 0;
-	if(SensorValue[gyroscope] > 30)
-		turnPD((0 - SensorValue[gyroscope]), true, false);
+
 	writeDebugStream("%d", SensorValue[gyroscope]);
+	if(abs(SensorValue[gyroscope]) > 30)
+		turnTo(0);
+	writeDebugStream("%d", SensorValue[gyroscope]);
+
+	// Pick up second cone
 	/*forwardNonPID(125, 45);
 	barIsUp = false;
-	//turnPD((0 - SensorValue[gyroscope]), false);;
+	//turnTo(0);
 	wait1Msec(100);
 	motor[intake] = 100;
 	motor[lLift] = motor[rLift] = -75;
 	while(SensorValue[liftPot] > LIFT_MIN);
 	motor[lLift] = motor[rLift] = 0;
-
-	wait10Msec(20);
 	runAutoStack(conesHeight[1], coneDown[1], coneDown[1], false);
-	//turnPD((0 - SensorValue[gyroscope]), true);;*/
+	//turnTo(0);
+	*/
+
+	barIsUp = true;
 	backward(1200);
+
 	motor[lLift] = motor[rLift] = 75;
 	while(SensorValue[liftPot] < LIFT_MIN+300);
 	motor[lLift] = motor[rLift] = 10;
+
 	turnPD(450, true);
-	barIsUp = true;
 	backward(800);
 	turnPD(900, true);
+
 	forwardNonPID(200, 75);
 	startTask(moveMoGoDown);
 	forwardNonPID(200, 75);
 	stopTask(moveMoGoDown);
+
 	motor[moGo] = -100;
 	while(SensorValue[moGoPot] < MOGO_UP)
 	{
-		motor[moGo] = -100;// * (SensorValue[moGoPot]/MOGO_UP);
+		motor[moGo] = -100;
 	}
 	motor[moGo] = 0;
 
@@ -89,34 +116,97 @@ void auton1()
 void stationary()
 {
 	clearTimer(T3);
-	motor[intake] = 50;
-	wait10Msec(75);
-	motor[intake] = 50;
-	startTask(moveMoGoDown);
-	motor[lLift] = motor[rLift] = 60;
-	while(SensorValue[liftPot] < 2300);
-	motor[lLift] = motor[rLift] = 10;
 	startTask(barSet);
+
+	startTask(intakeCone);
+	sleep(200);
+	startTask(moveMoGoDown);
+
+	motor[lLift] = motor[rLift] = 75;
+	while(SensorValue[liftPot] < 2100);
+	motor[lLift] = motor[rLift] = 0;
+
+	forwardNonPID(540, 60);
 	barIsUp = false;
-	wait10Msec(100);
-	forwardNonPID(550, 60);
-	wait10Msec(50);
+	sleep(500);
+
 	motor[lLift] = motor[rLift] = -50;
 	startTask(releaseCone);
-	wait10Msec(20);
+	sleep(200);
+	stopTask(releaseCone);
 	motor[lLift] = motor[rLift] = 0;
-	wait10Msec(60);
-	backward(570);
-	turnPD(-800-SensorValue[gyroscope], false);
-	turnPD(-900-SensorValue[gyroscope], false);
-	startTask(moveMoGoDown);
-	motor[lLift] = motor[rLift] = -60;
-	while(SensorValue[liftPot] > LIFT_MIN+400);
 	barIsUp = true;
+
+	sleep(100);
+
+	backward(470);
+
+	// What is this? Turn to 80º and then 90º
+	turnTo(0);
+	driveR(25);
+	while(SensorValue[gyroscope] < 0);
+	driveR(0);
+	writeDebugStream("Gyro: %d\n", SensorValue[gyroscope]);
+	//turnTo(-900);
+	//turnPD(-800-SensorValue[gyroscope], false);
+	//turnPD(-900-SensorValue[gyroscope], false);
+	motor[moGo] = 100;
+
+	while(SensorValue[moGoPot] > MOGO_DOWN)
+	{
+		motor[moGo] = 100;
+	}
+
+	motor[moGo] = 0;
+
+	motor[lLift] = motor[rLift] = -75;
+	while(SensorValue[liftPot] > LIFT_MIN + 600);
 	motor[lLift] = motor[rLift] = 10;
+
 	forward(1250);
+	forwardNonPID(20, 45);
+	motor[moGo] = -100;
+
+	while(SensorValue[moGoPot] < MOGO_UP)
+	{
+		motor[moGo] = -100;
+	}
+	turnTo(0);
+	barIsUp = false;
+	forwardNonPID(150, 45);
+	motor[moGo] = 0;
+
+	//turnTo(0);
+	wait1Msec(100);
+	motor[intake] = 100;
+	motor[lLift] = motor[rLift] = -75;
+	clearTimer(T1);
+	while(SensorValue[liftPot] > LIFT_MIN+50 && time1[T1] < 1000);
+	motor[lLift] = motor[rLift] = 0;
+	turnTo(-15);
+
+
+	runAutoStack(conesHeight[0], coneDown[0], coneDown[0], false);
+	barIsUp = true;
+	backward(1400);
+
+	turnTo(1800);
+	motor[lLift] = motor[rLift] = 75;
+	clearTimer(T1);
+	while(SensorValue[liftPot] < LIFT_MIN+400 && time1[T1] < 1000);
+	motor[lLift] = motor[rLift] = 0;
+	moGoIsUp = true;
+	startTask(moveMoGoDown);
+	while(moGoIsUp);
+	backward(400);
+	motor[moGo] = -100;
+
+	while(SensorValue[moGoPot] < MOGO_UP)
+	{
+		motor[moGo] = -100;
+	}
+
 	writeDebugStream("%d", time1[T3]);
-	while(true);
 }
 
 void auton2()
@@ -215,8 +305,9 @@ task autonomous()
     // 5 - 5 Pt Blue
 	clearDebugStream();
 //turnBangBang(450);
-	//turnBrake(false);
+	//turnBrake(fale);
 	//turnPD(-900, false);
+	//turnTo(-900);
 	stationary();
 	//forward(1050);
 	wait10Msec(100);

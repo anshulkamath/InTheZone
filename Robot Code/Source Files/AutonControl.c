@@ -2,290 +2,32 @@
 #define AUTONCONTROL_H
 #include "GyroPid.c"
 
-const int size1 = 10;
-struct PControlStruct
-{
-  int SensorPort;
-  int motorPorts[size1];
-  int pValue[size1];
-  int target;
-  bool highPrecision;
-
-};
-
-struct Structy
-{
-	int power;
-	float thres;
-};
-
-task moveMoGoDown()
-{
-	motor[moGo] = 100;
-	int start1 = SensorValue[moGoPot];
-	while(SensorValue[moGoPot] > MOGO_DOWN)
-	{
-		motor[moGo] = 100 * SensorValue[moGoPot];
-	}
-	motor[moGo] = 0;
-}
-
-<<<<<<< HEAD
-
-void driveL(int val)
-{
-	if(abs(val) > 127)
-		val = 127 * val/abs(val);
-
-	motor[leftB] = motor[leftF] = val;
-}
-
 //Power right drive motors
 void driveR(int val)
 {
-	if(abs(val) > 127)
-		val = 127 * val/abs(val);
+	if(abs(val) > 100)
+		val = sgn(val) * 100;
 
 	motor[rightB] = motor[rightF] = val;
 }
 
+void driveL(int val)
+{
+	if(abs(val) > 100)
+		val = sgn(val) * 100;
 
-void turnV3(int degrees1, int timeStopMS = 100000, bool doCorrection = false) {
-	clearTimer(T4)
-	const int DEGREES10 = degrees1 * 10;
-	const float Kt = 0.08;
-	const int GYRO_START = SensorValue[gyroscope];
-	const int TARGET = (fabs(GYRO_START + DEGREES10) > 3600) ? (sgn(degrees) * (fabs(GYRO_START + DEGREES10) - 3600)) : (GYRO_START + DEGREES10);
-	int dist = TARGET - SensorValue[gyroscope];
-	int pwr = (int) (dist * Kt);
-	while (fabs(pwr) > 5 && time1[T4] < timeStopMS) {
-		dist = TARGET - SensorValue[gyroscope];
-		pwr = (int) (dist * Kt);
-		driveR(pwr);
-		driveL(-pwr);
-	}
-	driveL(0);
-	driveR(0);
-	if (doCorrection) {
-		writeDebugStreamLine("Attempting Correction");
-		int dist = degrees1 - SensorValue[gyroscope];
-		int b = dist;
-		while (fabs(dist) > 10) {
-			dist = degrees1 - SensorValue[gyroscope];
-			driveR(sgn(dist) * 30);
-			driveL(-sgn(dist) * 30);
-			writeDebugStreamLine("Right Drive: %i", sgn(dist) * 30);
-			writeDebugStreamLine("Left power %i", -sgn(dist) * 30);
-		}
-		driveL(sgn(b) * 10);
-		driveR(-sgn(b) * 10);
-	}
+	motor[leftB] = motor[leftF] = val;
 }
 
-void turnTo(int degs)
+// Intake
+task intakeCone()
 {
-	turnV3(-(degs - SensorValue[gyroscope]), 100000, true);
-=======
-void turnBrake(bool clockwise)
-{
-  if (clockwise)
-  {
-    driveR(10);
-    driveL(-10);
-  }
-  else
-  {
-    driveR(-10);
-    driveL(10);
-  }
-
-    sleep (50);
-
-    driveR(0);
-    driveL(0);
->>>>>>> 388f87faa3e19737f835cf3be8fb2d7ec93e1a67
+  motor[intake] = 100;
+  sleep(300);
+  motor[intake] = 20;
 }
 
-void pControlFunction(PControlStruct control)
-{
-  //int currSensorValue = SensorValue[control.SensorPort];
-  bool done = false;
-  int rangeHigh = 20;
-  int prev = 0;
-  while(SensorValue[control.SensorPort] < control.target + control.highPrecision ? control.target : 0 && !done)
-  {
-    int cumPower = 0;
-
-    for(int i = 0; i<size; i++)
-      cumPower += control.pValue[i] * (SensorValue[control.SensorPort];
-
-    for(int i = 0; i<size; i++)
-      motor[control.motorPorts[i]] = cumPower;
-
-    if(abs(prev - SensorValue[control.SensorPort]) < rangeHigh && abs(SensorValue[control.SensorPort] - control.target) < rangeHigh)
-      done = true;
-
-    prev = SensorValue[control.SensorPort];
-  }
-}
-
-float stopThres = .75;
-float end = 0;
-void autoTune(int degrees)
-{
-  bool done = false;
-
-  while(!done)
-  {
-    int i = 0;
-    float off = 0;
-    while(i<4)
-    {
-      while(GyroGetAngle() < degrees*stopThres)
-      {
-        motor[rightB] = motor[rightF] = -80*(GyroGetAngle() - degrees)/(degrees*.95)+10;
-        motor[leftB] = motor[leftF] = 80*(GyroGetAngle() - degrees)/(degrees*.95)-10;
-
-      }
-      //display(GyroGetAngle(), stopThres*100, off, 0, 0, 0, 0, 0);
-          motor[rightB] = motor[rightF] = 10;
-          motor[leftB] = motor[leftF] = -10;
-      off += GyroGetAngle() - degrees;
-      sleep(2000);
-      pre_auton();
-      i++;
-    }
-
-    if(abs(off/4) < 10)
-      done = true;
-    else if(off > 0)
-      stopThres -= abs(off/4.0)/100.0;
-    else
-      stopThres += abs(off/4.0)/100.0;
-
-  }
-  writeDebugStreamLine("Value: %d With Bat Of %d", stopThres, nAvgBatteryLevel);
-  end = stopThres;
-}
-
-
-/*int powerExtrap(Structy [] x, int size)
-{
-	int closest = 0;
-	for(int i = 0; i<size; i++)
-	{
-		if(abs(nAvgBatteryLevel - x[i].power) <  abs(nAvgBatteryLevel - x[i].power))
-		{
-			closest = i;
-		}
-	}
-	if(x[closest].power > nAvgBatteryLevel)
-	{
-		float slope = (x[closest].thres - x[closest != 0 ? closest - 1 : 0]) /(x[closest].power - x[closest > 0 ? closest - 1 : 0]);
-		float b = slope * x[closest].power * -1 + x[closest].thres;
-		return (int)(slope * nAvgBatteryLevel + b);
-	}
-	float slope = (-x[closest].thres + x[closest +1 != size ? closest + 1 : 0]) /(-x[closest].power + x[closest +1 != size ? closest + 1 : 0]);
-	float b = slope * x[closest].power * -1 + x[closest].thres;
-	return (int)(slope * nAvgBatteryLevel + b);
-}*/
-
-
-
-
-
-
-
-void turnBangBang(int deg)
-{
-  float lBound = 0.6;
-  float uBound = 0.9;
-  while (SensorValue(gyroscope) < deg * 0.99)
-  {
-    if (SensorValue(gyroscope) < deg * lBound)
-    {
-      driveR(100);
-      driveL(-100);
-    }
-    else if (SensorValue(gyroscope) < deg * uBound)
-    {
-      driveR(65);
-      driveL(-65);
-    }
-    else
-    {
-      driveR(40);
-      driveL(-40);
-    }
-  }
-
-  turnBrake(false);
-}
-
-void turnPD(int target)
-{
-  float kp = 0;
-  float kd = 0;
-  int P = 0;
-  int D = 0;
-  int error, lastError, pwr;
-
-  while (abs(SensorValue(gyroscope)) < abs(target))
-  {
-    error = target - SensorValue(gyroscope);
-    P = error * kp;
-    D = (error - lastError) * kd;
-
-    pwr = P - D;
-
-    if (pwr > 100) pwr = 100;
-    if (pwr < -100) pwr = -100;
-
-    driveL(pwr);
-    driveR(-pwr);
-
-    lastError = error;
-    sleep (50);
-  }
-  if (target < 0) turnBrake (false);
-  else turnBrake (true);
-}
-
-void right(int deg)
-{
-	turnV3(900);
-}
-
-void left(int deg)
-{
-	//gyroTurn((-deg + (SensorValue[gyroscope] - gyro.gyroOffset))%3600);
-}
-task mGoalAuton()
-{
-	if (moGoIsUp)
-	{
-		while (SensorValue(moGoPot) > MOGO_DOWN + 300)
-			motor[moGo] = 100;
-		while (SensorValue(moGoPot) > MOGO_DOWN)
-			motor[moGo] = 40;
-
-		motor[moGo] = 20;
-
-		moGoIsUp = false;
-	}
-	else
-	{
-		while (SensorValue(moGoPot) < MOGO_UP - 300)
-			motor[moGo] = -100;
-		while (SensorValue(moGoPot) < MOGO_UP - 150)
-			motor[moGo] = -40;
-
-		motor[moGo] = 0;
-
-		moGoIsUp = true;
-	}
-}
-
+// Turn Functions
 void turnBrake(bool clockwise)
 {
   if (clockwise)
@@ -305,57 +47,37 @@ void turnBrake(bool clockwise)
     driveL(0);
 }
 
-void turnBangBang(int deg)
-{
-  float lBound = 0.6;
-  float uBound = 0.9;
-  while (SensorValue(gyroscope) < abs(deg) * 0.99)
-  {
-    if (SensorValue(gyroscope) < deg * lBound)
-    {
-      driveR(100);
-      driveL(-100);
-    }
-    else if (SensorValue(gyroscope) < deg * uBound)
-    {
-      driveR(65);
-      driveL(-65);
-    }
-    else
-    {
-      driveR(40);
-      driveL(-40);
-    }
-  }
-
-  turnBrake(false);
-}
-
-void turnPD(int target, bool mogo1, bool change = true)
+void turnPD(int target, bool mogo1 = false, bool change = true)
 {
 
   float kp = .03;
   float kd = .07;
-  if(abs(target)- 450 < 150 && !mogo1) // normal
+  if (abs(target) - 450 < 150 && !mogo1) // normal
   {
   	kp = .09;
   	kd = .1;
-  }else if(abs(target)- 450 < 150 && mogo1) // mogo
+  }
+  else if (abs(target) - 450 < 150 && mogo1) // mogo
   {
   	kp = .09;
   	kd = .1;
-  }else if(abs(target)- 900 < 150 && mogo1) // mogo
+  }
+  else if (abs(target) - 900 < 150 && mogo1) // mogo
   {
   	kp = .07;
   	kd = .1;
-  }else if(abs(target)- 900 < 150 && !mogo1) // mogo
+  }
+  else if (abs(target) - 900 < 150 && !mogo1) // mogo
   {
   	kp = .06;
   	kd = .07;
   }
+
   int P = 0;
   int D = 0;
+
   int error, lastError, pwr;
+
   bool PDOn = true;
 	int begin = SensorValue[gyroscope];
   while (abs(SensorValue(gyroscope) ) < abs(target + begin))
@@ -368,7 +90,8 @@ void turnPD(int target, bool mogo1, bool change = true)
 
     if (pwr > 100) pwr = 100;
     if (pwr < -100) pwr = -100;
-		if((D == 0 && error < 300) &&  change || !PDOn)
+
+    if((D == 0 && error < 300) &&  change || !PDOn)
 		{
 			pwr = sgn(target) * 40;
 			PDOn = false;
@@ -377,6 +100,7 @@ void turnPD(int target, bool mogo1, bool change = true)
 			pwr = sgn(target) * 20;
 			PDOn = false;
 		}
+
     driveL(-pwr);
     driveR(pwr);
 
@@ -385,6 +109,40 @@ void turnPD(int target, bool mogo1, bool change = true)
   }
   if (target < 0) turnBrake (true);
   else turnBrake (false);
+}
+
+void turnTo(int value)
+{
+	int error = value - SensorValue(gyroscope);
+
+	// If it is too far away from the target, turn to the target (should not have to be used)
+	if (abs(error) > 200)
+	{
+		turnPD(value - SensorValue(gyroscope) - sgn(error) * 200);
+		//while (abs(SensorValue(gyroscope)) < abs(value) - 250) {}
+		if (error > 0)
+			turnBrake(false);
+		else
+			turnBrake(true);
+	}
+
+	error = value - SensorValue(gyroscope);
+
+	// When it is close to the target, turn to to the target
+  if (error > 0)
+  {
+    driveL(-TURN_PWR);
+    driveR(TURN_PWR);
+    while (SensorValue(gyroscope) < value - 20) {}
+    turnBrake(false);
+  }
+	else if (error < 0)
+  {
+    driveL(TURN_PWR);
+    driveR(-TURN_PWR);
+    while (SensorValue(gyroscope) > value +20) {}
+    turnBrake(true);
+  }
 }
 
 task lDrivePID()
@@ -420,13 +178,13 @@ task lDrivePID()
 	int target = 0;
 	float error = 0;
 	int lastError = 0;
-	const float gyrostart = GyroGetAngle();
+	const float gyrostart = SensorValue[gyroscope];
 	int debugval = 0;
 
 
 	while (true)
 	{
-		float g = GyroGetAngle();
+		float g = SensorValue[gyroscope];
 		//if(isOpposite)
 		//display( (int)P , (int)I , (int)D ,error,lDrivePwr,driveTarget,g);
 		//display( (int)P , (int)I , (int)D, error, lDrivePwr, driveTarget, debugval, rDrivePwr);
@@ -510,19 +268,19 @@ task rDrivePID()
 	int error = 0;
 	int lastError = 0;
 	int debugval = 0;
-	int startangle = GyroGetAngle();
+	int startangle = SensorValue[gyroscope];
 	float tempy = .25;
 	while (true)
 	{
 		//if(!isOpposite)
-		//display( (int)P , (int)I , (int)D ,error,rDrivePwr,target,debugval , lDrivePwr);
+		//display( (inht)P , (int)I , (int)D ,error,rDrivePwr,target,debugval , lDrivePwr);
 		//display( (int)P , (int)I , (int)D ,error,rDrivePwr,target,debugval);
 
 		if(!isOpposite)
 		{
-			error = startangle - GyroGetAngle();
+			error = startangle - SensorValue[gyroscope];
 			target = startangle;
-			debugval = GyroGetAngle();
+			debugval = SensorValue[gyroscope];
 		}
 		else
 		{
@@ -566,54 +324,6 @@ task rDrivePID()
 		//writeDebugStreamLine("%d , %d", rDrivePwr, lDrivePwr);
 
 		sleep (50);
-	}
-}
-
-// Lift PID (not specifically lLift)
-task stabilizeLift()
-{
-	while(true)
-	{
-		float kp = .8;
-		float P = kp * (SensorValue[liftPot] + 40 - SensorValue[liftPot2]);
-		motor[lLift] -= P + 13;
-		motor[rLift] += P -.25*60;
-		sleep(10);
-	}
-}
-
-task lLiftPID()
-{
-	float P, I, D;
-	// period = .8
-	float kp = 0.3; //.5
-	float ki = 0.075;
-	float kd = 0.4;
-
-	int error = 0;
-	int lastError = 0;
-	int range = 150;
-
-	// 16.38 ticks per degree
-	while (true)
-	{
-		error = liftTarget - SensorValue(liftPot);
-
-		P = error * kp;
-		D = (error - lastError) * kd;
-
-		if (error > -range && error < range)
-			I += error * ki;
-		else
-			I=0;
-
-		lastError = error;
-		lLiftPwr = P + I + D;
-		motor[lLift] = lLiftPwr * 1.1;
-		motor[rLift] = rLiftPwr * 1.1;
-
-		//display( (int)P , (int)I , (int)D ,error,lLiftPwr,liftTarget,SensorValue(liftPot));
-		sleep (100);
 	}
 }
 
@@ -661,5 +371,119 @@ void backward(int len)
 	stopTask(rDrivePID);
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
+
+// Mobile Goal
+task mGoalAuton()
+{
+	if (moGoIsUp)
+	{
+		while (SensorValue(moGoPot) > MOGO_DOWN + 300)
+			motor[moGo] = 100;
+		while (SensorValue(moGoPot) > MOGO_DOWN)
+			motor[moGo] = 40;
+
+		motor[moGo] = 20;
+
+		moGoIsUp = false;
+	}
+	else
+	{
+		while (SensorValue(moGoPot) < MOGO_UP - 300)
+			motor[moGo] = -100;
+		while (SensorValue(moGoPot) < MOGO_UP - 150)
+			motor[moGo] = -40;
+
+		motor[moGo] = 0;
+
+		moGoIsUp = true;
+	}
+}
+
+task moveMoGoDown()
+{
+	motor[moGo] = 100;
+
+	while(SensorValue[moGoPot] > MOGO_DOWN)
+	{
+		motor[moGo] = 100;
+	}
+
+	motor[moGo] = 0;
+  moGoIsUp = false;
+}
+
+// Vestiges
+const int size1 = 10;
+struct PControlStruct
+{
+  int SensorPort;
+  int motorPorts[size1];
+  int pValue[size1];
+  int target;
+  bool highPrecision;
+
+};
+
+struct Structy
+{
+	int power;
+	float thres;
+};
+
+task lLiftPID()
+{
+	float P, I, D;
+	// period = .8
+	float kp = 0.3; //.5
+	float ki = 0.075;
+	float kd = 0.4;
+
+	int error = 0;
+	int lastError = 0;
+	int range = 150;
+
+	// 16.38 ticks per degree
+	while (true)
+	{
+		error = liftTarget - SensorValue(liftPot);
+
+		P = error * kp;
+		D = (error - lastError) * kd;
+
+		if (error > -range && error < range)
+			I += error * ki;
+		else
+			I=0;
+
+		lastError = error;
+		lLiftPwr = P + I + D;
+		motor[lLift] = lLiftPwr * 1.1;
+		motor[rLift] = rLiftPwr * 1.1;
+
+		//display( (int)P , (int)I , (int)D ,error,lLiftPwr,liftTarget,SensorValue(liftPot));
+		sleep (100);
+	}
+}
+
+/*int powerExtrap(Structy [] x, int size)
+{
+	int closest = 0;
+	for(int i = 0; i<size; i++)
+	{
+		if(abs(nAvgBatteryLevel - x[i].power) <  abs(nAvgBatteryLevel - x[i].power))
+		{
+			closest = i;
+		}
+	}
+	if(x[closest].power > nAvgBatteryLevel)
+	{
+		float slope = (x[closest].thres - x[closest != 0 ? closest - 1 : 0]) /(x[closest].power - x[closest > 0 ? closest - 1 : 0]);
+		float b = slope * x[closest].power * -1 + x[closest].thres;
+		return (int)(slope * nAvgBatteryLevel + b);
+	}
+	float slope = (-x[closest].thres + x[closest +1 != size ? closest + 1 : 0]) /(-x[closest].power + x[closest +1 != size ? closest + 1 : 0]);
+	float b = slope * x[closest].power * -1 + x[closest].thres;
+	return (int)(slope * nAvgBatteryLevel + b);
+}*/
 
 #endif

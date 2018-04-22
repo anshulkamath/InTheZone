@@ -105,7 +105,7 @@ void autoConeInitVals()
 	for (int i = 0; i < size; i++)
 	{
 		conesHeight[i] = LIFT_MIN + (122 * i);
-		conesDown[i] = conesHeight[i] - 100;
+		coneDown[i] = conesHeight[i] - 100;
 	}
 }
 
@@ -135,7 +135,7 @@ task startAutoStack()
 		autoStackIsOn = true;
 		if(cones < size)
 		{
-			intakeCone(1);
+			startTask(intakeCone);
 		//	runAutoStack(conesHeight[cones], coneDown[cones], true);
 			cones++;
 		}
