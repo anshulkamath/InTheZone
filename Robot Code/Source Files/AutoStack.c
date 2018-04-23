@@ -13,7 +13,7 @@ task releaseCone()
 	motor[intake] = -25;
 }
 
-void runAutoStack(int height, int down, int prevConeBottom, bool driver)
+void runAutoStack(int height, int down, int prevConeBottom, bool driver, bool resetBar = true)
 {
 	// Moves the lift up to the height and the bar up
 	motor[lLift] = motor[rLift] = 100;
@@ -39,35 +39,39 @@ void runAutoStack(int height, int down, int prevConeBottom, bool driver)
 	while(SensorValue[liftPot] <  height) {}
 	motor[lLift] = motor[rLift] = 0;
 
-	// Moves the bar to bottom position
-	barIsUp = false;
-	while(SensorValue[barPot] < BAR_DOWN - 2000) {} // Can make the value a little higher to make autostack quicker
+	if (resetBar)
+	{
+		// Moves the bar to bottom position
+		barIsUp = false;
+		while(SensorValue[barPot] < BAR_DOWN - 2000) {} // Can make the value a little higher to make autostack quicker
 
 
-	if(!driver)
-	{
-		// Residual of the moveDownField function
-		// Moves the lift to field position
-		motor[lLift] = motor[rLift] = -100;
-		while(SensorValue[liftPot] > LIFT_CONE + 600) {}
-		motor[lLift] = motor[rLift] = -40;
-		while(SensorValue[liftPot] > LIFT_CONE + 100) {}
-		motor[lLift] = motor[rLift] = 0;
-	}
-	else
-	{
-		// Residual of the moveDownDriver function
-		// Moves lift down to driver load stack
-		motor[lLift] = motor[rLift] = -100;
-		while(SensorValue[liftPot] > LIFT_DRIVER + 50) {}
-		motor[lLift] = motor[rLift] = 0;
-		//while(SensorValue[liftPot] > LIFT_DRIVER+50) {}
-		//motor[lLift] = motor[rLift] = 0;
+		if(!driver)
+		{
+			// Residual of the moveDownField function
+			// Moves the lift to field position
+			motor[lLift] = motor[rLift] = -100;
+			while(SensorValue[liftPot] > LIFT_CONE + 600) {}
+			motor[lLift] = motor[rLift] = -40;
+			while(SensorValue[liftPot] > LIFT_CONE + 100) {}
+			motor[lLift] = motor[rLift] = 0;
+		}
+		else
+		{
+			// Residual of the moveDownDriver function
+			// Moves lift down to driver load stack
+			motor[lLift] = motor[rLift] = -100;
+			while(SensorValue[liftPot] > LIFT_DRIVER + 50) {}
+			motor[lLift] = motor[rLift] = 0;
+			//while(SensorValue[liftPot] > LIFT_DRIVER+50) {}
+			//motor[lLift] = motor[rLift] = 0;
+		}
 	}
 }
 
 
 // Vestige
+
 void initConeVals()
 {
 	conesHeight[0] = 1400;

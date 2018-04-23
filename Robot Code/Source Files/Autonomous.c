@@ -141,22 +141,19 @@ void stationary()
 
 	backward(470);
 
-	// What is this? Turn to 80º and then 90º
-	turnTo(0);
-	driveR(25);
-	while(SensorValue[gyroscope] < 0);
-	driveR(0);
-	writeDebugStream("Gyro: %d\n", SensorValue[gyroscope]);
-	//turnTo(-900);
-	//turnPD(-800-SensorValue[gyroscope], false);
-	//turnPD(-900-SensorValue[gyroscope], false);
-	motor[moGo] = 100;
+	turnTo(0, true);
+	// Initiate swing turn
+	// driveR(25);
+	// while(SensorValue[gyroscope] < 0);
+	// driveR(0);
 
+	writeDebugStream("Gyro: %d\n", SensorValue[gyroscope]);
+
+	motor[moGo] = 100;
 	while(SensorValue[moGoPot] > MOGO_DOWN)
 	{
 		motor[moGo] = 100;
 	}
-
 	motor[moGo] = 0;
 
 	motor[lLift] = motor[rLift] = -75;
@@ -173,6 +170,8 @@ void stationary()
 	}
 	turnTo(0);
 	barIsUp = false;
+	while (SensorValue(barPot) < BAR_DOWN - 1000) {}
+
 	forwardNonPID(150, 45);
 	motor[moGo] = 0;
 
@@ -180,32 +179,36 @@ void stationary()
 	wait1Msec(100);
 	motor[intake] = 100;
 	motor[lLift] = motor[rLift] = -75;
+
 	clearTimer(T1);
-	while(SensorValue[liftPot] > LIFT_MIN+50 && time1[T1] < 1000);
+	while(SensorValue[liftPot] > LIFT_MIN + 50 && time1[T1] < 1000);
 	motor[lLift] = motor[rLift] = 0;
+
 	turnTo(-15);
 
-
-	runAutoStack(conesHeight[0], coneDown[0], coneDown[0], false);
+	runAutoStack(conesHeight[0], coneDown[0], coneDown[0], false, false);
 	barIsUp = true;
 	backward(1400);
 
 	turnTo(1800);
+
 	motor[lLift] = motor[rLift] = 75;
 	clearTimer(T1);
-	while(SensorValue[liftPot] < LIFT_MIN+400 && time1[T1] < 1000);
+	while(SensorValue[liftPot] < LIFT_MIN + 400 && time1[T1] < 1000);
 	motor[lLift] = motor[rLift] = 0;
+
 	moGoIsUp = true;
 	startTask(moveMoGoDown);
 	while(moGoIsUp);
 	backward(400);
-	motor[moGo] = -100;
 
+	motor[moGo] = -100;
 	while(SensorValue[moGoPot] < MOGO_UP)
 	{
 		motor[moGo] = -100;
 	}
-
+	motor[moGo] = 0;
+	
 	writeDebugStream("%d", time1[T3]);
 }
 
@@ -246,6 +249,7 @@ void auton2()
 		motor[moGo] = -100;// * (SensorValue[moGoPot]/MOGO_UP);
 	}
 	motor[moGo] = 0;
+
 	turnPD((0 - SensorValue[gyroscope]), true, false);
 
 	forwardNonPID(125, 45);

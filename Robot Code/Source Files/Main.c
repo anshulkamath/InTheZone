@@ -194,12 +194,9 @@ void pre_auton()
 	SensorType[gyroscope] = sensorGyro;
 	SensorScale[gyroscope] = 135;
 	SensorFullCount[gyroscope] *= 100;
-	// Calibrates Gyroscope
-	//gyroSetPort(gyroscope);
 
 	//Allow gyro to settle and then calibrate (Takes a total of around 3 seconds)
 	delay(1100);
-//gyroCalibrate();
 	gyroIsCalibrating = false;
 	pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
 

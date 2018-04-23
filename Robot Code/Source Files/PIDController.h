@@ -2,8 +2,8 @@
   * Jason McKinney
   * 07/22/2015
 <!--             07/22 Update            -->
-	- Fixed bug in slew rate calculation that caused 
-		the output value to wind faster than rate should allow. 
+	- Fixed bug in slew rate calculation that caused
+		the output value to wind faster than rate should allow.
 */
 
 #ifndef PIDController_h

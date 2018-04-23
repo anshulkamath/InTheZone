@@ -91,7 +91,7 @@ void turnPD(int target, bool mogo1 = false, bool change = true)
     if (pwr > 100) pwr = 100;
     if (pwr < -100) pwr = -100;
 
-    if((D == 0 && error < 300) &&  change || !PDOn)
+    if((D == 0 && abs(error) < 300) &&  change || !PDOn)
 		{
 			pwr = sgn(target) * 40;
 			PDOn = false;
@@ -111,7 +111,7 @@ void turnPD(int target, bool mogo1 = false, bool change = true)
   else turnBrake (false);
 }
 
-void turnTo(int value)
+void turnTo(int value, bool swingTurn = false)
 {
 	int error = value - SensorValue(gyroscope);
 
@@ -119,7 +119,6 @@ void turnTo(int value)
 	if (abs(error) > 200)
 	{
 		turnPD(value - SensorValue(gyroscope) - sgn(error) * 200);
-		//while (abs(SensorValue(gyroscope)) < abs(value) - 250) {}
 		if (error > 0)
 			turnBrake(false);
 		else
@@ -143,6 +142,25 @@ void turnTo(int value)
     while (SensorValue(gyroscope) > value +20) {}
     turnBrake(true);
   }
+
+	error = value - SensorValue(gyroscope);
+
+	// This is very time expensive
+	if (swingTurn)
+	{
+		if (error > 0)
+		{
+			driveR(25);
+			while (SensorValue(gyroscope) > value) {}
+			driveR(0);
+		}
+		else if (error < 0)
+		{
+			driveL(25);
+			while (SensorValue(gyroscope) < value) {}
+			driveL(0);
+		}
+	}
 }
 
 task lDrivePID()
