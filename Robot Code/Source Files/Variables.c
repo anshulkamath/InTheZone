@@ -11,9 +11,10 @@ int intakePwr = 0;
 // Control Variables
 int driveTarget = 0;
 int liftTarget = 0;
+bool liftDone = false;
 
 // Sensor Values - CONSTANTS
-const int LIFT_MIN = 1307;
+const int LIFT_MIN = 1225; // 75off
 const int LIFT_MAX  = 2900;
 const int LIFT_MID = (LIFT_MIN + LIFT_MAX) / 2;
 const int LIFT_DRIVER = 1950;
@@ -22,15 +23,15 @@ const int LIFT_CONE = 1590;
 
 bool liftUpAuton = false;
 
-const int BAR_UP = 360;
-const int BAR_DOWN = 2260;
+const int BAR_UP = 575;
+ const int BAR_DOWN = 2040;
 
 const int MOGO_START = 3111;
 const int MOGO_UP = 2745;
 const int MOGO_THROW = 1722;
 const int MOGO_DOWN = 500;
 
-const int TURN_PWR = 30;
+const int TURN_PWR = 25;
 
 const int INTAKE_HOLD = 30;
 
@@ -68,7 +69,7 @@ bool centerPressed = false;
 string mainBattery, backupBattery;
 
 // LCD Counters
-int autonCount = -1;
+int autonCount = 0;
 int lcdCount = 1;
 int color = -1;
 int side = -1;

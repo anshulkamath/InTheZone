@@ -103,12 +103,21 @@ void initConeVals()
 	coneDown[12] = 2550;
 }
 
+void adjustHeights(int off)
+{
+	for(int i =0; i <size; i++)
+	{
+		conesHeight[i] -= off;
+		coneDown[i] -= off;
+	}
+}
+
 void autoConeInitVals()
 {
-	conesHeight[0] = LIFT_MIN + 100;
+	conesHeight[0] = 1400;
 	for (int i = 0; i < size; i++)
 	{
-		conesHeight[i] = LIFT_MIN + (122 * i);
+		conesHeight[i] = conesHeight[0] + (122 * i);
 		coneDown[i] = conesHeight[i] - 100;
 	}
 }
@@ -121,15 +130,21 @@ task startAutoStack()
 	if (isFieldControl)
 	{
 		autoStackIsOn = true;
+			writeDebugStreamLine("Num cones %d \n", cones);
 		if(cones < size)
 		{
 		//	intakeCone(1);
+
 			{
 				if(cones < 3)
+				{
 					runAutoStack(conesHeight[cones], coneDown[cones], coneDown[cones], false);
-				else
+					cones++;
+				}else
+				{
 					runAutoStack(conesHeight[cones], coneDown[cones], coneDown[cones - 3], false);
-				cones++;
+					cones++;
+				}
 			}
 		}
 		autoStackIsOn = false;
@@ -147,7 +162,7 @@ task startAutoStack()
 	}
 }
 
-task autoStackControl()
+/*task autoStackControl()
 {
 	while (true)
 	{
@@ -206,11 +221,11 @@ task autoStackControl()
 
 		sleep (50);
 	}
-}
+}*/
 
 task autoStack()
 {
-	startTask(autoStackControl);
+	//startTask(autoStackControl);
 	bool tasksStarted = true;
 	while(true)
 	{
@@ -226,7 +241,7 @@ task autoStack()
 
 			startTask(startAutoStack);
 		}
-		else if (vexRT[Btn5D] && autoStackIsOn) // Cancels AutoStack
+		else if (vexRT[Btn5D] && !vexRT[btn8L] && autoStackIsOn) // Cancels AutoStack
 		{
 			stopTask(startAutoStack);
 			intakeIsActive = true;

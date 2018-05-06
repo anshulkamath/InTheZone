@@ -1,3 +1,5 @@
+#pragma config(UART_Usage, UART1, uartVEXLCD, baudRate19200, IOPins, None, None)
+#pragma config(UART_Usage, UART2, uartNotUsed, baudRate4800, IOPins, None, None)
 #pragma config(Sensor, in1,    liftPot,        sensorPotentiometer)
 #pragma config(Sensor, in2,    moGoPot,        sensorPotentiometer)
 #pragma config(Sensor, in3,    barPot,         sensorPotentiometer)
@@ -29,7 +31,7 @@
 #include "Vex_Competition_Includes.c"
 #include "Main Control.c"
 #include "Variables.c"
-#include "GyroLib.c"
+// #include "GyroLib.c"
 #include "AutoStack.c"
 #include "LCDCode.c"
 #include "Autonomous.c"
@@ -151,7 +153,8 @@ task controller()
 			}
 			else
 			{
-				isFieldControl = !isFieldControl;
+				cones = 0;
+				//isFieldControl = !isFieldControl;
 			}
 			while(vexRT(Btn8L));
 
@@ -184,7 +187,10 @@ void pre_auton()
 	bStopTasksBetweenModes = true;
 
 	// Initializes the cones arrays
-	initConeVals();
+	autoConeInitVals();
+
+	for (int i = 0; i < size; i++)
+		writeDebugStreamLine("Cone[%d] is: %d", i, conesHeight[i]);
 
 	gyroIsCalibrating = true;
 	writeDebugStreamLine("%d", SensorValue[liftPot]);
@@ -196,9 +202,9 @@ void pre_auton()
 	SensorFullCount[gyroscope] *= 100;
 
 	//Allow gyro to settle and then calibrate (Takes a total of around 3 seconds)
-	delay(1100);
+	delay(1700);
 	gyroIsCalibrating = false;
-	pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
+	//pidInit(gyroPid, 2, 0, 0.15, 0, 1270);
 
 }
 
@@ -209,7 +215,7 @@ task usercontrol()
 {
 
 //	right(90);
-
+	//isAutonAuto = false;
 	datalogClear();
 	stopTask(runLCD);
 	clearLCDLine(0);

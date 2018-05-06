@@ -1,6 +1,29 @@
 #ifndef AUTONCONTROL_H
 #define AUTONCONTROL_H
-#include "GyroPid.c"
+//#include "GyroPid.c"
+
+task liftSet
+{
+	int prevTarget = 0;
+	while(true)
+	{
+		while(prevTarget == liftTarget);
+		liftDone = false;
+		if(liftTarget > prevTarget)
+		{
+			motor[lLift] = motor[rLift] = 75;
+			while(SensorValue[liftPot] < liftTarget);
+			motor[lLift] = motor[rLift] = 0;
+		}else
+		{
+			motor[lLift] = motor[rLift] = -75;
+			while(SensorValue[liftPot] > liftTarget);
+			motor[lLift] = motor[rLift] = 0;
+		}
+		liftDone = true;
+		prevTarget = liftTarget;
+	}
+}
 
 //Power right drive motors
 void driveR(int val)
@@ -32,13 +55,13 @@ void turnBrake(bool clockwise)
 {
   if (clockwise)
   {
-    driveR(10);
-    driveL(-10);
+    driveR(20);
+    driveL(-20);
   }
   else
   {
-    driveR(-10);
-    driveL(10);
+    driveR(-20);
+    driveL(20);
   }
 
     sleep (150);
@@ -50,11 +73,10 @@ void turnBrake(bool clockwise)
 void turnPD(int target, bool mogo1 = false, bool change = true)
 {
 
-  float kp = .03;
-  float kd = .07;
+  float kp, kd;
   if (abs(target) - 450 < 150 && !mogo1) // normal
   {
-  	kp = .09;
+  	kp = .4;
   	kd = .1;
   }
   else if (abs(target) - 450 < 150 && mogo1) // mogo
@@ -64,14 +86,26 @@ void turnPD(int target, bool mogo1 = false, bool change = true)
   }
   else if (abs(target) - 900 < 150 && mogo1) // mogo
   {
-  	kp = .07;
+  	kp = .4;
   	kd = .1;
   }
   else if (abs(target) - 900 < 150 && !mogo1) // mogo
   {
-  	kp = .06;
+  	kp = .4;
   	kd = .07;
+  }else if (abs(target) - 900 < 150 && !mogo1) // normal
+  {
+  	kp = .4;
+  	kd = .1;
   }
+  else if (abs(target) - 450 < 150 && mogo1) // mogo
+  {
+  	kp = .4;
+  	kd = .1;
+  }
+
+  kp = .4;
+  kd = .08;
 
   int P = 0;
   int D = 0;
@@ -80,7 +114,9 @@ void turnPD(int target, bool mogo1 = false, bool change = true)
 
   bool PDOn = true;
 	int begin = SensorValue[gyroscope];
-  while (abs(SensorValue(gyroscope) ) < abs(target + begin))
+	//writeDebugStreamLine(t
+
+  while (abs(SensorValue(gyroscope) - begin ) < abs(target) && time1[T1] < 1000)
   {
     error = target + begin - SensorValue(gyroscope);
     P = error * kp;
@@ -113,16 +149,14 @@ void turnPD(int target, bool mogo1 = false, bool change = true)
 
 void turnTo(int value, bool swingTurn = false)
 {
+	clearTimer(T1);
 	int error = value - SensorValue(gyroscope);
-
+	writeDebugStreamLine("error %d", error);
 	// If it is too far away from the target, turn to the target (should not have to be used)
 	if (abs(error) > 200)
 	{
-		turnPD(value - SensorValue(gyroscope) - sgn(error) * 200);
-		if (error > 0)
-			turnBrake(false);
-		else
-			turnBrake(true);
+		writeDebugStreamLine("DDDDDDD");
+		turnPD(value - SensorValue(gyroscope)- sgn(error) * 200);
 	}
 
 	error = value - SensorValue(gyroscope);
@@ -132,14 +166,14 @@ void turnTo(int value, bool swingTurn = false)
   {
     driveL(-TURN_PWR);
     driveR(TURN_PWR);
-    while (SensorValue(gyroscope) < value - 20) {}
+    while (SensorValue(gyroscope) < value - 10 && time1[T1] < 1250) {}
     turnBrake(false);
   }
 	else if (error < 0)
   {
     driveL(TURN_PWR);
     driveR(-TURN_PWR);
-    while (SensorValue(gyroscope) > value +20) {}
+    while (SensorValue(gyroscope) > value + 10 && time1[T1] < 1250) {}
     turnBrake(true);
   }
 
@@ -150,14 +184,14 @@ void turnTo(int value, bool swingTurn = false)
 	{
 		if (error > 0)
 		{
-			driveR(25);
-			while (SensorValue(gyroscope) > value) {}
+			driveR(20);
+			while (SensorValue(gyroscope) < value && time1[T1] < 1650) {}
 			driveR(0);
 		}
 		else if (error < 0)
 		{
-			driveL(25);
-			while (SensorValue(gyroscope) < value) {}
+			driveL(20);
+			while (SensorValue(gyroscope) > value && time1[T1] < 1650) {}
 			driveL(0);
 		}
 	}
@@ -352,19 +386,11 @@ void forward(int len)
 	driveTarget = len;
 	startTask(lDrivePID);
 	startTask(rDrivePID);
-	while(SensorValue(lDriveQuad) < (len - driveRange));
+	clearTimer(T2);
+	while(SensorValue(lDriveQuad) < (len - driveRange) && time1[T2] < 4500);
 	sleep(500);
 	stopTask(lDrivePID);
 	stopTask(rDrivePID);
-	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
-}
-
-void forwardNonPID(int len)
-{
-	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 100;
-	int temp = SensorValue[lDriveQuad];
-	//motor[moGo] = -40;
-	while(SensorValue(lDriveQuad) -temp < (len - driveRange));
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
@@ -377,6 +403,13 @@ void forwardNonPID(int len, int power)
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
+void forwardNonPID(int len)
+{
+	forwardNonPID(len, (int)100);
+}
+
+
+
 void backward(int len)
 {
 	isOpposite = false;
@@ -387,6 +420,15 @@ void backward(int len)
 	sleep(500);
 	stopTask(lDrivePID);
 	stopTask(rDrivePID);
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
+}
+
+void backwardNonPID(int len, int power)
+{
+	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = -power;
+	int temp = SensorValue[lDriveQuad];
+	//motor[moGo] = -40;
+	while(SensorValue(lDriveQuad) - temp > (-len + driveRange));
 	motor[rightB] = motor[rightF] = motor[leftB] = motor[leftF] = 0;
 }
 
@@ -417,12 +459,24 @@ task mGoalAuton()
 	}
 }
 
+task moGoUp()
+{
+	while(SensorValue[moGoPot] < MOGO_UP)
+	{
+		motor[moGo] = -100;
+	}
+	motor[moGo] = 0;
+	moGoIsUp = true;
+}
+
 task moveMoGoDown()
 {
 	motor[moGo] = 100;
 
 	while(SensorValue[moGoPot] > MOGO_DOWN)
 	{
+		if(SensorValue[moGoPot] < MOGO_DOWN + 1000)
+			moGoIsUp = false;
 		motor[moGo] = 100;
 	}
 

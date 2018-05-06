@@ -62,7 +62,7 @@ void redRightSelector()
 	        tempNum = 2;
 	        break;*/
 	      case 1:
-	        displayLCDCenteredString(0, "9 Pt Red");
+	        displayLCDCenteredString(0, "Stat NoLoad Red");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
@@ -112,7 +112,7 @@ void redLeftSelector()
 	        tempNum = 0;
 	        break;
 	      case 1:
-	        displayLCDCenteredString(0, "9 Pt Red");
+	        displayLCDCenteredString(0, "Stat Loader Red");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
@@ -163,7 +163,7 @@ void blueRightSelector()
 	        tempNum = 1;
 	        break;
 	      case 1:
-	        displayLCDCenteredString(0, "9 Pt Blue");
+	        displayLCDCenteredString(0, "Stat Loader Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
@@ -224,8 +224,8 @@ void blueLeftSelector()
 	        }
 	        tempNum = 3;
 	        break;*/
-	      case 1:
-	        displayLCDCenteredString(0, "9 Pt Blue");
+	    case 1:
+	        displayLCDCenteredString(0, "Stat NoLoad Blue");
 	        displayLCDCenteredString(1, "<- Enter ->");
 	        waitForPress();
 	        if (nLCDButtons == rightButton)
@@ -240,7 +240,7 @@ void blueLeftSelector()
 	          tempCount--;
 	          break;
 	        }
-	        tempNum = 2;
+	        tempNum = 3;
 	        break;
 		}
 	}
@@ -250,61 +250,105 @@ void autonSelector()
 {
   clearLCDLine(0);
   clearLCDLine(1);
- waitForRelease();
-  displayLCDCenteredString(0, "Select Color");
-  displayLCDCenteredString(1, "Red   Blue");
-  while (color == -1 || side == -1)
-  {
-  	if(color != -1)
-  	{
-  		displayLCDCenteredString(0, "Select Side");
-  		displayLCDCenteredString(1, "Left   Right");
-  	}
-    waitForPress();
-		if(color == -1)
+	waitForRelease();
+	displayLCDCenteredString(0, "Select Which 20P");
+	displayLCDCenteredString(1, "Left  Right");
+	while(true)
+	{
+		waitForPress();
+		if(nLCDButtons == leftButton)
 		{
-      if (nLCDButtons == rightButton)
-      {
-        waitForRelease();
-        color = 1;
-      }
-      else if (nLCDButtons == leftButton)
-      {
-        waitForRelease();
-      	color = 0;
-    	}
-    }else if(side == -1)
-    {
-      if (nLCDButtons == rightButton)
-      {
-        waitForRelease();
-        side = 1;
-        // Color check
-        if(color == 0)
-        {
-        	redRightSelector();
-        }else
-        {
-        	blueRightSelector();
-        }
-      }
-      else if (nLCDButtons == leftButton)
-      {
-        waitForRelease();
-      	side = 0;
-      	if(color == 0)
+			autonCount = 0;
+			displayLCDCenteredString(0, "Auton Selected L");
+			return;
+		}else if(nLCDButtons == rightButton)
+		{
+			autonCount = 1;
+			displayLCDCenteredString(0, "Auton Selected R");
+			return;
+		}
+		waitForRelease();
+	}
+
+	displayLCDCenteredString(0, "Select Which Color");
+	displayLCDCenteredString(1, "Red  Blue");
+  if(nLCDButtons == leftButton)
+  {
+  	color = 0;
+  }
+  if(nLCDButtons == rightButton)
+  {
+  	color = 1;
+  }
+	waitForPress();
+  if(nLCDButtons == leftButton)
+  {
+ 		waitForRelease();
+  	displayLCDCenteredString(0, "Select Side");
+  	displayLCDCenteredString(1, "Left   Right"); // 1 is No 0 is yes
+  	while (side == -1)
+  	{
+    	waitForPress();
+			if(side == -1)
+			{
+     	 if (nLCDButtons == rightButton)
       	{
-      		redLeftSelector();
-      		break;
-      	}else
-      	{
-      		blueLeftSelector();
-      		break;
+      	  waitForRelease();
+        	side = 1;
       	}
+      	else if (nLCDButtons == leftButton)
+      	{
+        	waitForRelease();
+      		side = 0;
+    		}
+    }
+  	waitForRelease();
+  	wait10Msec(50);
+
+  	if(color == 0)
+
+  	waitForPress();
+  	if(nLCDButtons == centerButton)
+  	{
+  		autonCount = color;
+  	}
+  }
+  if(nLCDButtons == rightButton)
+  {
+		waitForRelease();
+  	displayLCDCenteredString(0, "Is Loader");
+  	displayLCDCenteredString(1, "Yes   No"); // 1 is No 0 is yes
+  	while (color == -1)
+  	{
+    	waitForPress();
+			if(color == -1)
+			{
+     	 if (nLCDButtons == rightButton)
+      	{
+      	  waitForRelease();
+        	color = 1;
+      	}
+      	else if (nLCDButtons == leftButton)
+      	{
+        	waitForRelease();
+      		color = 0;
+    		}
     	}
     }
   	waitForRelease();
   	wait10Msec(50);
+  	if(true)
+  	{
+  			displayLCDCenteredString(0, "20 Point");
+        displayLCDCenteredString(1, "<- Enter ->");
+  	}
+  	waitForPress();
+  	if(nLCDButtons == centerButton)
+  	{
+  		autonCount = color + 2;
+  	}
+  }
+
     // 0 - 20 Pt Right Red
     // 1 - 20 Pt Left Blue
     // 2 - 10 Pt Red
@@ -469,9 +513,28 @@ task runLCD()
           	centerPressed = true;
           }
           break;
-
+        case 3	:
+          displayLCDCenteredString(0, "Calibrate Gyroscope");
+          displayLCDCenteredString(1, "<- Enter ->");
+          waitForPress();
+          if (nLCDButtons == rightButton)
+          {
+            waitForRelease();
+            lcdCount++;
+          }
+          else if (nLCDButtons == leftButton)
+          {
+            waitForRelease();
+            lcdCount--;
+          }
+          else if(nLCDButtons == centerButton)
+          {
+            waitForRelease();
+          	centerPressed = true;
+          }
+          break;
         // Display Battery Voltage
-        case 3:
+        case 4:
           displayLCDCenteredString(0, "Show Battery Voltage");
           displayLCDCenteredString(1, "*Press enter to exit*");
           waitForPress();
@@ -507,14 +570,19 @@ task runLCD()
 	        case 2:
 	          moGoIsManual = !moGoIsManual;
 	          break;
-          case 3:
+	        case 3:
+	        	pre_auton();
+	        	break;
+          case 4:
             displayBattery();
             break;
 	      }
 	    }
 
 	    if(centerPressed == 1 && lcdCount == 0) autonSelector();
+
 	    if(lcdCount == 3) displayBattery();
+
 
       centerPressed = false;
     }
